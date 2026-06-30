@@ -28,11 +28,19 @@ const endpoints = {
 
 const now = new Date();
 const forecast = await buildForecast();
+const cityCollections = buildCityCollections(forecast.cities);
+const guidePages = buildGuidePages();
+const glossaryEntriesList = glossaryEntries();
 
 cleanGenerated();
 writeDataFiles();
 generateHomePage();
 generateCityPages();
+generateLocationPages();
+generateCountryPages();
+generateRegionPages();
+generateGuidePages();
+generateGlossaryPage();
 generateUtilityPages();
 generateSitemap();
 generateRobots();
@@ -235,7 +243,7 @@ function buildMapDots(coordinates) {
 }
 
 function cleanGenerated() {
-  for (const dir of ["cities", "about", "contact", "privacy"]) {
+  for (const dir of ["cities", "locations", "countries", "states", "guides", "glossary", "about", "contact", "privacy"]) {
     fs.rmSync(path.join(root, dir), { recursive: true, force: true });
   }
   for (const file of ["index.html", "sitemap.xml", "robots.txt", "ads.txt"]) {
@@ -266,10 +274,11 @@ function generateHomePage() {
               <p class="kicker">Northern lights forecast tonight</p>
               <h1>Can you see the aurora tonight?</h1>
               <p class="lead">Aurora Forecast Now turns NOAA space weather data and cloud cover into a city-level viewing chance for the northern lights.</p>
-              <form class="search-box" action="#cities">
+              <form class="search-box" action="#cities" data-live-search-form>
                 <input data-city-search type="search" placeholder="Search a city or state" aria-label="Search a city or state">
                 <button class="button" type="submit">Find forecast</button>
               </form>
+              <div class="live-result" data-live-result hidden></div>
               <div class="hero-meta" aria-label="Current forecast summary">
                 <div class="metric"><span>Max Kp next 36h</span><strong>${forecast.maxKp || "N/A"}</strong></div>
                 <div class="metric"><span>NOAA forecast time</span><strong>${formatDateTime(forecast.forecastTime)}</strong></div>
@@ -301,10 +310,46 @@ function generateHomePage() {
               <p class="kicker">Browse locations</p>
               <h2>City pages for tonight and tomorrow</h2>
             </div>
-            <p>These static city pages are direct links, so search engines can discover them without JavaScript.</p>
+            <p>Use these city pages when you want a stable forecast link, a nearby comparison, or a quick check before driving north.</p>
           </div>
           <div class="city-grid">
             ${priorityCities.map((city) => cityCard(city, "")).join("")}
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Forecast atlas</p>
+              <h2>Browse by location, guide, or forecast term</h2>
+            </div>
+            <p>Move from a single city result into place collections, plain-English guides, and the forecast terms that explain tonight's setup.</p>
+          </div>
+          <div class="guide-grid">
+            <article class="panel">
+              <h3>Location collections</h3>
+              <p>Start from the full city index, country pages, or state and province collections.</p>
+              ${linkCloud([
+                ["locations/", "All locations"],
+                ...cityCollections.countries.map((country) => [`countries/${country.slug}/`, country.name]),
+                ...cityCollections.regions.slice(0, 8).map((region) => [`states/${region.slug}/`, region.name]),
+              ])}
+            </article>
+            <article class="panel">
+              <h3>Forecast guides</h3>
+              <p>Evergreen pages explain the signals behind each city score.</p>
+              ${linkCloud([["guides/", "All guides"], ...guidePages.map((guide) => [`guides/${guide.slug}/`, guide.shortTitle])])}
+            </article>
+            <article class="panel">
+              <h3>Glossary and data</h3>
+              <p>Plain-English definitions and source pages help readers understand NOAA and local sky inputs.</p>
+              ${linkCloud([
+                ["glossary/", "Forecast glossary"],
+                ["guides/kp-index-aurora-forecast/", "Kp index"],
+                ["guides/cloud-cover-aurora-viewing/", "Cloud cover"],
+                ["guides/aurora-oval-map/", "Aurora oval"],
+              ])}
+            </article>
           </div>
         </section>
 
@@ -323,7 +368,7 @@ function generateHomePage() {
             <article class="panel">
               <p class="kicker">Update strategy</p>
               <h3>Built for cached refreshes</h3>
-              <p>The static MVP can rebuild from official feeds. A Worker/KV layer can later refresh popular cities every few minutes during storm watches.</p>
+              <p>The public forecast uses cached official feeds, and storm watches can trigger more frequent refreshes for live city checks.</p>
             </article>
           </div>
         </section>
@@ -359,14 +404,20 @@ function generateHomePage() {
 
 function generateCityPages() {
   for (const city of forecast.cities) {
+    const regionPath = `/states/${regionSlug(city)}/`;
+    const countryPath = `/countries/${slugify(city.country)}/`;
     writePage(["cities", city.slug], layout({
       title: `${city.name} Aurora Forecast Tonight: Northern Lights Chance`,
       description: `Northern lights forecast for ${city.name}, ${city.region}: aurora chance, Kp index, cloud cover, and viewing guidance for tonight.`,
       path: `/cities/${city.slug}/`,
-      schema: [cityPageSchema(city), breadcrumbSchema(city)],
+      schema: [cityPageSchema(city), cityFaqSchema(city), breadcrumbSchema([
+        ["Home", "/"],
+        ["Locations", "/locations/"],
+        [city.name, `/cities/${city.slug}/`],
+      ])],
       body: `
         <main class="city-page">
-          <a class="breadcrumb" href="../../">Aurora Forecast Now / Cities / ${escapeHtml(city.name)}</a>
+          ${breadcrumbLinks([["Home", "../../"], ["Locations", "../../locations/"], [city.name, ""]])}
           <section class="city-hero">
             <div>
               <p class="kicker">${escapeHtml(city.region)} aurora forecast</p>
@@ -409,6 +460,29 @@ function generateCityPages() {
             </aside>
           </section>
 
+          <section class="section compact-section">
+            <div class="guide-grid">
+              <article class="panel">
+                <p class="kicker">Region page</p>
+                <h3>${escapeHtml(city.region)} aurora forecast</h3>
+                <p>Compare nearby forecast pages that share similar latitude, time zone, and cloud patterns.</p>
+                <a class="text-link" href="../..${regionPath}">Browse ${escapeHtml(city.region)}</a>
+              </article>
+              <article class="panel">
+                <p class="kicker">Country page</p>
+                <h3>${escapeHtml(city.country)} northern lights cities</h3>
+                <p>Use the country collection to jump between high-latitude cities and storm-watch edge cases.</p>
+                <a class="text-link" href="../..${countryPath}">Browse ${escapeHtml(city.country)}</a>
+              </article>
+              <article class="panel">
+                <p class="kicker">Guide</p>
+                <h3>How to read the score</h3>
+                <p>Learn how Kp, cloud cover, latitude, and the aurora oval combine into a practical viewing chance.</p>
+                <a class="text-link" href="../../guides/how-to-read-aurora-forecast/">Open guide</a>
+              </article>
+            </div>
+          </section>
+
           <section class="section" style="padding-left:0;padding-right:0">
             <div class="section-head">
               <div>
@@ -420,10 +494,245 @@ function generateCityPages() {
               ${nearbyCities(city).map((nearby) => cityCard(nearby, "../../")).join("")}
             </div>
           </section>
+
+          <section class="section compact-section">
+            <div class="section-head">
+              <div>
+                <p class="kicker">FAQ</p>
+                <h2>${escapeHtml(city.name)} aurora questions</h2>
+              </div>
+            </div>
+            <div class="faq-grid">
+              ${cityFaqItems(city).map((item) => `<article class="faq-item"><h3>${escapeHtml(item.q)}</h3><p>${escapeHtml(item.a)}</p></article>`).join("")}
+            </div>
+          </section>
         </main>
       `,
     }));
   }
+}
+
+function generateLocationPages() {
+  writePage(["locations"], layout({
+    title: "Northern Lights Forecast Locations",
+    description: "Browse aurora forecast city pages, country collections, region pages, and current best viewing chances.",
+    path: "/locations/",
+    schema: [collectionPageSchema({
+      title: "Northern lights forecast locations",
+      description: "A city and region index for Aurora Forecast Now.",
+      path: "/locations/",
+      items: forecast.cities.map((city) => ({ name: `${city.name}, ${city.region}`, path: `/cities/${city.slug}/` })),
+    }), breadcrumbSchema([["Home", "/"], ["Locations", "/locations/"]])],
+    body: `
+      <main class="city-page">
+        ${breadcrumbLinks([["Home", "../"], ["Locations", ""]])}
+        <section class="city-hero">
+          <div>
+            <p class="kicker">Location index</p>
+            <h1>Northern lights forecast locations</h1>
+            <p class="lead">Browse aurora forecast pages by city, country, and region. The live search box can also score cities that are not yet part of the saved city list.</p>
+          </div>
+          <aside class="verdict">
+            <span class="badge good">Live</span>
+            <div class="verdict-score">${forecast.cities.length}</div>
+            <p>Saved city pages plus dynamic lookup for custom city and coordinate searches.</p>
+          </aside>
+        </section>
+        <section class="section compact-section">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Top chances</p>
+              <h2>Best city pages right now</h2>
+            </div>
+          </div>
+          <div class="city-grid">
+            ${forecast.cities.slice(0, 12).map((city) => cityCard(city, "../")).join("")}
+          </div>
+        </section>
+        <section class="section compact-section">
+          <div class="guide-grid">
+            <article class="panel">
+              <p class="kicker">Countries</p>
+              <h3>Browse by country</h3>
+              ${linkCloud(cityCollections.countries.map((country) => [`../countries/${country.slug}/`, country.name]))}
+            </article>
+            <article class="panel">
+              <p class="kicker">Regions</p>
+              <h3>Browse by state or province</h3>
+              ${linkCloud(cityCollections.regions.slice(0, 18).map((region) => [`../states/${region.slug}/`, region.name]))}
+            </article>
+            <article class="panel">
+              <p class="kicker">Guides</p>
+              <h3>Learn the forecast signals</h3>
+              ${linkCloud(guidePages.map((guide) => [`../guides/${guide.slug}/`, guide.shortTitle]))}
+            </article>
+          </div>
+        </section>
+      </main>
+    `,
+  }));
+}
+
+function generateCountryPages() {
+  for (const country of cityCollections.countries) {
+    writePage(["countries", country.slug], layout({
+      title: `${country.name} Northern Lights Forecast Cities`,
+      description: `Browse aurora forecast pages for ${country.name}: city scores, cloud cover, Kp index, and viewing guidance.`,
+      path: `/countries/${country.slug}/`,
+      schema: [collectionPageSchema({
+        title: `${country.name} northern lights forecast`,
+        description: `Aurora forecast city collection for ${country.name}.`,
+        path: `/countries/${country.slug}/`,
+        items: country.cities.map((city) => ({ name: `${city.name}, ${city.region}`, path: `/cities/${city.slug}/` })),
+      }), breadcrumbSchema([["Home", "/"], ["Locations", "/locations/"], [country.name, `/countries/${country.slug}/`]])],
+      body: `
+        <main class="city-page">
+          ${breadcrumbLinks([["Home", "../../"], ["Locations", "../../locations/"], [country.name, ""]])}
+          <section class="city-hero">
+            <div>
+              <p class="kicker">Country collection</p>
+              <h1>${escapeHtml(country.name)} northern lights forecast</h1>
+              <p class="lead">Compare city-level aurora chances across ${escapeHtml(country.name)}. Scores combine NOAA aurora grid data, Kp forecast, latitude, and local cloud cover.</p>
+            </div>
+            <aside class="verdict">
+              <span class="badge ${labelClass(country.bestCity.label)}">${escapeHtml(country.bestCity.label)}</span>
+              <div class="verdict-score">${country.bestCity.score}</div>
+              <p>Best current city: ${escapeHtml(country.bestCity.name)}, ${escapeHtml(country.bestCity.region)}.</p>
+            </aside>
+          </section>
+          <section class="section compact-section">
+            <div class="city-grid">
+              ${country.cities.map((city) => cityCard(city, "../../")).join("")}
+            </div>
+          </section>
+        </main>
+      `,
+    }));
+  }
+}
+
+function generateRegionPages() {
+  for (const region of cityCollections.regions) {
+    writePage(["states", region.slug], layout({
+      title: `${region.name} Aurora Forecast Tonight`,
+      description: `Northern lights forecast pages for ${region.name}: local city scores, cloud cover, and current Kp context.`,
+      path: `/states/${region.slug}/`,
+      schema: [collectionPageSchema({
+        title: `${region.name} aurora forecast`,
+        description: `Aurora forecast city collection for ${region.name}.`,
+        path: `/states/${region.slug}/`,
+        items: region.cities.map((city) => ({ name: city.name, path: `/cities/${city.slug}/` })),
+      }), breadcrumbSchema([["Home", "/"], ["Locations", "/locations/"], [region.name, `/states/${region.slug}/`]])],
+      body: `
+        <main class="city-page">
+          ${breadcrumbLinks([["Home", "../../"], ["Locations", "../../locations/"], [region.name, ""]])}
+          <section class="city-hero">
+            <div>
+              <p class="kicker">State and region collection</p>
+              <h1>${escapeHtml(region.name)} aurora forecast</h1>
+              <p class="lead">Use this region page to compare nearby northern lights forecast pages before deciding whether to watch from town, drive north, or wait for a stronger alert.</p>
+            </div>
+            <aside class="verdict">
+              <span class="badge ${labelClass(region.bestCity.label)}">${escapeHtml(region.bestCity.label)}</span>
+              <div class="verdict-score">${region.bestCity.score}</div>
+              <p>Best current city: ${escapeHtml(region.bestCity.name)}.</p>
+            </aside>
+          </section>
+          <section class="section compact-section">
+            <div class="city-grid">
+              ${region.cities.map((city) => cityCard(city, "../../")).join("")}
+            </div>
+          </section>
+        </main>
+      `,
+    }));
+  }
+}
+
+function generateGuidePages() {
+  writePage(["guides"], layout({
+    title: "Northern Lights Forecast Guides",
+    description: "Plain-English guides for reading aurora forecasts, Kp index, cloud cover, and city-level northern lights chances.",
+    path: "/guides/",
+    schema: [collectionPageSchema({
+      title: "Northern lights forecast guides",
+      description: "Plain-English aurora forecast explainers.",
+      path: "/guides/",
+      items: guidePages.map((guide) => ({ name: guide.title, path: `/guides/${guide.slug}/` })),
+    }), breadcrumbSchema([["Home", "/"], ["Guides", "/guides/"]])],
+    body: `
+      <main class="city-page">
+        ${breadcrumbLinks([["Home", "../"], ["Guides", ""]])}
+        <section class="detail-hero">
+          <p class="kicker">Forecast guides</p>
+          <h1>Northern lights forecast guides</h1>
+          <p class="lead">Short, practical explainers for people who want to know whether tonight is worth a sky check, a camera attempt, or a drive to darker ground.</p>
+        </section>
+        <section class="guide-list" aria-label="Aurora forecast guides">
+          ${guidePages.map((guide) => guideCard(guide, "../")).join("")}
+        </section>
+      </main>
+    `,
+  }));
+
+  for (const guide of guidePages) {
+    writePage(["guides", guide.slug], layout({
+      title: guide.title,
+      description: guide.description,
+      path: `/guides/${guide.slug}/`,
+      schema: [guideSchema(guide), faqPageSchema(guide.faqs), breadcrumbSchema([["Home", "/"], ["Guides", "/guides/"], [guide.shortTitle, `/guides/${guide.slug}/`]])],
+      body: `
+        <main class="city-page">
+          ${breadcrumbLinks([["Home", "../../"], ["Guides", "../"], [guide.shortTitle, ""]])}
+          <article class="article-body">
+            <p class="kicker">${escapeHtml(guide.kicker)}</p>
+            <h1>${escapeHtml(guide.title)}</h1>
+            <p class="lead">${escapeHtml(guide.intro)}</p>
+            ${guide.sections.map((section) => `<section><h2>${escapeHtml(section.heading)}</h2>${section.paragraphs.map((text) => `<p>${escapeHtml(text)}</p>`).join("")}</section>`).join("")}
+            <section>
+              <h2>Quick answers</h2>
+              <div class="faq-grid">
+                ${guide.faqs.map((item) => `<article class="faq-item"><h3>${escapeHtml(item.q)}</h3><p>${escapeHtml(item.a)}</p></article>`).join("")}
+              </div>
+            </section>
+          </article>
+          <section class="section compact-section">
+            <div class="section-head">
+              <div>
+                <p class="kicker">Related city pages</p>
+                <h2>Check live city conditions</h2>
+              </div>
+            </div>
+            <div class="city-grid">
+              ${forecast.cities.slice(0, 6).map((city) => cityCard(city, "../../")).join("")}
+            </div>
+          </section>
+        </main>
+      `,
+    }));
+  }
+}
+
+function generateGlossaryPage() {
+  writePage(["glossary"], layout({
+    title: "Northern Lights Forecast Glossary",
+    description: "Plain-English definitions for aurora forecast terms such as Kp, aurora oval, G storm watch, cloud cover, and NOAA OVATION.",
+    path: "/glossary/",
+    schema: [faqPageSchema(glossaryEntriesList.map((entry) => ({ q: entry.term, a: entry.definition }))), breadcrumbSchema([["Home", "/"], ["Glossary", "/glossary/"]])],
+    body: `
+      <main class="city-page">
+        ${breadcrumbLinks([["Home", "../"], ["Glossary", ""]])}
+        <section class="detail-hero">
+          <p class="kicker">Glossary</p>
+          <h1>Northern lights forecast terms, explained</h1>
+          <p class="lead">Use this page when a forecast says Kp, G2 watch, aurora oval, OVATION, cloud cover, or magnetic latitude and you just need the practical meaning.</p>
+        </section>
+        <section class="glossary-grid" aria-label="Northern lights forecast glossary">
+          ${glossaryEntriesList.map((entry) => glossaryCard(entry)).join("")}
+        </section>
+      </main>
+    `,
+  }));
 }
 
 function generateUtilityPages() {
@@ -458,7 +767,13 @@ function generateUtilityPages() {
 function generateSitemap() {
   const urls = [
     { loc: "/", priority: "1.0", changefreq: "hourly" },
+    { loc: "/locations/", priority: "0.9", changefreq: "hourly" },
+    { loc: "/guides/", priority: "0.8", changefreq: "weekly" },
+    { loc: "/glossary/", priority: "0.7", changefreq: "monthly" },
     ...forecast.cities.map((city) => ({ loc: `/cities/${city.slug}/`, priority: city.priority === 1 ? "0.9" : "0.7", changefreq: "hourly" })),
+    ...cityCollections.countries.map((country) => ({ loc: `/countries/${country.slug}/`, priority: "0.7", changefreq: "hourly" })),
+    ...cityCollections.regions.map((region) => ({ loc: `/states/${region.slug}/`, priority: region.cities.length > 1 ? "0.7" : "0.5", changefreq: "hourly" })),
+    ...guidePages.map((guide) => ({ loc: `/guides/${guide.slug}/`, priority: guide.priority, changefreq: "weekly" })),
     { loc: "/about/", priority: "0.3", changefreq: "monthly" },
     { loc: "/contact/", priority: "0.3", changefreq: "monthly" },
     { loc: "/privacy/", priority: "0.3", changefreq: "monthly" },
@@ -489,6 +804,13 @@ function generateAdsTxt() {
 
 function layout({ title, description, path: pagePath, body, schema = [] }) {
   const canonical = `${site.url}${pagePath}`;
+  const pageBody = body.trim();
+  const headExtras = [
+    site.searchConsoleVerification ? `<meta name="google-site-verification" content="${escapeHtml(site.searchConsoleVerification)}">` : "",
+    site.googleAnalyticsId ? analyticsTag(site.googleAnalyticsId) : "",
+    site.adsenseClientId ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${escapeHtml(site.adsenseClientId)}" crossorigin="anonymous"></script>` : "",
+    ...schema.map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`),
+  ].filter(Boolean).map((item) => `  ${item}`).join("\n");
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -503,27 +825,25 @@ function layout({ title, description, path: pagePath, body, schema = [] }) {
   <meta property="og:type" content="website">
   <meta property="og:url" content="${canonical}">
   <meta name="twitter:card" content="summary_large_image">
-  ${site.searchConsoleVerification ? `<meta name="google-site-verification" content="${escapeHtml(site.searchConsoleVerification)}">` : ""}
-  ${site.googleAnalyticsId ? analyticsTag(site.googleAnalyticsId) : ""}
-  ${site.adsenseClientId ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${escapeHtml(site.adsenseClientId)}" crossorigin="anonymous"></script>` : ""}
-  ${schema.map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`).join("\n  ")}
+${headExtras}
 </head>
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Main navigation">
       <a class="brand" href="${relativeAsset(pagePath)}"><span class="brand-mark" aria-hidden="true"></span>${escapeHtml(site.name)}</a>
       <div class="nav-links">
-        <a href="${relativeAsset(pagePath)}#cities">Cities</a>
-        <a href="${relativeAsset(pagePath)}data/forecast.json">Data</a>
+        <a href="${relativeAsset(pagePath)}locations/">Locations</a>
+        <a href="${relativeAsset(pagePath)}guides/">Guides</a>
+        <a href="${relativeAsset(pagePath)}glossary/">Glossary</a>
         <a href="${relativeAsset(pagePath)}about/">About</a>
         <a href="${relativeAsset(pagePath)}contact/">Contact</a>
       </div>
     </nav>
   </header>
-  ${body}
+${pageBody}
   <footer class="footer">
     <div class="footer-inner">
-      <span>Forecast guidance, not a guarantee. Updated ${escapeHtml(formatDateTime(forecast.generatedAt))}.</span>
+      <span data-live-footer-updated>Forecast guidance, not a guarantee. Updated ${escapeHtml(formatDateTime(forecast.generatedAt))}.</span>
       <span><a href="${relativeAsset(pagePath)}privacy/">Privacy</a> · <a href="${relativeAsset(pagePath)}sitemap.xml">Sitemap</a></span>
     </div>
   </footer>
@@ -586,6 +906,212 @@ function nearbyCities(city) {
     .map((row) => row.candidate);
 }
 
+function buildCityCollections(cityRows) {
+  const countries = Array.from(groupBy(cityRows, (city) => city.country).entries())
+    .map(([countryName, rows]) => {
+      const sortedRows = sortCities(rows);
+      return {
+        slug: slugify(countryName),
+        name: countryName,
+        cities: sortedRows,
+        bestCity: sortedRows[0],
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const regions = Array.from(groupBy(cityRows, (city) => `${city.country}|||${city.region}`).entries())
+    .map(([key, rows]) => {
+      const [country, region] = key.split("|||");
+      const sortedRows = sortCities(rows);
+      return {
+        slug: slugify(`${region}-${country}`),
+        name: `${region}, ${country}`,
+        region,
+        country,
+        cities: sortedRows,
+        bestCity: sortedRows[0],
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  return { countries, regions };
+}
+
+function sortCities(cityRows) {
+  return [...cityRows].sort((a, b) => b.score - a.score || a.priority - b.priority || a.name.localeCompare(b.name));
+}
+
+function groupBy(rows, keyFn) {
+  const map = new Map();
+  for (const row of rows) {
+    const key = keyFn(row);
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(row);
+  }
+  return map;
+}
+
+function buildGuidePages() {
+  return [
+    {
+      slug: "how-to-read-aurora-forecast",
+      shortTitle: "Read the forecast",
+      title: "How to Read an Aurora Forecast Tonight",
+      description: "A practical guide to reading Kp, aurora oval position, cloud cover, and city-level northern lights scores.",
+      kicker: "Forecast basics",
+      priority: "0.8",
+      intro: "Aurora forecasts look technical, but the viewing decision is usually a simple mix of storm strength, aurora oval position, darkness, clouds, and how far north you are.",
+      sections: [
+        {
+          heading: "Start with location, not only Kp",
+          paragraphs: [
+            "A high Kp number is useful, but it does not guarantee visible aurora in every city. High-latitude cities can work with lower Kp, while mid-latitude cities usually need a stronger storm and a clear northern horizon.",
+            "Aurora Forecast Now scores each city by combining NOAA aurora grid intensity, latitude, Kp forecast, and local cloud cover so the decision is closer to a practical viewing plan.",
+          ],
+        },
+        {
+          heading: "Check clouds before you drive",
+          paragraphs: [
+            "Cloud cover can erase a good space-weather setup. A lower cloud number means a better local sky window, but it should still be checked against local radar and road conditions before a long drive.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Is Kp enough to decide whether to go outside?", a: "No. Kp describes geomagnetic activity, but visibility also depends on aurora oval position, latitude, darkness, cloud cover, and light pollution." },
+        { q: "What does a city score mean?", a: "The score is a practical viewing signal for the next local night window. It is guidance, not a guarantee." },
+      ],
+    },
+    {
+      slug: "kp-index-aurora-forecast",
+      shortTitle: "Kp index",
+      title: "Kp Index for Northern Lights Forecasts",
+      description: "What the Kp index means for aurora viewing and why high Kp does not always mean visible northern lights in your city.",
+      kicker: "Kp guide",
+      priority: "0.7",
+      intro: "Kp is a global geomagnetic index. It helps describe storm strength, but it should be read together with local sky conditions and aurora oval position.",
+      sections: [
+        {
+          heading: "What Kp measures",
+          paragraphs: [
+            "Kp summarizes geomagnetic disturbance on a planetary scale. A higher number usually means the aurora oval can push farther south, which improves the chance for mid-latitude viewers.",
+            "For a city-level forecast, Kp is one signal among several. A strong Kp value with heavy clouds can still be a bad viewing night.",
+          ],
+        },
+        {
+          heading: "How to use Kp for city decisions",
+          paragraphs: [
+            "High-latitude locations can see aurora at lower Kp values. Cities farther south often need Kp 5 or higher, plus darkness and a clear northern horizon.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "What Kp do I need to see aurora?", a: "It depends on latitude. Northern cities can work at lower Kp; mid-latitude cities often need Kp 5 or stronger." },
+        { q: "Can Kp be high while my city score is low?", a: "Yes. Clouds, twilight, light pollution, and aurora oval position can all lower the local viewing chance." },
+      ],
+    },
+    {
+      slug: "cloud-cover-aurora-viewing",
+      shortTitle: "Cloud cover",
+      title: "Cloud Cover and Northern Lights Viewing",
+      description: "How cloud cover affects aurora viewing and why a clear local sky can matter as much as the space-weather forecast.",
+      kicker: "Sky conditions",
+      priority: "0.7",
+      intro: "A strong aurora forecast still needs a clear sky. Cloud cover is the local filter between space weather and what you can actually see.",
+      sections: [
+        {
+          heading: "Why clouds change the plan",
+          paragraphs: [
+            "Clouds block visible aurora even when geomagnetic conditions are favorable. That is why city-level guidance should include both space weather and weather data.",
+            "The best viewing plan often means finding a nearby cloud break, not simply driving to the darkest location on the map.",
+          ],
+        },
+        {
+          heading: "Use the clearest window",
+          paragraphs: [
+            "Aurora Forecast Now looks at near-term cloud cover to surface the best local window. If the score is borderline, a short clear break can still make a camera-first attempt worthwhile.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Can I see aurora through thin clouds?", a: "Sometimes a camera may catch glow through thin cloud, but naked-eye viewing usually needs clearer sky." },
+        { q: "Should I drive if clouds are high?", a: "Only if nearby forecasts show a credible clearing window and roads are safe. Space weather alone is not enough." },
+      ],
+    },
+    {
+      slug: "aurora-oval-map",
+      shortTitle: "Aurora oval map",
+      title: "Aurora Oval Map: What It Means Tonight",
+      description: "A plain-English explanation of the aurora oval, NOAA OVATION maps, and why city latitude matters.",
+      kicker: "Aurora map",
+      priority: "0.7",
+      intro: "The aurora oval is the zone where northern lights are most likely. When geomagnetic activity increases, that oval can brighten and expand toward lower latitudes.",
+      sections: [
+        {
+          heading: "What the oval tells you",
+          paragraphs: [
+            "NOAA aurora maps estimate where aurora is more likely in the near term. A city closer to stronger grid values has a better setup than a city far outside the active oval.",
+            "The map is not a promise. Local clouds, moonlight, twilight, and horizon quality still decide whether you can actually see anything.",
+          ],
+        },
+        {
+          heading: "Why city pages use the nearest grid",
+          paragraphs: [
+            "Each static city page compares the city location to the nearest NOAA aurora grid point. That keeps the forecast local enough to be useful without pretending the model is street-level precise.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Is the aurora oval the same as the visible aurora?", a: "No. It is a forecast probability zone. Visibility also depends on darkness, weather, and local light pollution." },
+        { q: "Why do nearby cities have different scores?", a: "Latitude, cloud cover, and distance to the modeled aurora grid can differ enough to change the practical score." },
+      ],
+    },
+  ];
+}
+
+function glossaryEntries() {
+  return [
+    { term: "Aurora oval", definition: "The ring-shaped region around the magnetic pole where aurora is most likely. During stronger storms it can brighten and expand toward lower latitudes." },
+    { term: "Kp index", definition: "A global geomagnetic activity scale. Higher Kp often means aurora can reach farther south, but local visibility still depends on sky conditions." },
+    { term: "G storm watch", definition: "A NOAA geomagnetic storm watch category. G2 or stronger watches are useful signals for more frequent aurora forecast checks." },
+    { term: "NOAA OVATION", definition: "A NOAA aurora forecast model that estimates short-term aurora probability and intensity across a geographic grid." },
+    { term: "Cloud cover", definition: "The share of the sky expected to be covered by clouds. Lower cloud cover improves local aurora viewing chances." },
+    { term: "Northern horizon", definition: "The part of the sky facing north. Mid-latitude viewers often need a dark, open northern horizon to catch low aurora." },
+    { term: "Camera-first aurora", definition: "A weak aurora setup where a phone or camera may capture color before the naked eye sees a clear display." },
+    { term: "Stale-while-revalidate", definition: "A caching pattern where the page can show recent old data while the system refreshes the newest forecast in the background." },
+  ];
+}
+
+function linkCloud(items) {
+  return `<div class="link-cloud">
+    ${items.map(([href, label]) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`).join("")}
+  </div>`;
+}
+
+function guideCard(guide, prefix) {
+  return `<article class="panel guide-card">
+    <p class="kicker">${escapeHtml(guide.kicker)}</p>
+    <h2><a href="${prefix}guides/${guide.slug}/">${escapeHtml(guide.title)}</a></h2>
+    <p>${escapeHtml(guide.description)}</p>
+    <a class="text-link" href="${prefix}guides/${guide.slug}/">Read guide</a>
+  </article>`;
+}
+
+function glossaryCard(entry) {
+  return `<article class="faq-item glossary-card">
+    <h2>${escapeHtml(entry.term)}</h2>
+    <p>${escapeHtml(entry.definition)}</p>
+  </article>`;
+}
+
+function breadcrumbLinks(items) {
+  return `<nav class="breadcrumb" aria-label="Breadcrumb">
+    ${items.map(([label, href], index) => {
+      const isLast = index === items.length - 1 || !href;
+      return isLast ? `<span>${escapeHtml(label)}</span>` : `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`;
+    }).join("<span>/</span>")}
+  </nav>`;
+}
+
 function faqItems() {
   return [
     {
@@ -598,7 +1124,7 @@ function faqItems() {
     },
     {
       q: "How often should this forecast update?",
-      a: "The MVP can rebuild every 15 to 60 minutes. During a G2 or stronger watch, a Worker cache can refresh popular cities more frequently.",
+      a: "The public forecast can update from official feeds throughout the day. During a G2 or stronger watch, the live cache can refresh more frequently.",
     },
   ];
 }
@@ -610,6 +1136,11 @@ function websiteSchema() {
     name: site.name,
     url: site.url,
     description: site.description,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${site.url}/api/forecast?city={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
   };
 }
 
@@ -628,27 +1159,102 @@ function cityPageSchema(city) {
   };
 }
 
-function breadcrumbSchema(city) {
+function cityFaqItems(city) {
+  return [
+    {
+      q: `Can I see the northern lights in ${city.name} tonight?`,
+      a: city.guidance,
+    },
+    {
+      q: `What matters most for ${city.name}?`,
+      a: `Watch the city score, Kp forecast, cloud cover, and whether you can find a dark northern horizon away from bright local lights.`,
+    },
+    {
+      q: `How often does the ${city.name} forecast update?`,
+      a: "The static page is rebuilt from official feeds, while the live API can refresh from Cloudflare KV more frequently during storm watches.",
+    },
+  ];
+}
+
+function cityFaqSchema(city) {
+  return faqPageSchema(cityFaqItems(city));
+}
+
+function collectionPageSchema({ title, description, path: pagePath, items }) {
   return {
     "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
-      { "@type": "ListItem", position: 2, name: city.name, item: `${site.url}/cities/${city.slug}/` },
-    ],
+    "@type": "CollectionPage",
+    name: title,
+    description,
+    url: `${site.url}${pagePath}`,
+    isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        url: `${site.url}${item.path}`,
+      })),
+    },
+    inLanguage: "en",
   };
 }
 
-function faqSchema() {
+function guideSchema(guide) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: guide.title,
+    description: guide.description,
+    url: `${site.url}/guides/${guide.slug}/`,
+    isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+    dateModified: now.toISOString(),
+    inLanguage: "en",
+  };
+}
+
+function breadcrumbSchema(items) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map(([name, item], index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name,
+      item: `${site.url}${item === "/" ? "" : item}`,
+    })),
+  };
+}
+
+function faqPageSchema(items) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faqItems().map((item) => ({
+    mainEntity: items.map((item) => ({
       "@type": "Question",
       name: item.q,
       acceptedAnswer: { "@type": "Answer", text: item.a },
     })),
   };
+}
+
+function faqSchema() {
+  return faqPageSchema(faqItems());
+}
+
+function regionSlug(city) {
+  return slugify(`${city.region}-${city.country}`);
+}
+
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80) || "location";
 }
 
 function normalizeUrl(value) {

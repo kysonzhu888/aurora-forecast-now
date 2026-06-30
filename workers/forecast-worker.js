@@ -3,6 +3,7 @@ import media from "../data/media.json";
 
 const CACHE_KEY = "forecast:latest";
 const LOCK_KEY = "forecast:refresh-lock";
+const GEOCODE_PREFIX = "geocode:";
 const NORMAL_MAX_AGE_SECONDS = 30 * 60;
 const STORM_MAX_AGE_SECONDS = 5 * 60;
 const LOCK_TTL_SECONDS = 90;
@@ -12,6 +13,7 @@ const endpoints = {
   ovation: "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json",
   kp: "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json",
   alerts: "https://services.swpc.noaa.gov/products/alerts.json",
+  geocoding: "https://geocoding-api.open-meteo.com/v1/search",
 };
 
 export default {
@@ -30,27 +32,45 @@ export default {
 
 async function handleForecast(request, env, ctx) {
   const url = new URL(request.url);
-  const citySlug = url.searchParams.get("city");
+  const locationRequest = await parseLocationRequest(url, env);
+  if (locationRequest.type === "not-found") {
+    return withCors(jsonResponse({
+      error: "City not found",
+      query: locationRequest.query,
+      message: "Try a larger nearby city or latitude/longitude.",
+    }, 404));
+  }
   const cached = await readCachedForecast(env);
 
   if (cached) {
+    if (locationRequest.type !== "none" && !cached.rawCoordinates?.length) {
+      const refreshed = await refreshWithLock(env, { reason: "request-dynamic-city-needs-grid" });
+      if (refreshed?.rawCoordinates?.length) {
+        return withCors(jsonResponse(await shapeResponse(refreshed, {
+          status: "fresh",
+          ageSeconds: 0,
+          maxAgeSeconds: maxAgeFor(refreshed),
+          locationRequest,
+        })));
+      }
+    }
     const ageSeconds = ageOf(cached);
     const maxAgeSeconds = maxAgeFor(cached);
     const status = ageSeconds > maxAgeSeconds ? "stale" : "fresh";
     if (status === "stale") {
       ctx.waitUntil(refreshWithLock(env, { reason: "request-stale" }));
     }
-    return withCors(jsonResponse(shapeResponse(cached, { status, ageSeconds, maxAgeSeconds, citySlug })));
+    return withCors(jsonResponse(await shapeResponse(cached, { status, ageSeconds, maxAgeSeconds, locationRequest })));
   }
 
   try {
     const fresh = await refreshWithLock(env, { reason: "request-empty-cache" });
     if (fresh) {
-      return withCors(jsonResponse(shapeResponse(fresh, {
+      return withCors(jsonResponse(await shapeResponse(fresh, {
         status: "fresh",
         ageSeconds: 0,
         maxAgeSeconds: maxAgeFor(fresh),
-        citySlug,
+        locationRequest,
       })));
     }
   } catch (error) {
@@ -58,11 +78,11 @@ async function handleForecast(request, env, ctx) {
   }
 
   const fallback = await fetchFallbackForecast();
-  return withCors(jsonResponse(shapeResponse(fallback, {
+  return withCors(jsonResponse(await shapeResponse(fallback, {
     status: "fallback",
     ageSeconds: ageOf(fallback),
     maxAgeSeconds: NORMAL_MAX_AGE_SECONDS,
-    citySlug,
+    locationRequest,
     warning: "Serving static fallback because KV cache is empty.",
   })));
 }
@@ -178,6 +198,7 @@ async function buildForecast(options = {}) {
     dataSources: media.dataSources,
     cities: cityForecasts,
     mapDots: buildMapDots(coordinates),
+    rawCoordinates: coordinates,
     worker: {
       reason: options.reason || "manual",
       durationMs: Date.now() - startedAt,
@@ -219,6 +240,71 @@ async function fetchCloudCover(cityRows) {
     });
   }
   return result;
+}
+
+async function resolveCityQuery(query, env) {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return null;
+
+  const preset = cities.find((city) => {
+    const haystack = `${city.slug} ${city.name} ${city.region} ${city.country}`.toLowerCase();
+    return city.slug === normalized || haystack === normalized || `${city.name}, ${city.region}`.toLowerCase() === normalized;
+  });
+  if (preset) return preset;
+
+  const cacheKey = `${GEOCODE_PREFIX}${normalized}`;
+  const cached = await env.AURORA_FORECAST_CACHE.get(cacheKey, "json");
+  if (cached) return cached;
+
+  const endpoint = `${endpoints.geocoding}?name=${encodeURIComponent(query)}&count=1&language=en&format=json`;
+  const data = await fetchJson(endpoint, "open-meteo-geocoding");
+  const match = data?.results?.[0];
+  if (!match) return null;
+
+  const city = {
+    slug: slugify(`${match.name}-${match.admin1 || match.country_code || match.country}`),
+    name: match.name,
+    region: match.admin1 || match.admin2 || match.country || "",
+    country: match.country || "",
+    lat: match.latitude,
+    lon: match.longitude,
+    timezone: match.timezone || "UTC",
+    priority: 9,
+    source: "open-meteo-geocoding",
+  };
+  await env.AURORA_FORECAST_CACHE.put(cacheKey, JSON.stringify(city), { expirationTtl: 30 * 24 * 60 * 60 });
+  return city;
+}
+
+async function parseLocationRequest(url, env) {
+  const latParam = url.searchParams.get("lat");
+  const lonParam = url.searchParams.get("lon");
+  const hasCoordinates = latParam != null && lonParam != null;
+  const lat = hasCoordinates ? Number(latParam) : null;
+  const lon = hasCoordinates ? Number(lonParam) : null;
+  if (hasCoordinates && Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+    return {
+      type: "coordinates",
+      city: {
+        slug: `lat-${round1(lat)}-lon-${round1(lon)}`.replaceAll(".", "-"),
+        name: "Custom location",
+        region: "",
+        country: "",
+        lat,
+        lon,
+        timezone: "UTC",
+        priority: 9,
+        source: "coordinates",
+      },
+    };
+  }
+
+  const rawCity = url.searchParams.get("city") || url.searchParams.get("q");
+  if (!rawCity) return { type: "none", city: null };
+
+  const resolved = await resolveCityQuery(rawCity, env);
+  if (!resolved) return { type: "not-found", query: rawCity, city: null };
+  return { type: "city", query: rawCity, city: resolved };
 }
 
 async function fetchFallbackForecast() {
@@ -277,10 +363,11 @@ function parseAlertInfo(rows) {
   };
 }
 
-function shapeResponse(forecast, meta) {
-  const city = meta.citySlug ? forecast.cities.find((candidate) => candidate.slug === meta.citySlug) || null : null;
+async function shapeResponse(forecast, meta) {
+  const city = await resolveResponseCity(forecast, meta.locationRequest);
+  const { rawCoordinates, ...publicForecast } = forecast;
   return {
-    ...forecast,
+    ...publicForecast,
     city,
     cache: {
       status: meta.status,
@@ -292,6 +379,48 @@ function shapeResponse(forecast, meta) {
       refreshAfterSeconds: Math.max(0, meta.maxAgeSeconds - Math.round(meta.ageSeconds || 0)),
     },
   };
+}
+
+async function resolveResponseCity(forecast, locationRequest) {
+  if (!locationRequest || locationRequest.type === "none") return null;
+  if (!locationRequest.city) return null;
+
+  const cachedCity = forecast.cities.find((candidate) => candidate.slug === locationRequest.city.slug);
+  if (cachedCity) return { ...cachedCity, source: locationRequest.city.source || "preset" };
+
+  const city = locationRequest.city;
+  const aurora = nearestAurora(forecast.rawCoordinates || [], city);
+  const clouds = await fetchSingleCloudCover(city);
+  const score = scoreCity(city, aurora.value, forecast.maxKp, clouds.bestCloud);
+  const label = labelForScore(score);
+  return {
+    ...city,
+    aurora: aurora.value,
+    gridLat: aurora.lat,
+    gridLon: aurora.lon,
+    bestCloud: clouds.bestCloud,
+    avgCloud: clouds.avgCloud,
+    score,
+    label,
+    watchWindow: "10:00 PM to 2:00 AM local time",
+    guidance: guidanceFor(city, score, forecast.maxKp, clouds.bestCloud),
+    source: city.source || "dynamic",
+  };
+}
+
+async function fetchSingleCloudCover(city) {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&hourly=cloud_cover&timezone=UTC&forecast_days=2`;
+    const json = await fetchJson(url, "open-meteo-single");
+    const cloudValues = (json?.hourly?.cloud_cover || []).slice(0, 24).filter((value) => Number.isFinite(value));
+    return {
+      bestCloud: cloudValues.length ? Math.min(...cloudValues) : null,
+      avgCloud: cloudValues.length ? Math.round(cloudValues.reduce((sum, value) => sum + value, 0) / cloudValues.length) : null,
+    };
+  } catch (error) {
+    console.warn(`Dynamic cloud lookup failed: ${error.message}`);
+    return { bestCloud: null, avgCloud: null };
+  }
 }
 
 async function readCachedForecast(env) {
@@ -403,6 +532,16 @@ function normalizeLon(lon) {
 
 function round1(value) {
   return Math.round(value * 10) / 10;
+}
+
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80) || "custom-location";
 }
 
 function jsonResponse(payload, status = 200) {

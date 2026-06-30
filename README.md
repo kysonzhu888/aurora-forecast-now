@@ -10,6 +10,10 @@ Aurora Forecast Now is a city-level northern lights forecast site. It turns publ
 - NOAA SWPC Planetary K Index forecast
 - Open-Meteo cloud cover forecast
 - Pre-generated city pages for SEO
+- Country, state/region, guide, and glossary collection pages
+- WebSite, CollectionPage, ItemList, FAQPage, Article, and Breadcrumb structured data
+- Live city lookup for arbitrary city names via Open-Meteo geocoding
+- Latitude/longitude forecast lookup for custom locations
 - Static sitemap, robots.txt, ads.txt, About, Contact, and Privacy pages
 - 36 city forecast pages at launch
 
@@ -22,7 +26,7 @@ tools/build.mjs
   -> fetch NOAA / Open-Meteo data
   -> score cities
   -> generate forecast JSON
-  -> generate homepage and city pages
+  -> generate homepage, city pages, location collections, guides, and glossary
   -> generate sitemap / robots / ads.txt
 
 Cloudflare Pages
@@ -34,15 +38,36 @@ The live forecast layer now runs on Cloudflare Worker + KV:
 ```text
 auroraforecastnow.com/api/forecast
   -> read latest forecast from KV
+  -> resolve city names through preset cities or Open-Meteo geocoding
+  -> score arbitrary coordinates against the latest NOAA aurora grid
   -> return stale data when expired
   -> refresh in the background
+
+auroraforecastnow.com/api/forecast?city=Tokyo
+auroraforecastnow.com/api/forecast?q=Oslo
+auroraforecastnow.com/api/forecast?lat=40.7128&lon=-74.0060
+  -> live city / coordinate lookup
+  -> geocoding results cached in KV for 30 days
 
 Cron trigger: */5 * * * *
   -> normal mode: full refresh every 30 minutes
   -> storm mode: full refresh every 5 minutes when NOAA alerts include G2+
 ```
 
-D1 is still reserved for later user-facing features such as email alerts, favorites, observations, and historical forecast analytics.
+The 36 generated city pages are SEO entry pages, not the product limit. The live API can score any resolved city or valid latitude/longitude. D1 is still reserved for later user-facing features such as email alerts, favorites, observations, and historical forecast analytics.
+
+## SEO Page Matrix
+
+- `/locations/`: full city index and collection hub
+- `/countries/<country>/`: country-level city collections
+- `/states/<region-country>/`: state, province, and region city collections
+- `/guides/`: evergreen aurora forecast guide index
+- `/guides/how-to-read-aurora-forecast/`
+- `/guides/kp-index-aurora-forecast/`
+- `/guides/cloud-cover-aurora-viewing/`
+- `/guides/aurora-oval-map/`
+- `/glossary/`: plain-English forecast terms
+- `sitemap.xml`: 73 URLs after the SEO matrix expansion
 
 Build:
 
@@ -81,4 +106,7 @@ npx wrangler deploy --config wrangler.worker.toml
 curl https://auroraforecastnow.com/api/health
 curl https://auroraforecastnow.com/api/forecast
 curl 'https://auroraforecastnow.com/api/forecast?city=fairbanks'
+curl 'https://auroraforecastnow.com/api/forecast?city=Tokyo'
+curl 'https://auroraforecastnow.com/api/forecast?q=Oslo'
+curl 'https://auroraforecastnow.com/api/forecast?lat=40.7128&lon=-74.0060'
 ```

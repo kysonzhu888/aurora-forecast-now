@@ -188,6 +188,34 @@ button.button {
   padding: 8px;
 }
 
+.live-result {
+  background: rgba(244, 247, 239, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-top: 12px;
+  max-width: 620px;
+  padding: 16px;
+}
+
+.live-result strong {
+  color: var(--text);
+}
+
+.live-result .result-score {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.live-result .score {
+  font-size: 2.5rem;
+}
+
+.live-result p {
+  margin: 8px 0 0;
+}
+
 .search-box input {
   background: transparent;
   border: 0;
@@ -385,12 +413,78 @@ button.button {
   padding: 24px;
 }
 
+.compact-section {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .guide-grid,
 .source-grid,
 .faq-grid {
   display: grid;
   gap: 14px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.guide-list {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.guide-card h2 {
+  font-size: 1.35rem;
+}
+
+.link-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.link-cloud a,
+.text-link {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  display: inline-flex;
+  font-size: 0.9rem;
+  font-weight: 720;
+  padding: 7px 10px;
+}
+
+.link-cloud a:hover,
+.text-link:hover {
+  border-color: rgba(116, 242, 164, 0.55);
+}
+
+.article-body {
+  max-width: 860px;
+}
+
+.article-body section {
+  margin-top: 34px;
+}
+
+.article-body h2 {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.detail-hero {
+  max-width: 860px;
+}
+
+.glossary-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.glossary-card h2 {
+  font-size: 1.18rem;
 }
 
 .source-card,
@@ -405,10 +499,17 @@ button.button {
 }
 
 .breadcrumb {
+  align-items: center;
   color: var(--muted);
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   font-size: 0.9rem;
+  gap: 8px;
   margin-bottom: 24px;
+}
+
+.breadcrumb a {
+  color: var(--text);
 }
 
 .city-hero {
@@ -494,6 +595,8 @@ button.button {
   .guide-grid,
   .source-grid,
   .faq-grid,
+  .guide-list,
+  .glossary-grid,
   .hero-meta {
     grid-template-columns: 1fr;
   }
