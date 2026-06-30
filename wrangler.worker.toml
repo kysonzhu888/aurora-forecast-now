@@ -1,0 +1,15 @@
+name = "aurora-forecast-now-api"
+main = "workers/forecast-worker.js"
+compatibility_date = "2026-06-30"
+workers_dev = true
+
+routes = [
+  { pattern = "auroraforecastnow.com/api/*", zone_name = "auroraforecastnow.com" }
+]
+
+kv_namespaces = [
+  { binding = "AURORA_FORECAST_CACHE", id = "d9e81de8d6034fa291e829ba93aa1132" }
+]
+
+[triggers]
+crons = ["*/5 * * * *"]

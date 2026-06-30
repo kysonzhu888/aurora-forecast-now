@@ -274,7 +274,9 @@ function generateHomePage() {
                 <div class="metric"><span>Max Kp next 36h</span><strong>${forecast.maxKp || "N/A"}</strong></div>
                 <div class="metric"><span>NOAA forecast time</span><strong>${formatDateTime(forecast.forecastTime)}</strong></div>
                 <div class="metric"><span>Best city now</span><strong>${escapeHtml(topCities[0]?.name || "Checking")}</strong></div>
+                <div class="metric"><span>Live cache</span><strong data-live-status>Static fallback</strong></div>
               </div>
+              <p class="live-note" data-live-note>Updated from the static build. Live API status will appear when available.</p>
             </div>
             ${auroraVisual(topCities.slice(0, 4))}
           </div>
@@ -547,22 +549,22 @@ function auroraVisual(cityRows) {
 }
 
 function cityCard(city, prefix) {
-  return `<a class="city-card" data-city-card data-search="${escapeHtml(`${city.name} ${city.region} ${city.country}`.toLowerCase())}" href="${prefix}cities/${city.slug}/">
+  return `<a class="city-card" data-city-card data-city-slug="${escapeHtml(city.slug)}" data-search="${escapeHtml(`${city.name} ${city.region} ${city.country}`.toLowerCase())}" href="${prefix}cities/${city.slug}/">
     <div class="card-top">
       <div>
         <h3>${escapeHtml(city.name)}</h3>
         <p>${escapeHtml(city.region)}</p>
       </div>
-      <span class="badge ${labelClass(city.label)}">${escapeHtml(city.label)}</span>
+      <span class="badge ${labelClass(city.label)}" data-city-label>${escapeHtml(city.label)}</span>
     </div>
     <div class="score-row">
-      <span class="score">${city.score}</span>
+      <span class="score" data-city-score>${city.score}</span>
       <p>${escapeHtml(city.watchWindow)}</p>
     </div>
     <div class="mini-stats">
-      <span>Kp ${forecast.maxKp || "N/A"}</span>
-      <span>Cloud ${city.bestCloud == null ? "N/A" : `${city.bestCloud}%`}</span>
-      <span>Aurora ${city.aurora}</span>
+      <span data-city-kp>Kp ${forecast.maxKp || "N/A"}</span>
+      <span data-city-cloud>Cloud ${city.bestCloud == null ? "N/A" : `${city.bestCloud}%`}</span>
+      <span data-city-aurora>Aurora ${city.aurora}</span>
       <span>${escapeHtml(city.country)}</span>
     </div>
   </a>`;

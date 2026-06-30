@@ -29,7 +29,20 @@ Cloudflare Pages
   -> hosts the generated static site
 ```
 
-This can later evolve into Cloudflare Worker + KV/D1 for higher-frequency refreshes, user alerts, and historical forecast storage.
+The live forecast layer now runs on Cloudflare Worker + KV:
+
+```text
+auroraforecastnow.com/api/forecast
+  -> read latest forecast from KV
+  -> return stale data when expired
+  -> refresh in the background
+
+Cron trigger: */5 * * * *
+  -> normal mode: full refresh every 30 minutes
+  -> storm mode: full refresh every 5 minutes when NOAA alerts include G2+
+```
+
+D1 is still reserved for later user-facing features such as email alerts, favorites, observations, and historical forecast analytics.
 
 Build:
 
@@ -48,6 +61,12 @@ rsync -a --exclude '.deploy' --exclude 'tools' --exclude 'site.config.json' --ex
 npx wrangler pages deploy .deploy --project-name aurora-forecast-now --branch main
 ```
 
+Deploy Worker:
+
+```bash
+npx wrangler deploy --config wrangler.worker.toml
+```
+
 ## Data Sources
 
 - NOAA SWPC Aurora 30 Minute Forecast
@@ -55,3 +74,11 @@ npx wrangler pages deploy .deploy --project-name aurora-forecast-now --branch ma
 - NOAA SWPC Planetary K Index Forecast JSON
 - NOAA SWPC Alerts JSON
 - Open-Meteo Forecast API
+
+## Live API
+
+```bash
+curl https://auroraforecastnow.com/api/health
+curl https://auroraforecastnow.com/api/forecast
+curl 'https://auroraforecastnow.com/api/forecast?city=fairbanks'
+```
