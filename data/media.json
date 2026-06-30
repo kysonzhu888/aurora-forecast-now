@@ -1,0 +1,26 @@
+{
+  "generatedVisuals": [
+    {
+      "id": "aurora-oval-map",
+      "title": "Aurora oval forecast map",
+      "source": "Generated from NOAA SWPC OVATION aurora forecast grid",
+      "sourceUrl": "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json",
+      "license": "NOAA public data",
+      "licenseUrl": "https://www.weather.gov/disclaimer"
+    }
+  ],
+  "dataSources": [
+    {
+      "name": "NOAA SWPC OVATION Aurora Forecast",
+      "url": "https://www.spaceweather.gov/products/aurora-30-minute-forecast"
+    },
+    {
+      "name": "NOAA SWPC Planetary K Index Forecast",
+      "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json"
+    },
+    {
+      "name": "Open-Meteo Forecast API",
+      "url": "https://open-meteo.com/"
+    }
+  ]
+}

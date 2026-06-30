@@ -1,0 +1,12 @@
+.DS_Store
+node_modules/
+*.log
+
+# Local deployment/cache artifacts
+.deploy/
+.wrangler/
+*.zip
+
+# Internal handoff notes stay local. Keep the public README.
+*.md
+!README.md

@@ -1,0 +1,2629 @@
+{
+  "generatedAt": "2026-06-30T05:51:48.412Z",
+  "observationTime": "2026-06-30T05:48:00Z",
+  "forecastTime": "2026-06-30T07:04:00Z",
+  "maxKp": 4.3,
+  "stormSummary": "WATCH: Geomagnetic Storm Category G1 Predicted Highest Storm Level Predicted by Day: Jun 28:  None (Below G1)   Jun 29:  G1 (Minor)   Jun 30:  G1 (Minor) THIS SUPERSEDES ANY/ALL PRIOR WATCHES IN EFFECT",
+  "dataSources": [
+    {
+      "name": "NOAA SWPC OVATION Aurora Forecast",
+      "url": "https://www.spaceweather.gov/products/aurora-30-minute-forecast"
+    },
+    {
+      "name": "NOAA SWPC Planetary K Index Forecast",
+      "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json"
+    },
+    {
+      "name": "Open-Meteo Forecast API",
+      "url": "https://open-meteo.com/"
+    }
+  ],
+  "cities": [
+    {
+      "slug": "yellowknife",
+      "name": "Yellowknife",
+      "region": "Northwest Territories",
+      "country": "Canada",
+      "lat": 62.454,
+      "lon": -114.3718,
+      "timezone": "America/Yellowknife",
+      "priority": 1,
+      "aurora": 11,
+      "gridLat": 62,
+      "gridLon": -114,
+      "bestCloud": 0,
+      "avgCloud": 9,
+      "score": 83,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Yellowknife. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "fairbanks",
+      "name": "Fairbanks",
+      "region": "Alaska",
+      "country": "United States",
+      "lat": 64.8378,
+      "lon": -147.7164,
+      "timezone": "America/Anchorage",
+      "priority": 1,
+      "aurora": 5,
+      "gridLat": 65,
+      "gridLon": -148,
+      "bestCloud": 6,
+      "avgCloud": 54,
+      "score": 76,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Fairbanks. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "reykjavik",
+      "name": "Reykjavik",
+      "region": "Capital Region",
+      "country": "Iceland",
+      "lat": 64.1466,
+      "lon": -21.9426,
+      "timezone": "Atlantic/Reykjavik",
+      "priority": 1,
+      "aurora": 2,
+      "gridLat": 64,
+      "gridLon": -22,
+      "bestCloud": 0,
+      "avgCloud": 91,
+      "score": 71,
+      "label": "Good",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Reykjavik has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+    },
+    {
+      "slug": "anchorage",
+      "name": "Anchorage",
+      "region": "Alaska",
+      "country": "United States",
+      "lat": 61.2181,
+      "lon": -149.9003,
+      "timezone": "America/Anchorage",
+      "priority": 1,
+      "aurora": 1,
+      "gridLat": 61,
+      "gridLon": -150,
+      "bestCloud": 4,
+      "avgCloud": 91,
+      "score": 66,
+      "label": "Good",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Anchorage has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+    },
+    {
+      "slug": "edmonton",
+      "name": "Edmonton",
+      "region": "Alberta",
+      "country": "Canada",
+      "lat": 53.5461,
+      "lon": -113.4938,
+      "timezone": "America/Edmonton",
+      "priority": 1,
+      "aurora": 3,
+      "gridLat": 54,
+      "gridLon": -113,
+      "bestCloud": 0,
+      "avgCloud": 19,
+      "score": 60,
+      "label": "Good",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Edmonton has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+    },
+    {
+      "slug": "calgary",
+      "name": "Calgary",
+      "region": "Alberta",
+      "country": "Canada",
+      "lat": 51.0447,
+      "lon": -114.0719,
+      "timezone": "America/Edmonton",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 51,
+      "gridLon": -114,
+      "bestCloud": 0,
+      "avgCloud": 33,
+      "score": 52,
+      "label": "Good",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Calgary has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+    },
+    {
+      "slug": "winnipeg",
+      "name": "Winnipeg",
+      "region": "Manitoba",
+      "country": "Canada",
+      "lat": 49.8951,
+      "lon": -97.1384,
+      "timezone": "America/Winnipeg",
+      "priority": 1,
+      "aurora": 1,
+      "gridLat": 50,
+      "gridLon": -97,
+      "bestCloud": 1,
+      "avgCloud": 47,
+      "score": 52,
+      "label": "Good",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Winnipeg has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+    },
+    {
+      "slug": "grand-forks",
+      "name": "Grand Forks",
+      "region": "North Dakota",
+      "country": "United States",
+      "lat": 47.9253,
+      "lon": -97.0329,
+      "timezone": "America/Chicago",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 48,
+      "gridLon": -97,
+      "bestCloud": 0,
+      "avgCloud": 16,
+      "score": 48,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Grand Forks, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "duluth",
+      "name": "Duluth",
+      "region": "Minnesota",
+      "country": "United States",
+      "lat": 46.7867,
+      "lon": -92.1005,
+      "timezone": "America/Chicago",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 47,
+      "gridLon": -92,
+      "bestCloud": 0,
+      "avgCloud": 48,
+      "score": 47,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Duluth, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "fargo",
+      "name": "Fargo",
+      "region": "North Dakota",
+      "country": "United States",
+      "lat": 46.8772,
+      "lon": -96.7898,
+      "timezone": "America/Chicago",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 47,
+      "gridLon": -97,
+      "bestCloud": 0,
+      "avgCloud": 7,
+      "score": 47,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Fargo, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "marquette",
+      "name": "Marquette",
+      "region": "Michigan",
+      "country": "United States",
+      "lat": 46.5436,
+      "lon": -87.3954,
+      "timezone": "America/Detroit",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 47,
+      "gridLon": -87,
+      "bestCloud": 0,
+      "avgCloud": 60,
+      "score": 46,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Marquette, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "spokane",
+      "name": "Spokane",
+      "region": "Washington",
+      "country": "United States",
+      "lat": 47.6588,
+      "lon": -117.426,
+      "timezone": "America/Los_Angeles",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 48,
+      "gridLon": -117,
+      "bestCloud": 11,
+      "avgCloud": 88,
+      "score": 46,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Spokane, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "billings",
+      "name": "Billings",
+      "region": "Montana",
+      "country": "United States",
+      "lat": 45.7833,
+      "lon": -108.5007,
+      "timezone": "America/Denver",
+      "priority": 3,
+      "aurora": 0,
+      "gridLat": 46,
+      "gridLon": -109,
+      "bestCloud": 0,
+      "avgCloud": 33,
+      "score": 45,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Billings, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "helena",
+      "name": "Helena",
+      "region": "Montana",
+      "country": "United States",
+      "lat": 46.5891,
+      "lon": -112.0391,
+      "timezone": "America/Denver",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 47,
+      "gridLon": -112,
+      "bestCloud": 15,
+      "avgCloud": 93,
+      "score": 45,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Helena, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "montreal",
+      "name": "Montreal",
+      "region": "Quebec",
+      "country": "Canada",
+      "lat": 45.5017,
+      "lon": -73.5673,
+      "timezone": "America/Toronto",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 46,
+      "gridLon": -74,
+      "bestCloud": 0,
+      "avgCloud": 60,
+      "score": 45,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Montreal, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "ottawa",
+      "name": "Ottawa",
+      "region": "Ontario",
+      "country": "Canada",
+      "lat": 45.4215,
+      "lon": -75.6972,
+      "timezone": "America/Toronto",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 45,
+      "gridLon": -76,
+      "bestCloud": 0,
+      "avgCloud": 61,
+      "score": 45,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Ottawa, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "bangor",
+      "name": "Bangor",
+      "region": "Maine",
+      "country": "United States",
+      "lat": 44.8016,
+      "lon": -68.7712,
+      "timezone": "America/New_York",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 45,
+      "gridLon": -69,
+      "bestCloud": 0,
+      "avgCloud": 55,
+      "score": 44,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Bangor, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "burlington",
+      "name": "Burlington",
+      "region": "Vermont",
+      "country": "United States",
+      "lat": 44.4759,
+      "lon": -73.2121,
+      "timezone": "America/New_York",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 44,
+      "gridLon": -73,
+      "bestCloud": 0,
+      "avgCloud": 49,
+      "score": 44,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Burlington, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "green-bay",
+      "name": "Green Bay",
+      "region": "Wisconsin",
+      "country": "United States",
+      "lat": 44.5133,
+      "lon": -88.0133,
+      "timezone": "America/Chicago",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 45,
+      "gridLon": -88,
+      "bestCloud": 0,
+      "avgCloud": 64,
+      "score": 44,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Green Bay, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "minneapolis",
+      "name": "Minneapolis",
+      "region": "Minnesota",
+      "country": "United States",
+      "lat": 44.9778,
+      "lon": -93.265,
+      "timezone": "America/Chicago",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 45,
+      "gridLon": -93,
+      "bestCloud": 0,
+      "avgCloud": 40,
+      "score": 44,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Minneapolis, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "missoula",
+      "name": "Missoula",
+      "region": "Montana",
+      "country": "United States",
+      "lat": 46.8721,
+      "lon": -113.994,
+      "timezone": "America/Denver",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 47,
+      "gridLon": -114,
+      "bestCloud": 24,
+      "avgCloud": 94,
+      "score": 44,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Missoula, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "seattle",
+      "name": "Seattle",
+      "region": "Washington",
+      "country": "United States",
+      "lat": 47.6062,
+      "lon": -122.3321,
+      "timezone": "America/Los_Angeles",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 48,
+      "gridLon": -122,
+      "bestCloud": 31,
+      "avgCloud": 86,
+      "score": 44,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Seattle, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "boise",
+      "name": "Boise",
+      "region": "Idaho",
+      "country": "United States",
+      "lat": 43.615,
+      "lon": -116.2023,
+      "timezone": "America/Boise",
+      "priority": 3,
+      "aurora": 0,
+      "gridLat": 44,
+      "gridLon": -116,
+      "bestCloud": 0,
+      "avgCloud": 15,
+      "score": 43,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Boise, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "portland-maine",
+      "name": "Portland",
+      "region": "Maine",
+      "country": "United States",
+      "lat": 43.6591,
+      "lon": -70.2568,
+      "timezone": "America/New_York",
+      "priority": 1,
+      "aurora": 0,
+      "gridLat": 44,
+      "gridLon": -70,
+      "bestCloud": 0,
+      "avgCloud": 57,
+      "score": 43,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Portland, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "toronto",
+      "name": "Toronto",
+      "region": "Ontario",
+      "country": "Canada",
+      "lat": 43.6532,
+      "lon": -79.3832,
+      "timezone": "America/Toronto",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 44,
+      "gridLon": -79,
+      "bestCloud": 0,
+      "avgCloud": 42,
+      "score": 43,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Toronto, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "buffalo",
+      "name": "Buffalo",
+      "region": "New York",
+      "country": "United States",
+      "lat": 42.8864,
+      "lon": -78.8784,
+      "timezone": "America/New_York",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 43,
+      "gridLon": -79,
+      "bestCloud": 0,
+      "avgCloud": 23,
+      "score": 42,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Buffalo, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "concord",
+      "name": "Concord",
+      "region": "New Hampshire",
+      "country": "United States",
+      "lat": 43.2081,
+      "lon": -71.5376,
+      "timezone": "America/New_York",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 43,
+      "gridLon": -72,
+      "bestCloud": 0,
+      "avgCloud": 34,
+      "score": 42,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Concord, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "madison",
+      "name": "Madison",
+      "region": "Wisconsin",
+      "country": "United States",
+      "lat": 43.0731,
+      "lon": -89.4012,
+      "timezone": "America/Chicago",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 43,
+      "gridLon": -89,
+      "bestCloud": 0,
+      "avgCloud": 66,
+      "score": 42,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Madison, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "rochester",
+      "name": "Rochester",
+      "region": "New York",
+      "country": "United States",
+      "lat": 43.1566,
+      "lon": -77.6088,
+      "timezone": "America/New_York",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 43,
+      "gridLon": -78,
+      "bestCloud": 0,
+      "avgCloud": 25,
+      "score": 42,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Rochester, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "boston",
+      "name": "Boston",
+      "region": "Massachusetts",
+      "country": "United States",
+      "lat": 42.3601,
+      "lon": -71.0589,
+      "timezone": "America/New_York",
+      "priority": 3,
+      "aurora": 0,
+      "gridLat": 42,
+      "gridLon": -71,
+      "bestCloud": 0,
+      "avgCloud": 30,
+      "score": 41,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Boston, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "chicago",
+      "name": "Chicago",
+      "region": "Illinois",
+      "country": "United States",
+      "lat": 41.8781,
+      "lon": -87.6298,
+      "timezone": "America/Chicago",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 42,
+      "gridLon": -88,
+      "bestCloud": 0,
+      "avgCloud": 42,
+      "score": 41,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Chicago, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "detroit",
+      "name": "Detroit",
+      "region": "Michigan",
+      "country": "United States",
+      "lat": 42.3314,
+      "lon": -83.0458,
+      "timezone": "America/Detroit",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 42,
+      "gridLon": -83,
+      "bestCloud": 0,
+      "avgCloud": 13,
+      "score": 41,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Detroit, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "portland",
+      "name": "Portland",
+      "region": "Oregon",
+      "country": "United States",
+      "lat": 45.5152,
+      "lon": -122.6784,
+      "timezone": "America/Los_Angeles",
+      "priority": 2,
+      "aurora": 0,
+      "gridLat": 46,
+      "gridLon": -123,
+      "bestCloud": 30,
+      "avgCloud": 95,
+      "score": 41,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Portland, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "cleveland",
+      "name": "Cleveland",
+      "region": "Ohio",
+      "country": "United States",
+      "lat": 41.4993,
+      "lon": -81.6944,
+      "timezone": "America/New_York",
+      "priority": 3,
+      "aurora": 0,
+      "gridLat": 41,
+      "gridLon": -82,
+      "bestCloud": 0,
+      "avgCloud": 6,
+      "score": 40,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Cleveland, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "new-york-city",
+      "name": "New York City",
+      "region": "New York",
+      "country": "United States",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "timezone": "America/New_York",
+      "priority": 3,
+      "aurora": 0,
+      "gridLat": 41,
+      "gridLon": -74,
+      "bestCloud": 0,
+      "avgCloud": 15,
+      "score": 39,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near New York City, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    },
+    {
+      "slug": "denver",
+      "name": "Denver",
+      "region": "Colorado",
+      "country": "United States",
+      "lat": 39.7392,
+      "lon": -104.9903,
+      "timezone": "America/Denver",
+      "priority": 3,
+      "aurora": 0,
+      "gridLat": 40,
+      "gridLon": -105,
+      "bestCloud": 0,
+      "avgCloud": 18,
+      "score": 38,
+      "label": "Possible",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Aurora is possible near Denver, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse."
+    }
+  ],
+  "mapDots": [
+    {
+      "x": 59.2,
+      "y": 42.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 42.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 42.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 42.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 42.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 42.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 66.7,
+      "y": 42.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 41.7,
+      "y": 32.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 37.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 32.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 32.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 42.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 32.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 32.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 47.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 37.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 37.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 66.7,
+      "y": 37.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 69.2,
+      "y": 42.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 71.7,
+      "y": 42.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 39.2,
+      "y": 32.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 41.7,
+      "y": 37.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 42.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 32.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 47.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 32.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 47.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 47.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 66.7,
+      "y": 47.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 69.2,
+      "y": 47.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 69.2,
+      "y": 37.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 71.7,
+      "y": 37.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 74.2,
+      "y": 42.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 74.2,
+      "y": 37.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 76.7,
+      "y": 42.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 27.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 27.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 32.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 27.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 39.2,
+      "y": 37.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 39.2,
+      "y": 27.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 41.7,
+      "y": 27.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 27.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 27.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 47.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 32.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 32.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 71.7,
+      "y": 47.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 76.7,
+      "y": 37.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 79.2,
+      "y": 42.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 79.2,
+      "y": 37.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 22.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 27.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 22.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 22.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 32.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 22.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 22.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 42.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 27.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 47.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 27.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 32.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 66.7,
+      "y": 32.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 69.2,
+      "y": 32.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 71.7,
+      "y": 32.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 74.2,
+      "y": 47.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 74.2,
+      "y": 32.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 81.7,
+      "y": 42.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 81.7,
+      "y": 37.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 84.2,
+      "y": 37.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 1.7,
+      "y": 2.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 4.2,
+      "y": 2.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 12.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 16.7,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 16.7,
+      "y": 12.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 19.2,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 19.2,
+      "y": 12.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 22.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 22.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 27.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 32.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 37.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 39.2,
+      "y": 22.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 41.7,
+      "y": 42.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 41.7,
+      "y": 22.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 22.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 47.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 27.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 27.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 52.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 52.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 66.7,
+      "y": 52.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 76.7,
+      "y": 47.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 76.7,
+      "y": 32.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 79.2,
+      "y": 32.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 81.7,
+      "y": 32.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 84.2,
+      "y": 42.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 84.2,
+      "y": 32.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 86.7,
+      "y": 37.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 86.7,
+      "y": 32.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 89.2,
+      "y": 37.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 89.2,
+      "y": 32.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 1.7,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 4.2,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 6.7,
+      "y": 12.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 6.7,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 6.7,
+      "y": 2.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 9.2,
+      "y": 12.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 9.2,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 9.2,
+      "y": 2.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
+      "y": 12.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
+      "y": 2.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 2.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 16.7,
+      "y": 22.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 16.7,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 19.2,
+      "y": 22.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 19.2,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 12.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 27.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 12.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 12.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 32.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 37.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 39.2,
+      "y": 42.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 47.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 22.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 52.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 52.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 27.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 27.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 69.2,
+      "y": 52.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 71.7,
+      "y": 52.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 79.2,
+      "y": 47.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 86.7,
+      "y": 42.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 91.7,
+      "y": 37.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 91.7,
+      "y": 32.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 94.2,
+      "y": 32.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 96.7,
+      "y": 32.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 1.7,
+      "y": 12.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 4.2,
+      "y": 12.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 9.2,
+      "y": 17.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 22.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 16.7,
+      "y": 2.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 19.2,
+      "y": 2.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 7.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 7.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 32.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 12.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 37.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 12.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 12.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 39.2,
+      "y": 17.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 41.7,
+      "y": 17.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 47.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 22.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 22.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 52.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 66.7,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 69.2,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 71.7,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 74.2,
+      "y": 52.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 74.2,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 76.7,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 79.2,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 81.7,
+      "y": 47.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 81.7,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 84.2,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 86.7,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 89.2,
+      "y": 42.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 89.2,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 91.7,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 94.2,
+      "y": 37.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 94.2,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 96.7,
+      "y": 37.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 96.7,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 99.2,
+      "y": 32.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 99.2,
+      "y": 27.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 99.2,
+      "y": 22.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 4.2,
+      "y": 17.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 6.7,
+      "y": 17.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 16.7,
+      "y": 27.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 19.2,
+      "y": 27.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 2.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 32.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 2.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 7.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 37.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 7.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 7.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 42.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 12.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 39.2,
+      "y": 12.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 17.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 17.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 52.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 76.7,
+      "y": 52.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 84.2,
+      "y": 47.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 86.7,
+      "y": 47.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 86.7,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 89.2,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 91.7,
+      "y": 42.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 91.7,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 94.2,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 96.7,
+      "y": 22.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 99.2,
+      "y": 37.5,
+      "value": 4,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 1.7,
+      "y": 17.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 6.7,
+      "y": 22.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 9.2,
+      "y": 22.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 27.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 32.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 37.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 2.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 2.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 2.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 42.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 7.5,
+      "value": 3,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    }
+  ]
+}
