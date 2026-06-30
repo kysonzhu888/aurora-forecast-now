@@ -256,10 +256,10 @@ function writeDataFiles() {
 }
 
 function generateHomePage() {
-  const topCities = forecast.cities.slice(0, 9);
+  const topCities = forecast.cities.slice(0, 12);
   const priorityCities = [...forecast.cities]
     .sort((a, b) => a.priority - b.priority || b.score - a.score)
-    .slice(0, 24);
+    .slice(0, 36);
 
   writePage([], layout({
     title: "Northern Lights Forecast Tonight by City",
@@ -855,7 +855,7 @@ ${pageBody}
 
 function auroraVisual(cityRows) {
   const dots = forecast.mapDots.map((dot) => `<span class="map-dot" style="--x:${dot.x}%;--y:${dot.y}%;--size:${dot.size}px;--alpha:${dot.alpha};color:${dot.color}"></span>`).join("");
-  const cityPins = cityRows.map((city) => {
+  const cityPins = cityRows.filter(isNorthAmericaMapCity).map((city) => {
     const x = round1(((city.lon + 170) / 120) * 100);
     const y = round1(((75 - city.lat) / 40) * 100);
     return `<span class="map-city" title="${escapeHtml(city.name)}" style="--x:${x}%;--y:${y}%"></span>`;
@@ -864,8 +864,12 @@ function auroraVisual(cityRows) {
     <div class="aurora-band" aria-hidden="true"></div>
     ${dots}
     ${cityPins}
-    <div class="visual-label">Generated from NOAA OVATION grid. Bright dots mark stronger aurora probability across North America.</div>
+    <div class="visual-label">Generated from NOAA OVATION grid. Bright dots mark stronger aurora probability across the North American view.</div>
   </div>`;
+}
+
+function isNorthAmericaMapCity(city) {
+  return city.lon >= -170 && city.lon <= -50 && city.lat >= 35 && city.lat <= 75;
 }
 
 function cityCard(city, prefix) {

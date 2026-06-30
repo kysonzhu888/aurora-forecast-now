@@ -15,7 +15,7 @@ Aurora Forecast Now is a city-level northern lights forecast site. It turns publ
 - Live city lookup for arbitrary city names via Open-Meteo geocoding
 - Latitude/longitude forecast lookup for custom locations
 - Static sitemap, robots.txt, ads.txt, About, Contact, and Privacy pages
-- 36 city forecast pages at launch
+- 164 saved city forecast pages at launch, with live lookup for cities outside the saved list
 
 ## Architecture
 
@@ -54,7 +54,7 @@ Cron trigger: */5 * * * *
   -> storm mode: full refresh every 5 minutes when NOAA alerts include G2+
 ```
 
-The 36 generated city pages are SEO entry pages, not the product limit. The live API can score any resolved city or valid latitude/longitude. D1 is still reserved for later user-facing features such as email alerts, favorites, observations, and historical forecast analytics.
+The generated city pages are SEO entry pages, not the product limit. The saved city pool is curated in `data/city-seeds.json`, resolved into `data/cities.json`, and sorted dynamically by live forecast score at build/runtime. The live API can also score any resolved city or valid latitude/longitude. D1 is still reserved for later user-facing features such as email alerts, favorites, observations, and historical forecast analytics.
 
 ## SEO Page Matrix
 
@@ -67,7 +67,7 @@ The 36 generated city pages are SEO entry pages, not the product limit. The live
 - `/guides/cloud-cover-aurora-viewing/`
 - `/guides/aurora-oval-map/`
 - `/glossary/`: plain-English forecast terms
-- `sitemap.xml`: 73 URLs after the SEO matrix expansion
+- `sitemap.xml`: generated from the current city, country, region, guide, and utility page matrix
 
 Build:
 

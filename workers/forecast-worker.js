@@ -244,11 +244,19 @@ async function fetchCloudCover(cityRows) {
 
 async function resolveCityQuery(query, env) {
   const normalized = query.trim().toLowerCase();
+  const normalizedSlug = slugify(query);
   if (!normalized) return null;
 
   const preset = cities.find((city) => {
-    const haystack = `${city.slug} ${city.name} ${city.region} ${city.country}`.toLowerCase();
-    return city.slug === normalized || haystack === normalized || `${city.name}, ${city.region}`.toLowerCase() === normalized;
+    const cityNameSlug = slugify(city.name);
+    const cityRegionSlug = slugify(`${city.name}-${city.region}`);
+    const cityCountrySlug = slugify(`${city.name}-${city.country}`);
+    const cityLabel = `${city.name}, ${city.region}`.toLowerCase();
+    return city.slug === normalizedSlug
+      || cityNameSlug === normalizedSlug
+      || cityRegionSlug === normalizedSlug
+      || cityCountrySlug === normalizedSlug
+      || cityLabel === normalized;
   });
   if (preset) return preset;
 
