@@ -16,7 +16,9 @@ const site = {
   contactEmail: config.contactEmail,
   googleAnalyticsId: (config.googleAnalyticsId || "").trim(),
   adsenseClientId: (config.adsenseClientId || "").trim(),
-  adsensePublisherId: (config.adsensePublisherId || "").trim(),
+  adsensePublisherId: normalizePublisherId(config.adsensePublisherId || config.adsenseClientId || ""),
+  adsenseAccountId: normalizeAdsenseAccountId(config.adsenseClientId || config.adsensePublisherId || ""),
+  adsenseAdSlots: normalizeAdSlots(config.adsenseAdSlots || {}),
   searchConsoleVerification: (config.searchConsoleVerification || "").trim(),
 };
 
@@ -310,6 +312,18 @@ function generateHomePage() {
           </div>
         </section>
 
+        ${adUnit({
+          slotKey: "topBanner",
+          className: "ad-shell-wide",
+          fallbackTitle: "More ways to plan tonight",
+          fallbackText: "Use the forecast atlas while Aurora Forecast Now is being prepared for ad review.",
+          links: [
+            ["locations/", "Browse locations"],
+            ["guides/how-to-read-aurora-forecast/", "Read the score"],
+            ["guides/cloud-cover-aurora-viewing/", "Check cloud cover"],
+          ],
+        })}
+
         <section id="cities" class="section">
           <div class="section-head">
             <div>
@@ -478,6 +492,17 @@ function generateCityPages() {
               </div>
             </aside>
           </section>
+
+          ${adUnit({
+            slotKey: "inArticle",
+            fallbackTitle: "Keep checking nearby skies",
+            fallbackText: "Compare this forecast with nearby locations before you choose a viewing spot.",
+            links: [
+              ["../../locations/", "All locations"],
+              [`../..${regionPath}`, city.region],
+              ["../../guides/how-to-read-aurora-forecast/", "Forecast guide"],
+            ],
+          })}
 
           <section class="section compact-section">
             <div class="guide-grid">
@@ -721,6 +746,16 @@ function generateGuidePages() {
               </div>
             </section>
           </article>
+          ${adUnit({
+            slotKey: "inArticle",
+            fallbackTitle: "Forecast tools for tonight",
+            fallbackText: "Jump from this guide into city scores, cloud checks, and aurora oval basics.",
+            links: [
+              ["../../locations/", "All locations"],
+              ["../../guides/cloud-cover-aurora-viewing/", "Cloud cover"],
+              ["../../guides/aurora-oval-map/", "Aurora oval"],
+            ],
+          })}
           <section class="section compact-section">
             <div class="section-head">
               <div>
@@ -838,6 +873,7 @@ function layout({ title, description, path: pagePath, body, schema = [] }) {
   const pageBody = body.trim();
   const headExtras = [
     site.searchConsoleVerification ? `<meta name="google-site-verification" content="${escapeHtml(site.searchConsoleVerification)}">` : "",
+    site.adsenseAccountId ? `<meta name="google-adsense-account" content="${escapeHtml(site.adsenseAccountId)}">` : "",
     site.googleAnalyticsId ? analyticsTag(site.googleAnalyticsId) : "",
     site.adsenseClientId ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${escapeHtml(site.adsenseClientId)}" crossorigin="anonymous"></script>` : "",
     ...schema.map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`),
@@ -1363,6 +1399,46 @@ function relativeAsset(pagePath) {
 function analyticsTag(id) {
   return `<script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(id)}"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${escapeHtml(id)}");</script>`;
+}
+
+function normalizePublisherId(value) {
+  const id = String(value || "").trim().replace(/^ca-pub-/, "").replace(/^pub-/, "");
+  return id ? `pub-${id}` : "";
+}
+
+function normalizeAdsenseAccountId(value) {
+  const id = String(value || "").trim().replace(/^ca-pub-/, "").replace(/^pub-/, "");
+  return id ? `ca-pub-${id}` : "";
+}
+
+function normalizeAdSlots(slots) {
+  return {
+    topBanner: String(slots.topBanner || "").trim(),
+    inArticle: String(slots.inArticle || "").trim(),
+  };
+}
+
+function adUnit({ slotKey, className = "", fallbackTitle, fallbackText, links }) {
+  const slot = site.adsenseAdSlots[slotKey];
+  if (site.adsenseClientId && slot) {
+    return `<aside class="ad-shell ${className}" aria-label="Advertisement">
+      <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="${escapeHtml(site.adsenseClientId)}"
+        data-ad-slot="${escapeHtml(slot)}"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    </aside>`;
+  }
+  return `<aside class="ad-shell ad-fallback ${className}">
+    <div>
+      <p class="kicker">Keep exploring</p>
+      <h2>${escapeHtml(fallbackTitle)}</h2>
+      <p>${escapeHtml(fallbackText)}</p>
+    </div>
+    ${linkCloud(links)}
+  </aside>`;
 }
 
 function haversine(a, b) {

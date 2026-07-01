@@ -6,5 +6,9 @@
   "googleAnalyticsId": "",
   "adsenseClientId": "ca-pub-7896672979027584",
   "adsensePublisherId": "pub-7896672979027584",
+  "adsenseAdSlots": {
+    "topBanner": "",
+    "inArticle": ""
+  },
   "searchConsoleVerification": ""
 }

@@ -343,6 +343,32 @@ button.button {
   padding: 54px 22px;
 }
 
+.ad-shell {
+  background: rgba(244, 247, 239, 0.07);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  margin: 30px auto;
+  max-width: var(--max);
+  min-height: 128px;
+  padding: 18px 22px;
+}
+
+.ad-shell-wide {
+  margin-top: 0;
+}
+
+.ad-fallback {
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.ad-fallback h2 {
+  font-size: clamp(1.3rem, 2.4vw, 1.85rem);
+  margin-bottom: 8px;
+}
+
 .section-head {
   align-items: end;
   display: flex;
@@ -748,11 +774,16 @@ button.button {
   }
 
   .section-head,
+  .ad-fallback,
   .comment-head,
   .comment-actions,
   .footer-inner {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .ad-fallback {
+    grid-template-columns: 1fr;
   }
 
   .comment-form button {
@@ -782,5 +813,10 @@ button.button {
   .city-page {
     padding-left: 18px;
     padding-right: 18px;
+  }
+
+  .ad-shell {
+    margin-left: 18px;
+    margin-right: 18px;
   }
 }
