@@ -11,5 +11,10 @@ kv_namespaces = [
   { binding = "AURORA_FORECAST_CACHE", id = "d9e81de8d6034fa291e829ba93aa1132" }
 ]
 
+[[d1_databases]]
+binding = "COMMENTS_DB"
+database_name = "aurora-forecast-now-comments"
+database_id = "982edd3e-006a-41f6-8023-577fabc0ab6d"
+
 [triggers]
 crons = ["*/5 * * * *"]

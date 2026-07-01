@@ -27,7 +27,11 @@ const endpoints = {
 };
 
 const now = new Date();
-const forecast = await buildForecast();
+const ALERT_LOOKBACK_MS = 72 * 60 * 60 * 1000;
+const useExistingForecast = process.env.AURORA_USE_EXISTING_FORECAST === "1";
+const reusedLastmod = useExistingForecast ? readExistingSitemapLastmod() : "";
+const buildLastmod = reusedLastmod || now.toISOString();
+const forecast = useExistingForecast ? readJson(path.join("data", "forecast.json")) : await buildForecast();
 const cityCollections = buildCityCollections(forecast.cities);
 const guidePages = buildGuidePages();
 const glossaryEntriesList = glossaryEntries();
@@ -47,7 +51,11 @@ generateRobots();
 generateAdsTxt();
 
 console.log(`Generated ${forecast.cities.length} city pages for ${site.name}.`);
-console.log(`Forecast updated from NOAA: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`);
+console.log(
+  useExistingForecast
+    ? `Forecast reused from data/forecast.json: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`
+    : `Forecast updated from NOAA: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`
+);
 
 async function buildForecast() {
   const [ovation, kpRows, alerts, cloudBySlug] = await Promise.all([
@@ -150,15 +158,26 @@ function maxUpcomingKp(rows) {
 function summarizeAlerts(rows) {
   if (!Array.isArray(rows)) return "No current NOAA alert summary was available during the last build.";
   const storm = rows
-    .map((row) => row.message || "")
-    .find((message) => /Geomagnetic Storm|G[1-5]/i.test(message));
+    .map((row) => ({
+      message: row.message || "",
+      issueMs: parseNoaaIssueTime(row.issue_datetime),
+    }))
+    .filter((row) => row.message && Number.isFinite(row.issueMs))
+    .filter((row) => now.getTime() - row.issueMs <= ALERT_LOOKBACK_MS)
+    .filter((row) => !/\bCANCEL(?:LED)?\b/i.test(row.message))
+    .find((row) => /Geomagnetic Storm|Geomagnetic K-index|K-index|G[1-5]/i.test(row.message));
   if (!storm) return "No active geomagnetic storm watch appeared in the latest NOAA alert feed.";
-  const lines = storm
+  const lines = storm.message
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
     .filter((line) => /WATCH|WARNING|ALERT|G[1-5]|Predicted|Observed|Highest Storm Level/i.test(line));
   return lines.slice(0, 4).join(" ");
+}
+
+function parseNoaaIssueTime(value) {
+  if (!value) return Number.NaN;
+  return new Date(`${String(value).replace(" ", "T")}Z`).getTime();
 }
 
 function nearestAurora(coordinates, city) {
@@ -506,6 +525,12 @@ function generateCityPages() {
               ${cityFaqItems(city).map((item) => `<article class="faq-item"><h3>${escapeHtml(item.q)}</h3><p>${escapeHtml(item.a)}</p></article>`).join("")}
             </div>
           </section>
+          ${commentSection({
+            key: `aurora:city:${city.slug}`,
+            kicker: "Sky notes",
+            title: `${city.name} comments`,
+            placeholder: `Share a viewing note, correction, or question about aurora watching near ${city.name}...`,
+          })}
         </main>
       `,
     }));
@@ -707,6 +732,12 @@ function generateGuidePages() {
               ${forecast.cities.slice(0, 6).map((city) => cityCard(city, "../../")).join("")}
             </div>
           </section>
+          ${commentSection({
+            key: `aurora:guide:${guide.slug}`,
+            kicker: "Reader notes",
+            title: "Guide comments",
+            placeholder: "Share a question, correction, or practical aurora forecast tip...",
+          })}
         </main>
       `,
     }));
@@ -780,7 +811,7 @@ function generateSitemap() {
   ];
   writeFile("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((url) => `  <url><loc>${site.url}${url.loc}</loc><lastmod>${now.toISOString()}</lastmod><changefreq>${url.changefreq}</changefreq><priority>${url.priority}</priority></url>`).join("\n")}
+${urls.map((url) => `  <url><loc>${site.url}${url.loc}</loc><lastmod>${buildLastmod}</lastmod><changefreq>${url.changefreq}</changefreq><priority>${url.priority}</priority></url>`).join("\n")}
 </urlset>
 `);
 }
@@ -1107,6 +1138,35 @@ function glossaryCard(entry) {
   </article>`;
 }
 
+function commentSection({ key, kicker, title, placeholder }) {
+  return `<section class="comment-section" data-comment-section data-comment-key="${escapeHtml(key)}">
+    <div class="comment-head">
+      <div>
+        <p class="kicker">${escapeHtml(kicker)}</p>
+        <h2>${escapeHtml(title)}</h2>
+      </div>
+      <span data-comment-count>Loading comments</span>
+    </div>
+    <form class="comment-form" data-comment-form>
+      <div class="comment-fields">
+        <label>
+          <span>Name</span>
+          <input name="name" type="text" maxlength="40" placeholder="Visitor" autocomplete="name">
+        </label>
+        <label>
+          <span>Comment</span>
+          <textarea name="comment" maxlength="600" rows="3" placeholder="${escapeHtml(placeholder)}" required></textarea>
+        </label>
+      </div>
+      <div class="comment-actions">
+        <p class="comment-status" data-comment-status role="status"></p>
+        <button type="submit" data-comment-submit>Post</button>
+      </div>
+    </form>
+    <div class="comment-list" data-comment-list></div>
+  </section>`;
+}
+
 function breadcrumbLinks(items) {
   return `<nav class="breadcrumb" aria-label="Breadcrumb">
     ${items.map(([label, href], index) => {
@@ -1213,7 +1273,7 @@ function guideSchema(guide) {
     description: guide.description,
     url: `${site.url}/guides/${guide.slug}/`,
     isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
-    dateModified: now.toISOString(),
+    dateModified: buildLastmod,
     inLanguage: "en",
   };
 }
@@ -1317,6 +1377,13 @@ function haversine(a, b) {
 
 function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(root, relativePath), "utf8"));
+}
+
+function readExistingSitemapLastmod() {
+  const sitemapPath = path.join(root, "sitemap.xml");
+  if (!fs.existsSync(sitemapPath)) return "";
+  const match = fs.readFileSync(sitemapPath, "utf8").match(/<lastmod>([^<]+)<\/lastmod>/);
+  return match ? match[1] : "";
 }
 
 function writePage(parts, html) {

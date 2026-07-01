@@ -8,6 +8,10 @@ const NORMAL_MAX_AGE_SECONDS = 30 * 60;
 const STORM_MAX_AGE_SECONDS = 5 * 60;
 const LOCK_TTL_SECONDS = 90;
 const FALLBACK_FORECAST_URL = "https://auroraforecastnow.com/data/forecast.json";
+const ALERT_LOOKBACK_MS = 72 * 60 * 60 * 1000;
+const MAX_NAME_LENGTH = 40;
+const MAX_COMMENT_LENGTH = 600;
+const MAX_COMMENTS_PER_RESPONSE = 30;
 
 const endpoints = {
   ovation: "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json",
@@ -19,9 +23,11 @@ const endpoints = {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    const normalizedPath = url.pathname.replace(/\/+$/, "") || "/";
     if (request.method === "OPTIONS") return withCors(new Response(null, { status: 204 }));
-    if (url.pathname === "/api/health") return handleHealth(env);
-    if (url.pathname === "/api/forecast") return handleForecast(request, env, ctx);
+    if (normalizedPath === "/api/health" || normalizedPath === "/health") return handleHealth(env);
+    if (normalizedPath === "/api/forecast" || normalizedPath === "/forecast") return handleForecast(request, env, ctx);
+    if (normalizedPath === "/api/comments" || normalizedPath === "/comments") return handleComments(request, env);
     return withCors(jsonResponse({ error: "Not found" }, 404));
   },
 
@@ -97,6 +103,93 @@ async function handleHealth(env) {
     stormMode: Boolean(cached?.stormMode),
     stormLevel: cached?.stormLevel || 0,
   }));
+}
+
+async function handleComments(request, env) {
+  if (request.method === "GET") {
+    const url = new URL(request.url);
+    const pageKey = normalizeText(
+      url.searchParams.get("pageKey") || url.searchParams.get("gameSlug"),
+      120
+    );
+    if (!pageKey) {
+      return withCors(jsonResponse({ error: "Missing pageKey." }, 400));
+    }
+    return withCors(jsonResponse({ comments: await listComments(env, pageKey) }));
+  }
+
+  if (request.method !== "POST") {
+    return withCors(jsonResponse({ error: "Method not allowed." }, 405));
+  }
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return withCors(jsonResponse({ error: "Invalid JSON body." }, 400));
+  }
+
+  const pageKey = normalizeText(payload.pageKey || payload.gameSlug, 120);
+  const name = normalizeText(payload.name || "Visitor", MAX_NAME_LENGTH) || "Visitor";
+  const body = normalizeText(payload.comment || payload.body, MAX_COMMENT_LENGTH);
+
+  if (!pageKey) {
+    return withCors(jsonResponse({ error: "Missing pageKey." }, 400));
+  }
+
+  if (!body) {
+    return withCors(jsonResponse({ error: "Comment cannot be empty." }, 400));
+  }
+
+  const db = commentsDb(env);
+  if (!db) {
+    return withCors(jsonResponse({ error: "Comments database is not configured yet." }, 503));
+  }
+
+  const id = crypto.randomUUID();
+  await db
+    .prepare(`
+      INSERT INTO comments (id, page_key, name, body)
+      VALUES (?, ?, ?, ?)
+    `)
+    .bind(id, pageKey, name, body)
+    .run();
+
+  return withCors(jsonResponse({ ok: true, comments: await listComments(env, pageKey) }, 201));
+}
+
+async function listComments(env, pageKey) {
+  const db = commentsDb(env);
+  if (!db) return [];
+
+  const { results } = await db
+    .prepare(`
+      SELECT id, name, body, created_at
+      FROM comments
+      WHERE page_key = ? AND status = 'visible'
+      ORDER BY created_at DESC
+      LIMIT ?
+    `)
+    .bind(pageKey, MAX_COMMENTS_PER_RESPONSE)
+    .all();
+
+  return (results || []).map((row) => ({
+    id: row.id,
+    name: row.name,
+    body: row.body,
+    createdAt: row.created_at,
+  }));
+}
+
+function commentsDb(env) {
+  return env && env.COMMENTS_DB;
+}
+
+function normalizeText(value, maxLength) {
+  return String(value || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, maxLength);
 }
 
 async function handleScheduledRefresh(env, scheduledTime) {
@@ -342,12 +435,18 @@ function parseAlertInfo(rows) {
     };
   }
 
-  const messages = rows.map((row) => row.message || "").filter(Boolean);
-  const level = messages.reduce((max, message) => {
-    const matches = [...message.matchAll(/\bG([1-5])\b/g)].map((match) => Number(match[1]));
-    return Math.max(max, ...matches, 0);
-  }, 0);
-  const storm = messages.find((message) => /Geomagnetic Storm|G[1-5]/i.test(message));
+  const currentAlerts = rows
+    .map((row) => ({
+      message: row.message || "",
+      issueMs: parseNoaaIssueTime(row.issue_datetime),
+    }))
+    .filter((row) => row.message && Number.isFinite(row.issueMs))
+    .filter((row) => Date.now() - row.issueMs <= ALERT_LOOKBACK_MS)
+    .filter((row) => !/\bCANCEL(?:LED)?\b/i.test(row.message));
+
+  const geomagneticAlerts = currentAlerts.filter((row) => /Geomagnetic Storm|Geomagnetic K-index|K-index|G[1-5]/i.test(row.message));
+  const level = geomagneticAlerts.reduce((max, row) => Math.max(max, alertLevelFromMessage(row.message)), 0);
+  const storm = geomagneticAlerts.find((row) => /WATCH|WARNING|ALERT|G[1-5]/i.test(row.message));
   if (!storm) {
     return {
       level,
@@ -356,7 +455,7 @@ function parseAlertInfo(rows) {
     };
   }
 
-  const summary = storm
+  const summary = storm.message
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
@@ -369,6 +468,17 @@ function parseAlertInfo(rows) {
     stormMode: level >= 2,
     summary,
   };
+}
+
+function parseNoaaIssueTime(value) {
+  if (!value) return Number.NaN;
+  return new Date(`${String(value).replace(" ", "T")}Z`).getTime();
+}
+
+function alertLevelFromMessage(message) {
+  const gLevels = [...message.matchAll(/\bG([1-5])\b/g)].map((match) => Number(match[1]));
+  const kLevels = [...message.matchAll(/K-index of ([5-9])/gi)].map((match) => Number(match[1]) - 4);
+  return Math.max(...gLevels, ...kLevels, 0);
 }
 
 async function shapeResponse(forecast, meta) {
@@ -565,7 +675,7 @@ function jsonResponse(payload, status = 200) {
 function withCors(response) {
   const headers = new Headers(response.headers);
   headers.set("access-control-allow-origin", "*");
-  headers.set("access-control-allow-methods", "GET, OPTIONS");
+  headers.set("access-control-allow-methods", "GET, POST, OPTIONS");
   headers.set("access-control-allow-headers", "content-type");
   return new Response(response.body, {
     status: response.status,

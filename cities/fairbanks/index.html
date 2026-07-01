@@ -46,13 +46,13 @@
             </div>
             <aside class="verdict">
               <span class="badge great">Great</span>
-              <div class="verdict-score">92</div>
+              <div class="verdict-score">80</div>
               <p>Aurora chance score for the next local night window.</p>
               <div class="stat-table">
                 <div><span>Best window</span><strong>10:00 PM to 2:00 AM local time</strong></div>
-                <div><span>Max Kp</span><strong>4.7</strong></div>
-                <div><span>NOAA aurora grid</span><strong>14</strong></div>
-                <div><span>Best cloud cover</span><strong>7%</strong></div>
+                <div><span>Max Kp</span><strong>4.3</strong></div>
+                <div><span>NOAA aurora grid</span><strong>7</strong></div>
+                <div><span>Best cloud cover</span><strong>1%</strong></div>
               </div>
             </aside>
           </section>
@@ -68,9 +68,9 @@
               <p class="kicker">Current data</p>
               <h3>Last build</h3>
               <div class="stat-table">
-                <div><span>Generated</span><strong>Jun 30, 8:03 PM GMT+8</strong></div>
-                <div><span>NOAA observed</span><strong>Jun 30, 7:57 PM GMT+8</strong></div>
-                <div><span>NOAA forecast</span><strong>Jun 30, 8:59 PM GMT+8</strong></div>
+                <div><span>Generated</span><strong>Jul 1, 4:02 PM GMT+8</strong></div>
+                <div><span>NOAA observed</span><strong>Jul 1, 3:57 PM GMT+8</strong></div>
+                <div><span>NOAA forecast</span><strong>Jul 1, 5:02 PM GMT+8</strong></div>
                 <div><span>Nearest grid</span><strong>65, -148</strong></div>
               </div>
             </aside>
@@ -116,13 +116,13 @@
       <span class="badge great" data-city-label>Great</span>
     </div>
     <div class="score-row">
-      <span class="score" data-city-score>94</span>
+      <span class="score" data-city-score>81</span>
       <p>10:00 PM to 2:00 AM local time</p>
     </div>
     <div class="mini-stats">
-      <span data-city-kp>Kp 4.7</span>
-      <span data-city-cloud>Cloud 15%</span>
-      <span data-city-aurora>Aurora 14</span>
+      <span data-city-kp>Kp 4.3</span>
+      <span data-city-cloud>Cloud 12%</span>
+      <span data-city-aurora>Aurora 7</span>
       <span>United States</span>
     </div>
   </a><a class="city-card" data-city-card data-city-slug="talkeetna-alaska" data-search="talkeetna alaska united states" href="../../cities/talkeetna-alaska/">
@@ -131,16 +131,16 @@
         <h3>Talkeetna</h3>
         <p>Alaska</p>
       </div>
-      <span class="badge great" data-city-label>Great</span>
+      <span class="badge good" data-city-label>Good</span>
     </div>
     <div class="score-row">
-      <span class="score" data-city-score>76</span>
+      <span class="score" data-city-score>70</span>
       <p>10:00 PM to 2:00 AM local time</p>
     </div>
     <div class="mini-stats">
-      <span data-city-kp>Kp 4.7</span>
-      <span data-city-cloud>Cloud 59%</span>
-      <span data-city-aurora>Aurora 10</span>
+      <span data-city-kp>Kp 4.3</span>
+      <span data-city-cloud>Cloud 5%</span>
+      <span data-city-aurora>Aurora 3</span>
       <span>United States</span>
     </div>
   </a><a class="city-card" data-city-card data-city-slug="dawson-city-yukon" data-search="dawson city yukon canada" href="../../cities/dawson-city-yukon/">
@@ -152,13 +152,13 @@
       <span class="badge great" data-city-label>Great</span>
     </div>
     <div class="score-row">
-      <span class="score" data-city-score>89</span>
+      <span class="score" data-city-score>80</span>
       <p>10:00 PM to 2:00 AM local time</p>
     </div>
     <div class="mini-stats">
-      <span data-city-kp>Kp 4.7</span>
-      <span data-city-cloud>Cloud 9%</span>
-      <span data-city-aurora>Aurora 13</span>
+      <span data-city-kp>Kp 4.3</span>
+      <span data-city-cloud>Cloud 14%</span>
+      <span data-city-aurora>Aurora 9</span>
       <span>Canada</span>
     </div>
   </a>
@@ -176,10 +176,36 @@
               <article class="faq-item"><h3>Can I see the northern lights in Fairbanks tonight?</h3><p>Conditions are strong for Fairbanks. Find a dark northern horizon and check the sky after local twilight.</p></article><article class="faq-item"><h3>What matters most for Fairbanks?</h3><p>Watch the city score, Kp forecast, cloud cover, and whether you can find a dark northern horizon away from bright local lights.</p></article><article class="faq-item"><h3>How often does the Fairbanks forecast update?</h3><p>The static page is rebuilt from official feeds, while the live API can refresh from Cloudflare KV more frequently during storm watches.</p></article>
             </div>
           </section>
+          <section class="comment-section" data-comment-section data-comment-key="aurora:city:fairbanks">
+    <div class="comment-head">
+      <div>
+        <p class="kicker">Sky notes</p>
+        <h2>Fairbanks comments</h2>
+      </div>
+      <span data-comment-count>Loading comments</span>
+    </div>
+    <form class="comment-form" data-comment-form>
+      <div class="comment-fields">
+        <label>
+          <span>Name</span>
+          <input name="name" type="text" maxlength="40" placeholder="Visitor" autocomplete="name">
+        </label>
+        <label>
+          <span>Comment</span>
+          <textarea name="comment" maxlength="600" rows="3" placeholder="Share a viewing note, correction, or question about aurora watching near Fairbanks..." required></textarea>
+        </label>
+      </div>
+      <div class="comment-actions">
+        <p class="comment-status" data-comment-status role="status"></p>
+        <button type="submit" data-comment-submit>Post</button>
+      </div>
+    </form>
+    <div class="comment-list" data-comment-list></div>
+  </section>
         </main>
   <footer class="footer">
     <div class="footer-inner">
-      <span data-live-footer-updated>Forecast guidance, not a guarantee. Updated Jun 30, 8:03 PM GMT+8.</span>
+      <span data-live-footer-updated>Forecast guidance, not a guarantee. Updated Jul 1, 4:02 PM GMT+8.</span>
       <span><a href="../../privacy/">Privacy</a> · <a href="../../sitemap.xml">Sitemap</a></span>
     </div>
   </footer>
