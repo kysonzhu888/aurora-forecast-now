@@ -309,3 +309,44 @@ async function readJsonResponse(response) {
   }
   return response.json();
 }
+
+// Storm alert waitlist：与评论表单同风格，POST /api/alerts/subscribe
+document.querySelectorAll("[data-alert-signup]").forEach((panel) => {
+  const form = panel.querySelector("[data-alert-form]");
+  const status = panel.querySelector("[data-alert-status]");
+  if (!form) return;
+
+  const setStatus = (message, tone = "") => {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.tone = tone;
+  };
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submit = form.querySelector("button[type=submit]");
+    const email = form.elements.email ? form.elements.email.value : "";
+    const website = form.elements.website ? form.elements.website.value : "";
+    if (submit) submit.disabled = true;
+    setStatus("Joining...");
+    try {
+      const response = await fetch("/api/alerts/subscribe", {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          website,
+          citySlug: panel.dataset.alertCity || "",
+          sourcePath: window.location.pathname,
+        }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || "Could not join the waitlist.");
+      setStatus("You're on the list. We'll email you when storm alerts launch.", "ok");
+      form.reset();
+    } catch (error) {
+      setStatus(error.message || "Something went wrong. Please try again.", "error");
+      if (submit) submit.disabled = false;
+    }
+  });
+});

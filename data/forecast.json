@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-03T13:23:00.002Z",
-  "observationTime": "2026-07-03T13:17:00Z",
-  "forecastTime": "2026-07-03T14:13:00Z",
+  "generatedAt": "2026-07-03T13:41:54.544Z",
+  "observationTime": "2026-07-03T13:37:00Z",
+  "forecastTime": "2026-07-03T14:33:00Z",
   "maxKp": 5.7,
   "stormSummary": "WARNING: Geomagnetic K-index of 4 expected Warning Conditions: Onset",
   "dataSources": [
@@ -85,34 +85,15 @@
       "lon": 23.6809,
       "timezone": "Europe/Oslo",
       "priority": 1,
-      "aurora": 9,
+      "aurora": 11,
       "gridLat": 71,
       "gridLon": 24,
       "bestCloud": 7,
       "avgCloud": 53,
-      "score": 94,
+      "score": 97,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Hammerfest. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "utqiagvik-alaska",
-      "name": "Utqiagvik",
-      "region": "Alaska",
-      "country": "United States",
-      "lat": 71.2906,
-      "lon": -156.7887,
-      "timezone": "America/Anchorage",
-      "priority": 1,
-      "aurora": 11,
-      "gridLat": 71,
-      "gridLon": -157,
-      "bestCloud": 42,
-      "avgCloud": 85,
-      "score": 94,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Utqiagvik. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "kirkenes-finnmark",
@@ -123,15 +104,53 @@
       "lon": 30.0458,
       "timezone": "Europe/Oslo",
       "priority": 1,
-      "aurora": 8,
+      "aurora": 10,
       "gridLat": 70,
       "gridLon": 30,
       "bestCloud": 0,
       "avgCloud": 1,
-      "score": 92,
+      "score": 95,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Kirkenes. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "utqiagvik-alaska",
+      "name": "Utqiagvik",
+      "region": "Alaska",
+      "country": "United States",
+      "lat": 71.2906,
+      "lon": -156.7887,
+      "timezone": "America/Anchorage",
+      "priority": 1,
+      "aurora": 12,
+      "gridLat": 71,
+      "gridLon": -157,
+      "bestCloud": 42,
+      "avgCloud": 85,
+      "score": 95,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Utqiagvik. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "tromso-troms",
+      "name": "Tromso",
+      "region": "Troms",
+      "country": "Norway",
+      "lat": 69.6676,
+      "lon": 18.9258,
+      "timezone": "Europe/Oslo",
+      "priority": 1,
+      "aurora": 9,
+      "gridLat": 70,
+      "gridLon": 19,
+      "bestCloud": 0,
+      "avgCloud": 28,
+      "score": 94,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Tromso. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "longyearbyen-svalbard-and-jan-mayen",
@@ -153,25 +172,6 @@
       "guidance": "Conditions are strong for Longyearbyen. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "tromso-troms",
-      "name": "Tromso",
-      "region": "Troms",
-      "country": "Norway",
-      "lat": 69.6676,
-      "lon": 18.9258,
-      "timezone": "Europe/Oslo",
-      "priority": 1,
-      "aurora": 7,
-      "gridLat": 70,
-      "gridLon": 19,
-      "bestCloud": 0,
-      "avgCloud": 28,
-      "score": 91,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Tromso. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
       "slug": "alta-finnmark",
       "name": "Alta",
       "region": "Finnmark",
@@ -180,34 +180,34 @@
       "lon": 23.2717,
       "timezone": "Europe/Oslo",
       "priority": 1,
-      "aurora": 7,
+      "aurora": 9,
       "gridLat": 70,
       "gridLon": 23,
       "bestCloud": 25,
       "avgCloud": 70,
-      "score": 88,
+      "score": 91,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Alta. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "dawson-city-yukon",
-      "name": "Dawson City",
-      "region": "Yukon",
-      "country": "Canada",
-      "lat": 64.0601,
-      "lon": -139.4333,
-      "timezone": "America/Dawson",
+      "slug": "inari-lapland",
+      "name": "Inari",
+      "region": "Lapland",
+      "country": "Finland",
+      "lat": 68.906,
+      "lon": 27.0288,
+      "timezone": "Europe/Helsinki",
       "priority": 1,
-      "aurora": 14,
-      "gridLat": 64,
-      "gridLon": -139,
-      "bestCloud": 56,
-      "avgCloud": 96,
-      "score": 88,
+      "aurora": 8,
+      "gridLat": 69,
+      "gridLon": 27,
+      "bestCloud": 11,
+      "avgCloud": 55,
+      "score": 90,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Dawson City. Find a dark northern horizon and check the sky after local twilight."
+      "guidance": "Conditions are strong for Inari. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "rankin-inlet-nunavut",
@@ -218,12 +218,12 @@
       "lon": -92.0853,
       "timezone": "America/Rankin_Inlet",
       "priority": 1,
-      "aurora": 11,
+      "aurora": 12,
       "gridLat": 63,
       "gridLon": -92,
       "bestCloud": 0,
       "avgCloud": 25,
-      "score": 88,
+      "score": 90,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Rankin Inlet. Find a dark northern horizon and check the sky after local twilight."
@@ -237,15 +237,34 @@
       "lon": -150.1094,
       "timezone": "America/Anchorage",
       "priority": 2,
-      "aurora": 12,
+      "aurora": 13,
       "gridLat": 62,
       "gridLon": -150,
       "bestCloud": 7,
       "avgCloud": 60,
-      "score": 88,
+      "score": 90,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Talkeetna. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "dawson-city-yukon",
+      "name": "Dawson City",
+      "region": "Yukon",
+      "country": "Canada",
+      "lat": 64.0601,
+      "lon": -139.4333,
+      "timezone": "America/Dawson",
+      "priority": 1,
+      "aurora": 15,
+      "gridLat": 64,
+      "gridLon": -139,
+      "bestCloud": 56,
+      "avgCloud": 96,
+      "score": 89,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Dawson City. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "hay-river-northwest-territories",
@@ -256,34 +275,34 @@
       "lon": -115.7999,
       "timezone": "America/Edmonton",
       "priority": 2,
-      "aurora": 12,
+      "aurora": 13,
       "gridLat": 61,
       "gridLon": -116,
       "bestCloud": 1,
       "avgCloud": 75,
-      "score": 87,
+      "score": 89,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Hay River. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "inari-lapland",
-      "name": "Inari",
+      "slug": "ivalo-lapland",
+      "name": "Ivalo",
       "region": "Lapland",
       "country": "Finland",
-      "lat": 68.906,
-      "lon": 27.0288,
+      "lat": 68.6599,
+      "lon": 27.5389,
       "timezone": "Europe/Helsinki",
       "priority": 1,
-      "aurora": 6,
+      "aurora": 8,
       "gridLat": 69,
-      "gridLon": 27,
-      "bestCloud": 11,
-      "avgCloud": 55,
-      "score": 87,
+      "gridLon": 28,
+      "bestCloud": 20,
+      "avgCloud": 77,
+      "score": 89,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Inari. Find a dark northern horizon and check the sky after local twilight."
+      "guidance": "Conditions are strong for Ivalo. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "yellowknife",
@@ -294,15 +313,72 @@
       "lon": -114.3725,
       "timezone": "America/Edmonton",
       "priority": 1,
-      "aurora": 11,
+      "aurora": 12,
       "gridLat": 62,
       "gridLon": -114,
       "bestCloud": 6,
       "avgCloud": 79,
-      "score": 87,
+      "score": 89,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Yellowknife. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "cambridge-bay-nunavut",
+      "name": "Cambridge Bay",
+      "region": "Nunavut",
+      "country": "Canada",
+      "lat": 69.1149,
+      "lon": -105.0548,
+      "timezone": "America/Cambridge_Bay",
+      "priority": 1,
+      "aurora": 5,
+      "gridLat": 69,
+      "gridLon": -105,
+      "bestCloud": 0,
+      "avgCloud": 31,
+      "score": 87,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Cambridge Bay. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "abisko-norrbotten-county",
+      "name": "Abisko",
+      "region": "Norrbotten County",
+      "country": "Sweden",
+      "lat": 68.3491,
+      "lon": 18.8287,
+      "timezone": "Europe/Stockholm",
+      "priority": 1,
+      "aurora": 5,
+      "gridLat": 68,
+      "gridLon": 19,
+      "bestCloud": 5,
+      "avgCloud": 64,
+      "score": 86,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Abisko. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "anchorage",
+      "name": "Anchorage",
+      "region": "Alaska",
+      "country": "United States",
+      "lat": 61.2181,
+      "lon": -149.9003,
+      "timezone": "America/Anchorage",
+      "priority": 1,
+      "aurora": 11,
+      "gridLat": 61,
+      "gridLon": -150,
+      "bestCloud": 6,
+      "avgCloud": 42,
+      "score": 86,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Anchorage. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "arviat-nunavut",
@@ -324,101 +400,6 @@
       "guidance": "Conditions are strong for Arviat. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "cambridge-bay-nunavut",
-      "name": "Cambridge Bay",
-      "region": "Nunavut",
-      "country": "Canada",
-      "lat": 69.1149,
-      "lon": -105.0548,
-      "timezone": "America/Cambridge_Bay",
-      "priority": 1,
-      "aurora": 4,
-      "gridLat": 69,
-      "gridLon": -105,
-      "bestCloud": 0,
-      "avgCloud": 31,
-      "score": 86,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Cambridge Bay. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "ivalo-lapland",
-      "name": "Ivalo",
-      "region": "Lapland",
-      "country": "Finland",
-      "lat": 68.6599,
-      "lon": 27.5389,
-      "timezone": "Europe/Helsinki",
-      "priority": 1,
-      "aurora": 6,
-      "gridLat": 69,
-      "gridLon": 28,
-      "bestCloud": 20,
-      "avgCloud": 77,
-      "score": 86,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Ivalo. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "abisko-norrbotten-county",
-      "name": "Abisko",
-      "region": "Norrbotten County",
-      "country": "Sweden",
-      "lat": 68.3491,
-      "lon": 18.8287,
-      "timezone": "Europe/Stockholm",
-      "priority": 1,
-      "aurora": 4,
-      "gridLat": 68,
-      "gridLon": 19,
-      "bestCloud": 5,
-      "avgCloud": 64,
-      "score": 84,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Abisko. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "anchorage",
-      "name": "Anchorage",
-      "region": "Alaska",
-      "country": "United States",
-      "lat": 61.2181,
-      "lon": -149.9003,
-      "timezone": "America/Anchorage",
-      "priority": 1,
-      "aurora": 10,
-      "gridLat": 61,
-      "gridLon": -150,
-      "bestCloud": 6,
-      "avgCloud": 42,
-      "score": 84,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Anchorage. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "kiruna-norrbotten-county",
-      "name": "Kiruna",
-      "region": "Norrbotten County",
-      "country": "Sweden",
-      "lat": 67.8557,
-      "lon": 20.2251,
-      "timezone": "Europe/Stockholm",
-      "priority": 1,
-      "aurora": 4,
-      "gridLat": 68,
-      "gridLon": 20,
-      "bestCloud": 4,
-      "avgCloud": 62,
-      "score": 84,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Kiruna. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
       "slug": "kittila-lapland",
       "name": "Kittila",
       "region": "Lapland",
@@ -427,34 +408,15 @@
       "lon": 24.8936,
       "timezone": "Europe/Helsinki",
       "priority": 1,
-      "aurora": 5,
+      "aurora": 6,
       "gridLat": 68,
       "gridLon": 25,
       "bestCloud": 8,
       "avgCloud": 45,
-      "score": 84,
+      "score": 86,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Kittila. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "narvik-nordland",
-      "name": "Narvik",
-      "region": "Nordland",
-      "country": "Norway",
-      "lat": 68.4384,
-      "lon": 17.4272,
-      "timezone": "Europe/Oslo",
-      "priority": 1,
-      "aurora": 4,
-      "gridLat": 68,
-      "gridLon": 17,
-      "bestCloud": 7,
-      "avgCloud": 64,
-      "score": 84,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Narvik. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "svolvaer-nordland",
@@ -465,15 +427,53 @@
       "lon": 14.5683,
       "timezone": "Europe/Oslo",
       "priority": 1,
-      "aurora": 4,
+      "aurora": 5,
       "gridLat": 68,
       "gridLon": 15,
       "bestCloud": 2,
       "avgCloud": 64,
-      "score": 84,
+      "score": 86,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Svolvaer. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "kiruna-norrbotten-county",
+      "name": "Kiruna",
+      "region": "Norrbotten County",
+      "country": "Sweden",
+      "lat": 67.8557,
+      "lon": 20.2251,
+      "timezone": "Europe/Stockholm",
+      "priority": 1,
+      "aurora": 5,
+      "gridLat": 68,
+      "gridLon": 20,
+      "bestCloud": 4,
+      "avgCloud": 62,
+      "score": 85,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Kiruna. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "narvik-nordland",
+      "name": "Narvik",
+      "region": "Nordland",
+      "country": "Norway",
+      "lat": 68.4384,
+      "lon": 17.4272,
+      "timezone": "Europe/Oslo",
+      "priority": 1,
+      "aurora": 5,
+      "gridLat": 68,
+      "gridLon": 17,
+      "bestCloud": 7,
+      "avgCloud": 64,
+      "score": 85,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Narvik. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "fort-smith-northwest-territories",
@@ -484,12 +484,12 @@
       "lon": -111.8887,
       "timezone": "America/Edmonton",
       "priority": 2,
-      "aurora": 11,
+      "aurora": 12,
       "gridLat": 60,
       "gridLon": -112,
       "bestCloud": 25,
       "avgCloud": 82,
-      "score": 82,
+      "score": 83,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Fort Smith. Find a dark northern horizon and check the sky after local twilight."
@@ -512,6 +512,63 @@
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Iqaluit. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "sodankyla-lapland",
+      "name": "Sodankyla",
+      "region": "Lapland",
+      "country": "Finland",
+      "lat": 67.4167,
+      "lon": 26.6,
+      "timezone": "Europe/Helsinki",
+      "priority": 1,
+      "aurora": 5,
+      "gridLat": 67,
+      "gridLon": 27,
+      "bestCloud": 33,
+      "avgCloud": 76,
+      "score": 81,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Sodankyla. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "whitehorse-yukon",
+      "name": "Whitehorse",
+      "region": "Yukon",
+      "country": "Canada",
+      "lat": 60.7161,
+      "lon": -135.0538,
+      "timezone": "America/Whitehorse",
+      "priority": 1,
+      "aurora": 13,
+      "gridLat": 61,
+      "gridLon": -135,
+      "bestCloud": 67,
+      "avgCloud": 95,
+      "score": 81,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Whitehorse. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "bodo-nordland",
+      "name": "Bodo",
+      "region": "Nordland",
+      "country": "Norway",
+      "lat": 67.2827,
+      "lon": 14.3751,
+      "timezone": "Europe/Oslo",
+      "priority": 1,
+      "aurora": 4,
+      "gridLat": 67,
+      "gridLon": 14,
+      "bestCloud": 31,
+      "avgCloud": 84,
+      "score": 80,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Bodo. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "churchill-manitoba",
@@ -571,23 +628,23 @@
       "guidance": "Conditions are strong for Lulea. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "sodankyla-lapland",
-      "name": "Sodankyla",
-      "region": "Lapland",
-      "country": "Finland",
-      "lat": 67.4167,
-      "lon": 26.6,
-      "timezone": "Europe/Helsinki",
+      "slug": "tasiilaq-sermersooq",
+      "name": "Tasiilaq",
+      "region": "Sermersooq",
+      "country": "Greenland",
+      "lat": 65.6145,
+      "lon": -37.6368,
+      "timezone": "America/Nuuk",
       "priority": 1,
-      "aurora": 4,
-      "gridLat": 67,
-      "gridLon": 27,
-      "bestCloud": 33,
-      "avgCloud": 76,
+      "aurora": 3,
+      "gridLat": 66,
+      "gridLon": -38,
+      "bestCloud": 0,
+      "avgCloud": 20,
       "score": 80,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Sodankyla. Find a dark northern horizon and check the sky after local twilight."
+      "guidance": "Conditions are strong for Tasiilaq. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "ilulissat-avannaata",
@@ -609,23 +666,23 @@
       "guidance": "Conditions are strong for Ilulissat. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "whitehorse-yukon",
-      "name": "Whitehorse",
-      "region": "Yukon",
-      "country": "Canada",
-      "lat": 60.7161,
-      "lon": -135.0538,
-      "timezone": "America/Whitehorse",
+      "slug": "oulu-north-ostrobothnia",
+      "name": "Oulu",
+      "region": "North Ostrobothnia",
+      "country": "Finland",
+      "lat": 65.0124,
+      "lon": 25.4682,
+      "timezone": "Europe/Helsinki",
       "priority": 1,
-      "aurora": 12,
-      "gridLat": 61,
-      "gridLon": -135,
-      "bestCloud": 67,
-      "avgCloud": 95,
+      "aurora": 3,
+      "gridLat": 65,
+      "gridLon": 25,
+      "bestCloud": 4,
+      "avgCloud": 62,
       "score": 79,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Whitehorse. Find a dark northern horizon and check the sky after local twilight."
+      "guidance": "Conditions are strong for Oulu. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "akureyri-northeast",
@@ -647,42 +704,23 @@
       "guidance": "Conditions are strong for Akureyri. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "bodo-nordland",
-      "name": "Bodo",
-      "region": "Nordland",
-      "country": "Norway",
-      "lat": 67.2827,
-      "lon": 14.3751,
-      "timezone": "Europe/Oslo",
+      "slug": "rovaniemi-lapland",
+      "name": "Rovaniemi",
+      "region": "Lapland",
+      "country": "Finland",
+      "lat": 66.499,
+      "lon": 25.6887,
+      "timezone": "Europe/Helsinki",
       "priority": 1,
-      "aurora": 3,
-      "gridLat": 67,
-      "gridLon": 14,
-      "bestCloud": 31,
-      "avgCloud": 84,
-      "score": 78,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Bodo. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "tasiilaq-sermersooq",
-      "name": "Tasiilaq",
-      "region": "Sermersooq",
-      "country": "Greenland",
-      "lat": 65.6145,
-      "lon": -37.6368,
-      "timezone": "America/Nuuk",
-      "priority": 1,
-      "aurora": 2,
+      "aurora": 4,
       "gridLat": 66,
-      "gridLon": -38,
-      "bestCloud": 0,
-      "avgCloud": 20,
+      "gridLon": 26,
+      "bestCloud": 34,
+      "avgCloud": 65,
       "score": 78,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Tasiilaq. Find a dark northern horizon and check the sky after local twilight."
+      "guidance": "Conditions are strong for Rovaniemi. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "fort-mcmurray-alberta",
@@ -723,44 +761,6 @@
       "guidance": "Conditions are strong for Kangerlussuaq. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "oulu-north-ostrobothnia",
-      "name": "Oulu",
-      "region": "North Ostrobothnia",
-      "country": "Finland",
-      "lat": 65.0124,
-      "lon": 25.4682,
-      "timezone": "Europe/Helsinki",
-      "priority": 1,
-      "aurora": 2,
-      "gridLat": 65,
-      "gridLon": 25,
-      "bestCloud": 4,
-      "avgCloud": 62,
-      "score": 77,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Oulu. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "rovaniemi-lapland",
-      "name": "Rovaniemi",
-      "region": "Lapland",
-      "country": "Finland",
-      "lat": 66.499,
-      "lon": 25.6887,
-      "timezone": "Europe/Helsinki",
-      "priority": 1,
-      "aurora": 3,
-      "gridLat": 66,
-      "gridLon": 26,
-      "bestCloud": 34,
-      "avgCloud": 65,
-      "score": 77,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Rovaniemi. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
       "slug": "egilsstadir-east",
       "name": "Egilsstadir",
       "region": "East",
@@ -778,6 +778,44 @@
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Egilsstadir. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "fort-st-john-british-columbia",
+      "name": "Fort St. John",
+      "region": "British Columbia",
+      "country": "Canada",
+      "lat": 56.2499,
+      "lon": -120.8529,
+      "timezone": "America/Dawson_Creek",
+      "priority": 1,
+      "aurora": 8,
+      "gridLat": 56,
+      "gridLon": -121,
+      "bestCloud": 0,
+      "avgCloud": 33,
+      "score": 76,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Fort St. John. Find a dark northern horizon and check the sky after local twilight."
+    },
+    {
+      "slug": "dawson-creek-british-columbia",
+      "name": "Dawson Creek",
+      "region": "British Columbia",
+      "country": "Canada",
+      "lat": 55.7598,
+      "lon": -120.2403,
+      "timezone": "America/Dawson_Creek",
+      "priority": 2,
+      "aurora": 8,
+      "gridLat": 56,
+      "gridLon": -120,
+      "bestCloud": 0,
+      "avgCloud": 37,
+      "score": 75,
+      "label": "Great",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Conditions are strong for Dawson Creek. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "reykjavik",
@@ -799,42 +837,42 @@
       "guidance": "Conditions are strong for Reykjavik. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "fort-st-john-british-columbia",
-      "name": "Fort St. John",
-      "region": "British Columbia",
-      "country": "Canada",
-      "lat": 56.2499,
-      "lon": -120.8529,
-      "timezone": "America/Dawson_Creek",
+      "slug": "kuusamo-north-ostrobothnia",
+      "name": "Kuusamo",
+      "region": "North Ostrobothnia",
+      "country": "Finland",
+      "lat": 65.9645,
+      "lon": 29.1888,
+      "timezone": "Europe/Helsinki",
       "priority": 1,
-      "aurora": 7,
-      "gridLat": 56,
-      "gridLon": -121,
-      "bestCloud": 0,
-      "avgCloud": 33,
+      "aurora": 4,
+      "gridLat": 66,
+      "gridLon": 29,
+      "bestCloud": 66,
+      "avgCloud": 89,
       "score": 74,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Fort St. John. Find a dark northern horizon and check the sky after local twilight."
+      "guidance": "Conditions are strong for Kuusamo. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "dawson-creek-british-columbia",
-      "name": "Dawson Creek",
-      "region": "British Columbia",
-      "country": "Canada",
-      "lat": 55.7598,
-      "lon": -120.2403,
-      "timezone": "America/Dawson_Creek",
-      "priority": 2,
-      "aurora": 7,
-      "gridLat": 56,
-      "gridLon": -120,
-      "bestCloud": 0,
-      "avgCloud": 37,
-      "score": 73,
+      "slug": "umea-vasterbotten-county",
+      "name": "Umea",
+      "region": "Västerbotten County",
+      "country": "Sweden",
+      "lat": 63.8284,
+      "lon": 20.2597,
+      "timezone": "Europe/Stockholm",
+      "priority": 1,
+      "aurora": 2,
+      "gridLat": 64,
+      "gridLon": 20,
+      "bestCloud": 19,
+      "avgCloud": 71,
+      "score": 74,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Dawson Creek. Find a dark northern horizon and check the sky after local twilight."
+      "guidance": "Conditions are strong for Umea. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "vik-iceland",
@@ -845,34 +883,15 @@
       "lon": -19.0097,
       "timezone": "Atlantic/Reykjavik",
       "priority": 2,
-      "aurora": 0,
+      "aurora": 1,
       "gridLat": 63,
       "gridLon": -19,
       "bestCloud": 0,
       "avgCloud": 44,
-      "score": 73,
+      "score": 74,
       "label": "Great",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Conditions are strong for Vik. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
-      "slug": "kuusamo-north-ostrobothnia",
-      "name": "Kuusamo",
-      "region": "North Ostrobothnia",
-      "country": "Finland",
-      "lat": 65.9645,
-      "lon": 29.1888,
-      "timezone": "Europe/Helsinki",
-      "priority": 1,
-      "aurora": 3,
-      "gridLat": 66,
-      "gridLon": 29,
-      "bestCloud": 66,
-      "avgCloud": 89,
-      "score": 72,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Kuusamo. Find a dark northern horizon and check the sky after local twilight."
     },
     {
       "slug": "thompson-manitoba",
@@ -913,25 +932,6 @@
       "guidance": "Conditions are strong for Trondheim. Find a dark northern horizon and check the sky after local twilight."
     },
     {
-      "slug": "umea-vasterbotten-county",
-      "name": "Umea",
-      "region": "Västerbotten County",
-      "country": "Sweden",
-      "lat": 63.8284,
-      "lon": 20.2597,
-      "timezone": "Europe/Stockholm",
-      "priority": 1,
-      "aurora": 1,
-      "gridLat": 64,
-      "gridLon": 20,
-      "bestCloud": 19,
-      "avgCloud": 71,
-      "score": 72,
-      "label": "Great",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Conditions are strong for Umea. Find a dark northern horizon and check the sky after local twilight."
-    },
-    {
       "slug": "grande-prairie-alberta",
       "name": "Grande Prairie",
       "region": "Alberta",
@@ -968,25 +968,6 @@
       "label": "Good",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Isafjordur has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
-    },
-    {
-      "slug": "kuujjuaq-quebec",
-      "name": "Kuujjuaq",
-      "region": "Quebec",
-      "country": "Canada",
-      "lat": 58.1073,
-      "lon": -68.3997,
-      "timezone": "America/Toronto",
-      "priority": 1,
-      "aurora": 2,
-      "gridLat": 58,
-      "gridLon": -68,
-      "bestCloud": 3,
-      "avgCloud": 77,
-      "score": 69,
-      "label": "Good",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Kuujjuaq has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
       "slug": "ostersund-jamtland-county",
@@ -1046,6 +1027,25 @@
       "guidance": "La Ronge has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
+      "slug": "nuuk-sermersooq",
+      "name": "Nuuk",
+      "region": "Sermersooq",
+      "country": "Greenland",
+      "lat": 64.1835,
+      "lon": -51.7216,
+      "timezone": "America/Nuuk",
+      "priority": 1,
+      "aurora": 3,
+      "gridLat": 64,
+      "gridLon": -52,
+      "bestCloud": 86,
+      "avgCloud": 98,
+      "score": 68,
+      "label": "Good",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Nuuk has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+    },
+    {
       "slug": "torshavn-faroe-islands",
       "name": "Torshavn",
       "region": "Faroe Islands",
@@ -1103,23 +1103,23 @@
       "guidance": "Juneau has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
-      "slug": "nuuk-sermersooq",
-      "name": "Nuuk",
-      "region": "Sermersooq",
-      "country": "Greenland",
-      "lat": 64.1835,
-      "lon": -51.7216,
-      "timezone": "America/Nuuk",
+      "slug": "kuujjuaq-quebec",
+      "name": "Kuujjuaq",
+      "region": "Quebec",
+      "country": "Canada",
+      "lat": 58.1073,
+      "lon": -68.3997,
+      "timezone": "America/Toronto",
       "priority": 1,
-      "aurora": 2,
-      "gridLat": 64,
-      "gridLon": -52,
-      "bestCloud": 86,
-      "avgCloud": 98,
-      "score": 66,
+      "aurora": 1,
+      "gridLat": 58,
+      "gridLon": -68,
+      "bestCloud": 3,
+      "avgCloud": 77,
+      "score": 67,
       "label": "Good",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Nuuk has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+      "guidance": "Kuujjuaq has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
       "slug": "prince-george-british-columbia",
@@ -1388,6 +1388,25 @@
       "guidance": "Newcastle upon Tyne has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
+      "slug": "banff-alberta",
+      "name": "Banff",
+      "region": "Alberta",
+      "country": "Canada",
+      "lat": 51.1762,
+      "lon": -115.5698,
+      "timezone": "America/Edmonton",
+      "priority": 2,
+      "aurora": 2,
+      "gridLat": 51,
+      "gridLon": -116,
+      "bestCloud": 0,
+      "avgCloud": 40,
+      "score": 60,
+      "label": "Good",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Banff has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+    },
+    {
       "slug": "calgary",
       "name": "Calgary",
       "region": "Alberta",
@@ -1464,23 +1483,23 @@
       "guidance": "Ushuaia has a reasonable chance if clouds stay low and the aurora oval pushes north. Dark sites south of town help."
     },
     {
-      "slug": "banff-alberta",
-      "name": "Banff",
-      "region": "Alberta",
-      "country": "Canada",
-      "lat": 51.1762,
-      "lon": -115.5698,
-      "timezone": "America/Edmonton",
-      "priority": 2,
-      "aurora": 1,
-      "gridLat": 51,
-      "gridLon": -116,
-      "bestCloud": 0,
-      "avgCloud": 40,
+      "slug": "hamburg-free-and-hanseatic-city-of-hamburg",
+      "name": "Hamburg",
+      "region": "Free and Hanseatic City of Hamburg",
+      "country": "Germany",
+      "lat": 53.5507,
+      "lon": 9.993,
+      "timezone": "Europe/Berlin",
+      "priority": 3,
+      "aurora": 0,
+      "gridLat": 54,
+      "gridLon": 10,
+      "bestCloud": 6,
+      "avgCloud": 62,
       "score": 59,
       "label": "Good",
       "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Banff has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+      "guidance": "Hamburg has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
       "slug": "stockholm-stockholm-county",
@@ -1519,25 +1538,6 @@
       "label": "Good",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Dublin has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
-    },
-    {
-      "slug": "hamburg-free-and-hanseatic-city-of-hamburg",
-      "name": "Hamburg",
-      "region": "Free and Hanseatic City of Hamburg",
-      "country": "Germany",
-      "lat": 53.5507,
-      "lon": 9.993,
-      "timezone": "Europe/Berlin",
-      "priority": 3,
-      "aurora": 0,
-      "gridLat": 54,
-      "gridLon": 10,
-      "bestCloud": 16,
-      "avgCloud": 63,
-      "score": 58,
-      "label": "Good",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Hamburg has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
       "slug": "labrador-city-newfoundland-and-labrador",
@@ -1703,8 +1703,8 @@
       "aurora": 0,
       "gridLat": 54,
       "gridLon": 19,
-      "bestCloud": 47,
-      "avgCloud": 79,
+      "bestCloud": 43,
+      "avgCloud": 80,
       "score": 56,
       "label": "Good",
       "watchWindow": "10:00 PM to 2:00 AM local time",
@@ -1768,6 +1768,25 @@
       "guidance": "Sept-Iles has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
+      "slug": "minot-north-dakota",
+      "name": "Minot",
+      "region": "North Dakota",
+      "country": "United States",
+      "lat": 48.2325,
+      "lon": -101.2963,
+      "timezone": "America/Chicago",
+      "priority": 1,
+      "aurora": 1,
+      "gridLat": 48,
+      "gridLon": -101,
+      "bestCloud": 0,
+      "avgCloud": 81,
+      "score": 55,
+      "label": "Good",
+      "watchWindow": "10:00 PM to 2:00 AM local time",
+      "guidance": "Minot has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
+    },
+    {
       "slug": "belfast-northern-ireland",
       "name": "Belfast",
       "region": "Northern Ireland",
@@ -1785,25 +1804,6 @@
       "label": "Good",
       "watchWindow": "10:00 PM to 2:00 AM local time",
       "guidance": "Belfast has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
-    },
-    {
-      "slug": "minot-north-dakota",
-      "name": "Minot",
-      "region": "North Dakota",
-      "country": "United States",
-      "lat": 48.2325,
-      "lon": -101.2963,
-      "timezone": "America/Chicago",
-      "priority": 1,
-      "aurora": 0,
-      "gridLat": 48,
-      "gridLon": -101,
-      "bestCloud": 0,
-      "avgCloud": 81,
-      "score": 54,
-      "label": "Good",
-      "watchWindow": "10:00 PM to 2:00 AM local time",
-      "guidance": "Minot has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help."
     },
     {
       "slug": "saguenay-quebec",
@@ -3368,6 +3368,22 @@
     {
       "x": 1.7,
       "y": 17.5,
+      "value": 20,
+      "alpha": 0.3,
+      "size": 8,
+      "color": "#9ff7d2"
+    },
+    {
+      "x": 1.7,
+      "y": 22.5,
+      "value": 19,
+      "alpha": 0.3,
+      "size": 8,
+      "color": "#ffd166"
+    },
+    {
+      "x": 4.2,
+      "y": 22.5,
       "value": 19,
       "alpha": 0.3,
       "size": 8,
@@ -3382,25 +3398,9 @@
       "color": "#ffd166"
     },
     {
-      "x": 1.7,
-      "y": 22.5,
-      "value": 18,
-      "alpha": 0.3,
-      "size": 8,
-      "color": "#ffd166"
-    },
-    {
-      "x": 4.2,
-      "y": 22.5,
-      "value": 18,
-      "alpha": 0.3,
-      "size": 8,
-      "color": "#ffd166"
-    },
-    {
       "x": 6.7,
       "y": 22.5,
-      "value": 18,
+      "value": 19,
       "alpha": 0.3,
       "size": 8,
       "color": "#ffd166"
@@ -3408,6 +3408,14 @@
     {
       "x": 6.7,
       "y": 17.5,
+      "value": 19,
+      "alpha": 0.3,
+      "size": 8,
+      "color": "#ffd166"
+    },
+    {
+      "x": 9.2,
+      "y": 22.5,
       "value": 18,
       "alpha": 0.3,
       "size": 8,
@@ -3415,6 +3423,14 @@
     },
     {
       "x": 9.2,
+      "y": 17.5,
+      "value": 18,
+      "alpha": 0.3,
+      "size": 8,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
       "y": 22.5,
       "value": 18,
       "alpha": 0.3,
@@ -3430,7 +3446,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 9.2,
+      "x": 11.7,
       "y": 17.5,
       "value": 17,
       "alpha": 0.3,
@@ -3438,7 +3454,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 11.7,
+      "x": 14.2,
       "y": 22.5,
       "value": 17,
       "alpha": 0.3,
@@ -3446,7 +3462,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 14.2,
+      "x": 16.7,
       "y": 22.5,
       "value": 17,
       "alpha": 0.3,
@@ -3462,8 +3478,32 @@
       "color": "#ffd166"
     },
     {
+      "x": 6.7,
+      "y": 27.5,
+      "value": 16,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 6.7,
+      "y": 12.5,
+      "value": 16,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 9.2,
+      "y": 27.5,
+      "value": 16,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
       "x": 11.7,
-      "y": 17.5,
+      "y": 27.5,
       "value": 16,
       "alpha": 0.3,
       "size": 7,
@@ -3472,6 +3512,14 @@
     {
       "x": 14.2,
       "y": 27.5,
+      "value": 16,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 17.5,
       "value": 16,
       "alpha": 0.3,
       "size": 7,
@@ -3486,65 +3534,17 @@
       "color": "#ffd166"
     },
     {
-      "x": 16.7,
-      "y": 22.5,
+      "x": 19.2,
+      "y": 27.5,
       "value": 16,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
     },
     {
-      "x": 6.7,
-      "y": 27.5,
-      "value": 15,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 6.7,
-      "y": 12.5,
-      "value": 15,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 9.2,
-      "y": 27.5,
-      "value": 15,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 11.7,
-      "y": 27.5,
-      "value": 15,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 14.2,
-      "y": 17.5,
-      "value": 15,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 19.2,
-      "y": 27.5,
-      "value": 15,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
       "x": 19.2,
       "y": 22.5,
-      "value": 15,
+      "value": 16,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
@@ -3552,6 +3552,38 @@
     {
       "x": 21.7,
       "y": 27.5,
+      "value": 16,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 1.7,
+      "y": 27.5,
+      "value": 15,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 4.2,
+      "y": 27.5,
+      "value": 15,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 9.2,
+      "y": 12.5,
+      "value": 15,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 16.7,
+      "y": 17.5,
       "value": 15,
       "alpha": 0.3,
       "size": 7,
@@ -3574,65 +3606,9 @@
       "color": "#ffd166"
     },
     {
-      "x": 1.7,
-      "y": 27.5,
-      "value": 14,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 4.2,
-      "y": 27.5,
-      "value": 14,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 9.2,
-      "y": 12.5,
-      "value": 14,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 16.7,
-      "y": 17.5,
-      "value": 14,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 24.2,
-      "y": 22.5,
-      "value": 14,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
       "x": 26.7,
       "y": 27.5,
-      "value": 14,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 11.7,
-      "y": 12.5,
-      "value": 13,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 19.2,
-      "y": 32.5,
-      "value": 13,
+      "value": 15,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
@@ -3640,7 +3616,7 @@
     {
       "x": 19.2,
       "y": 17.5,
-      "value": 13,
+      "value": 14,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
@@ -3648,7 +3624,7 @@
     {
       "x": 21.7,
       "y": 32.5,
-      "value": 13,
+      "value": 14,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
@@ -3656,7 +3632,15 @@
     {
       "x": 24.2,
       "y": 32.5,
-      "value": 13,
+      "value": 14,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 22.5,
+      "value": 14,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
@@ -3664,15 +3648,7 @@
     {
       "x": 26.7,
       "y": 32.5,
-      "value": 13,
-      "alpha": 0.3,
-      "size": 7,
-      "color": "#ffd166"
-    },
-    {
-      "x": 26.7,
-      "y": 22.5,
-      "value": 13,
+      "value": 14,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
@@ -3680,7 +3656,7 @@
     {
       "x": 29.2,
       "y": 32.5,
-      "value": 13,
+      "value": 14,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
@@ -3688,7 +3664,7 @@
     {
       "x": 29.2,
       "y": 27.5,
-      "value": 13,
+      "value": 14,
       "alpha": 0.3,
       "size": 7,
       "color": "#ffd166"
@@ -3696,6 +3672,62 @@
     {
       "x": 31.7,
       "y": 32.5,
+      "value": 14,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 32.5,
+      "value": 14,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 1.7,
+      "y": 7.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
+      "y": 12.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 16.7,
+      "y": 32.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 19.2,
+      "y": 32.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 17.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 26.7,
+      "y": 22.5,
       "value": 13,
       "alpha": 0.3,
       "size": 7,
@@ -3711,7 +3743,23 @@
     },
     {
       "x": 34.2,
-      "y": 32.5,
+      "y": 37.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 27.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 37.5,
       "value": 13,
       "alpha": 0.3,
       "size": 7,
@@ -3726,128 +3774,120 @@
       "color": "#ffd166"
     },
     {
-      "x": 1.7,
-      "y": 7.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 4.2,
-      "y": 7.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 14.2,
-      "y": 32.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 14.2,
-      "y": 12.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 16.7,
-      "y": 32.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 21.7,
-      "y": 17.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 29.2,
-      "y": 22.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 31.7,
-      "y": 37.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 34.2,
-      "y": 37.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 34.2,
-      "y": 27.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 36.7,
-      "y": 37.5,
-      "value": 12,
-      "alpha": 0.3,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
       "x": 39.2,
       "y": 37.5,
-      "value": 12,
+      "value": 13,
       "alpha": 0.3,
-      "size": 6,
+      "size": 7,
       "color": "#ffd166"
     },
     {
       "x": 39.2,
       "y": 32.5,
-      "value": 12,
+      "value": 13,
       "alpha": 0.3,
-      "size": 6,
+      "size": 7,
       "color": "#ffd166"
     },
     {
       "x": 41.7,
       "y": 37.5,
-      "value": 12,
+      "value": 13,
       "alpha": 0.3,
-      "size": 6,
+      "size": 7,
       "color": "#ffd166"
     },
     {
       "x": 41.7,
       "y": 32.5,
-      "value": 12,
+      "value": 13,
       "alpha": 0.3,
-      "size": 6,
+      "size": 7,
       "color": "#ffd166"
     },
     {
       "x": 44.2,
       "y": 37.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 32.5,
+      "value": 13,
+      "alpha": 0.3,
+      "size": 7,
+      "color": "#ffd166"
+    },
+    {
+      "x": 4.2,
+      "y": 7.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 14.2,
+      "y": 12.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 29.2,
+      "y": 22.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 31.7,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
+      "y": 27.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 39.2,
+      "y": 27.5,
       "value": 12,
       "alpha": 0.3,
       "size": 6,
@@ -3862,6 +3902,134 @@
       "color": "#ffd166"
     },
     {
+      "x": 46.7,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 37.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 56.7,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 27.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 27.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 32.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 27.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 66.7,
+      "y": 27.5,
+      "value": 12,
+      "alpha": 0.3,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
       "x": 6.7,
       "y": 7.5,
       "value": 11,
@@ -3870,7 +4038,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 11.7,
+      "x": 9.2,
       "y": 32.5,
       "value": 11,
       "alpha": 0.2,
@@ -3880,6 +4048,14 @@
     {
       "x": 16.7,
       "y": 12.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 24.2,
+      "y": 37.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -3902,14 +4078,6 @@
       "color": "#ffd166"
     },
     {
-      "x": 29.2,
-      "y": 37.5,
-      "value": 11,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
       "x": 31.7,
       "y": 22.5,
       "value": 11,
@@ -3918,15 +4086,23 @@
       "color": "#ffd166"
     },
     {
-      "x": 36.7,
-      "y": 27.5,
+      "x": 39.2,
+      "y": 42.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
       "color": "#ffd166"
     },
     {
-      "x": 39.2,
+      "x": 41.7,
+      "y": 42.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 41.7,
       "y": 27.5,
       "value": 11,
       "alpha": 0.2,
@@ -3935,7 +4111,15 @@
     },
     {
       "x": 44.2,
-      "y": 32.5,
+      "y": 42.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 27.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -3943,7 +4127,15 @@
     },
     {
       "x": 46.7,
-      "y": 32.5,
+      "y": 42.5,
+      "value": 11,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 27.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -3951,7 +4143,7 @@
     },
     {
       "x": 49.2,
-      "y": 37.5,
+      "y": 42.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -3959,7 +4151,7 @@
     },
     {
       "x": 49.2,
-      "y": 32.5,
+      "y": 27.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -3967,15 +4159,7 @@
     },
     {
       "x": 51.7,
-      "y": 37.5,
-      "value": 11,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 51.7,
-      "y": 32.5,
+      "y": 27.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -3983,15 +4167,7 @@
     },
     {
       "x": 54.2,
-      "y": 37.5,
-      "value": 11,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 54.2,
-      "y": 32.5,
+      "y": 27.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -3999,15 +4175,7 @@
     },
     {
       "x": 56.7,
-      "y": 37.5,
-      "value": 11,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 56.7,
-      "y": 32.5,
+      "y": 27.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -4015,7 +4183,7 @@
     },
     {
       "x": 59.2,
-      "y": 32.5,
+      "y": 37.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -4023,31 +4191,7 @@
     },
     {
       "x": 61.7,
-      "y": 32.5,
-      "value": 11,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 61.7,
-      "y": 27.5,
-      "value": 11,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 64.2,
-      "y": 32.5,
-      "value": 11,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 64.2,
-      "y": 27.5,
+      "y": 37.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -4062,8 +4206,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 66.7,
-      "y": 27.5,
+      "x": 69.2,
+      "y": 32.5,
       "value": 11,
       "alpha": 0.2,
       "size": 6,
@@ -4086,7 +4230,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 6.7,
+      "x": 4.2,
       "y": 32.5,
       "value": 10,
       "alpha": 0.2,
@@ -4094,7 +4238,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 9.2,
+      "x": 6.7,
       "y": 32.5,
       "value": 10,
       "alpha": 0.2,
@@ -4118,7 +4262,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 24.2,
+      "x": 21.7,
       "y": 37.5,
       "value": 10,
       "alpha": 0.2,
@@ -4128,6 +4272,14 @@
     {
       "x": 26.7,
       "y": 17.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 34.2,
+      "y": 42.5,
       "value": 10,
       "alpha": 0.2,
       "size": 6,
@@ -4150,72 +4302,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 39.2,
-      "y": 42.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 41.7,
-      "y": 42.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 41.7,
-      "y": 27.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 44.2,
-      "y": 42.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 44.2,
-      "y": 27.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 46.7,
-      "y": 42.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 46.7,
-      "y": 27.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 49.2,
-      "y": 42.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 49.2,
-      "y": 27.5,
+      "x": 36.7,
+      "y": 22.5,
       "value": 10,
       "alpha": 0.2,
       "size": 6,
@@ -4230,24 +4318,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 51.7,
-      "y": 27.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
       "x": 54.2,
       "y": 42.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 54.2,
-      "y": 27.5,
       "value": 10,
       "alpha": 0.2,
       "size": 6,
@@ -4255,23 +4327,7 @@
     },
     {
       "x": 56.7,
-      "y": 27.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 59.2,
-      "y": 37.5,
-      "value": 10,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 59.2,
-      "y": 27.5,
+      "y": 42.5,
       "value": 10,
       "alpha": 0.2,
       "size": 6,
@@ -4279,7 +4335,7 @@
     },
     {
       "x": 61.7,
-      "y": 37.5,
+      "y": 22.5,
       "value": 10,
       "alpha": 0.2,
       "size": 6,
@@ -4288,6 +4344,14 @@
     {
       "x": 64.2,
       "y": 37.5,
+      "value": 10,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 64.2,
+      "y": 22.5,
       "value": 10,
       "alpha": 0.2,
       "size": 6,
@@ -4303,15 +4367,15 @@
     },
     {
       "x": 69.2,
-      "y": 32.5,
+      "y": 22.5,
       "value": 10,
       "alpha": 0.2,
       "size": 6,
       "color": "#ffd166"
     },
     {
-      "x": 69.2,
-      "y": 22.5,
+      "x": 71.7,
+      "y": 32.5,
       "value": 10,
       "alpha": 0.2,
       "size": 6,
@@ -4342,7 +4406,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 4.2,
+      "x": 1.7,
       "y": 32.5,
       "value": 9,
       "alpha": 0.2,
@@ -4367,14 +4431,6 @@
     },
     {
       "x": 21.7,
-      "y": 37.5,
-      "value": 9,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 21.7,
       "y": 12.5,
       "value": 9,
       "alpha": 0.2,
@@ -4390,7 +4446,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 34.2,
+      "x": 31.7,
       "y": 42.5,
       "value": 9,
       "alpha": 0.2,
@@ -4398,7 +4454,23 @@
       "color": "#ffd166"
     },
     {
-      "x": 36.7,
+      "x": 39.2,
+      "y": 22.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 41.7,
+      "y": 22.5,
+      "value": 9,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
       "y": 22.5,
       "value": 9,
       "alpha": 0.2,
@@ -4407,7 +4479,7 @@
     },
     {
       "x": 56.7,
-      "y": 42.5,
+      "y": 22.5,
       "value": 9,
       "alpha": 0.2,
       "size": 6,
@@ -4422,15 +4494,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 61.7,
-      "y": 22.5,
-      "value": 9,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 64.2,
+      "x": 59.2,
       "y": 22.5,
       "value": 9,
       "alpha": 0.2,
@@ -4440,14 +4504,6 @@
     {
       "x": 66.7,
       "y": 37.5,
-      "value": 9,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 71.7,
-      "y": 32.5,
       "value": 9,
       "alpha": 0.2,
       "size": 6,
@@ -4481,14 +4537,6 @@
       "x": 79.2,
       "y": 22.5,
       "value": 9,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 1.7,
-      "y": 32.5,
-      "value": 8,
       "alpha": 0.2,
       "size": 6,
       "color": "#ffd166"
@@ -4535,14 +4583,6 @@
     },
     {
       "x": 31.7,
-      "y": 42.5,
-      "value": 8,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 31.7,
       "y": 17.5,
       "value": 8,
       "alpha": 0.2,
@@ -4550,8 +4590,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 39.2,
-      "y": 22.5,
+      "x": 34.2,
+      "y": 17.5,
       "value": 8,
       "alpha": 0.2,
       "size": 6,
@@ -4559,7 +4599,7 @@
     },
     {
       "x": 41.7,
-      "y": 22.5,
+      "y": 47.5,
       "value": 8,
       "alpha": 0.2,
       "size": 6,
@@ -4590,8 +4630,24 @@
       "color": "#ffd166"
     },
     {
+      "x": 46.7,
+      "y": 22.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
       "x": 49.2,
       "y": 47.5,
+      "value": 8,
+      "alpha": 0.2,
+      "size": 6,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 22.5,
       "value": 8,
       "alpha": 0.2,
       "size": 6,
@@ -4606,23 +4662,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 54.2,
-      "y": 22.5,
-      "value": 8,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 56.7,
-      "y": 22.5,
-      "value": 8,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 59.2,
+      "x": 51.7,
       "y": 22.5,
       "value": 8,
       "alpha": 0.2,
@@ -4679,14 +4719,6 @@
     },
     {
       "x": 76.7,
-      "y": 32.5,
-      "value": 8,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
-      "x": 76.7,
       "y": 17.5,
       "value": 8,
       "alpha": 0.2,
@@ -4702,14 +4734,6 @@
       "color": "#ffd166"
     },
     {
-      "x": 79.2,
-      "y": 17.5,
-      "value": 8,
-      "alpha": 0.2,
-      "size": 6,
-      "color": "#ffd166"
-    },
-    {
       "x": 81.7,
       "y": 22.5,
       "value": 8,
@@ -4718,16 +4742,24 @@
       "color": "#ffd166"
     },
     {
-      "x": 81.7,
-      "y": 17.5,
-      "value": 8,
+      "x": 4.2,
+      "y": 2.5,
+      "value": 7,
       "alpha": 0.2,
-      "size": 6,
+      "size": 5,
       "color": "#ffd166"
     },
     {
-      "x": 4.2,
+      "x": 6.7,
       "y": 2.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 11.7,
+      "y": 37.5,
       "value": 7,
       "alpha": 0.2,
       "size": 5,
@@ -4766,7 +4798,15 @@
       "color": "#ffd166"
     },
     {
-      "x": 34.2,
+      "x": 36.7,
+      "y": 47.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 36.7,
       "y": 17.5,
       "value": 7,
       "alpha": 0.2,
@@ -4776,38 +4816,6 @@
     {
       "x": 39.2,
       "y": 47.5,
-      "value": 7,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 41.7,
-      "y": 47.5,
-      "value": 7,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 46.7,
-      "y": 22.5,
-      "value": 7,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 49.2,
-      "y": 22.5,
-      "value": 7,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 51.7,
-      "y": 22.5,
       "value": 7,
       "alpha": 0.2,
       "size": 5,
@@ -4824,6 +4832,22 @@
     {
       "x": 56.7,
       "y": 47.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 59.2,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 61.7,
+      "y": 17.5,
       "value": 7,
       "alpha": 0.2,
       "size": 5,
@@ -4862,8 +4886,32 @@
       "color": "#ffd166"
     },
     {
+      "x": 76.7,
+      "y": 32.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 79.2,
+      "y": 17.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
       "x": 81.7,
       "y": 27.5,
+      "value": 7,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 81.7,
+      "y": 17.5,
       "value": 7,
       "alpha": 0.2,
       "size": 5,
@@ -4894,14 +4942,6 @@
       "color": "#ffd166"
     },
     {
-      "x": 6.7,
-      "y": 2.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
       "x": 9.2,
       "y": 37.5,
       "value": 6,
@@ -4912,14 +4952,6 @@
     {
       "x": 9.2,
       "y": 2.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 11.7,
-      "y": 37.5,
       "value": 6,
       "alpha": 0.2,
       "size": 5,
@@ -4927,6 +4959,22 @@
     },
     {
       "x": 19.2,
+      "y": 7.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
+      "y": 42.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 21.7,
       "y": 7.5,
       "value": 6,
       "alpha": 0.2,
@@ -4958,15 +5006,7 @@
       "color": "#ffd166"
     },
     {
-      "x": 36.7,
-      "y": 47.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 36.7,
+      "x": 39.2,
       "y": 17.5,
       "value": 6,
       "alpha": 0.2,
@@ -4974,7 +5014,47 @@
       "color": "#ffd166"
     },
     {
-      "x": 39.2,
+      "x": 41.7,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 44.2,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 46.7,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 49.2,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 51.7,
+      "y": 17.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 54.2,
       "y": 17.5,
       "value": 6,
       "alpha": 0.2,
@@ -4998,24 +5078,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 59.2,
-      "y": 17.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
       "x": 61.7,
       "y": 47.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 61.7,
-      "y": 17.5,
       "value": 6,
       "alpha": 0.2,
       "size": 5,
@@ -5046,14 +5110,6 @@
       "color": "#ffd166"
     },
     {
-      "x": 81.7,
-      "y": 12.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
       "x": 84.2,
       "y": 27.5,
       "value": 6,
@@ -5062,24 +5118,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 84.2,
-      "y": 12.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
       "x": 86.7,
       "y": 22.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 86.7,
-      "y": 12.5,
       "value": 6,
       "alpha": 0.2,
       "size": 5,
@@ -5096,14 +5136,6 @@
     {
       "x": 89.2,
       "y": 17.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 89.2,
-      "y": 12.5,
       "value": 6,
       "alpha": 0.2,
       "size": 5,
@@ -5118,14 +5150,6 @@
       "color": "#ffd166"
     },
     {
-      "x": 91.7,
-      "y": 12.5,
-      "value": 6,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
       "x": 94.2,
       "y": 17.5,
       "value": 6,
@@ -5134,9 +5158,25 @@
       "color": "#ffd166"
     },
     {
-      "x": 94.2,
+      "x": 96.7,
       "y": 12.5,
       "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 99.2,
+      "y": 12.5,
+      "value": 6,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
+      "x": 4.2,
+      "y": 37.5,
+      "value": 5,
       "alpha": 0.2,
       "size": 5,
       "color": "#ffd166"
@@ -5158,24 +5198,16 @@
       "color": "#ffd166"
     },
     {
+      "x": 14.2,
+      "y": 2.5,
+      "value": 5,
+      "alpha": 0.2,
+      "size": 5,
+      "color": "#ffd166"
+    },
+    {
       "x": 19.2,
       "y": 42.5,
-      "value": 5,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 21.7,
-      "y": 42.5,
-      "value": 5,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 21.7,
-      "y": 7.5,
       "value": 5,
       "alpha": 0.2,
       "size": 5,
@@ -5214,24 +5246,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 41.7,
-      "y": 17.5,
-      "value": 5,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
       "x": 44.2,
       "y": 52.5,
-      "value": 5,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 44.2,
-      "y": 17.5,
       "value": 5,
       "alpha": 0.2,
       "size": 5,
@@ -5246,24 +5262,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 46.7,
-      "y": 17.5,
-      "value": 5,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
       "x": 49.2,
       "y": 52.5,
-      "value": 5,
-      "alpha": 0.2,
-      "size": 5,
-      "color": "#ffd166"
-    },
-    {
-      "x": 49.2,
-      "y": 17.5,
       "value": 5,
       "alpha": 0.2,
       "size": 5,
@@ -5278,8 +5278,8 @@
       "color": "#ffd166"
     },
     {
-      "x": 51.7,
-      "y": 17.5,
+      "x": 54.2,
+      "y": 52.5,
       "value": 5,
       "alpha": 0.2,
       "size": 5,

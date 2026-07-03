@@ -296,7 +296,7 @@ function buildMapDots(coordinates) {
 }
 
 function cleanGenerated() {
-  for (const dir of ["cities", "locations", "countries", "states", "guides", "glossary", "about", "contact", "privacy"]) {
+  for (const dir of ["cities", "locations", "countries", "states", "guides", "glossary", "about", "contact", "privacy", "aurora-australis"]) {
     fs.rmSync(path.join(root, dir), { recursive: true, force: true });
   }
   for (const file of ["index.html", "sitemap.xml", "robots.txt", "ads.txt"]) {
@@ -381,6 +381,12 @@ function generateHomePage() {
           </div>
           <div class="city-grid">
             ${topSouthernCities.map((city) => cityCard(city, "")).join("")}
+          </div>
+        </section>
+
+        <section class="section compact-section">
+          <div class="guide-grid">
+${alertSignupPanel(null)}
           </div>
         </section>
 
@@ -571,6 +577,7 @@ function generateCityPages() {
                 <p>Learn how Kp, cloud cover, latitude, and the aurora oval combine into a practical viewing chance.</p>
                 <a class="text-link" href="../../guides/how-to-read-aurora-forecast/">Open guide</a>
               </article>
+${alertSignupPanel(city)}
             </div>
           </section>
 
@@ -670,6 +677,30 @@ function generateLocationPages() {
   }));
 }
 
+// Storm alert waitlist 表单：citySlug 为空 = 全站（首页/hub），有值 = 城市页。
+// honeypot 字段 website 视觉隐藏；提交逻辑在 script.js 的 [data-alert-form]。
+function alertSignupPanel(city) {
+  const citySlug = city ? city.slug : "";
+  const target = city ? city.name : "your city";
+  return `
+            <article class="panel" data-alert-signup data-alert-city="${escapeHtml(citySlug)}">
+              <p class="kicker">Storm alerts</p>
+              <h3>Get an email when a storm hits ${escapeHtml(target)}</h3>
+              <p>We are building free storm email alerts. Join the waitlist and we will notify you when they launch.</p>
+              <form class="comment-form" data-alert-form>
+                <div class="comment-fields">
+                  <label>
+                    <span>Email</span>
+                    <input name="email" type="email" maxlength="254" placeholder="you@example.com" autocomplete="email" required>
+                  </label>
+                  <input name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
+                </div>
+                <button type="submit" class="text-link">Join the waitlist</button>
+              </form>
+              <p data-alert-status role="status"></p>
+            </article>`;
+}
+
 function generateAuroraAustralisHub() {
   const southernCities = [...forecast.cities]
     .filter((city) => city.lat < 0)
@@ -733,6 +764,7 @@ function generateAuroraAustralisHub() {
               <h3>Southern lights basics</h3>
               ${hubFaqs.map((faq) => `<p><strong>${escapeHtml(faq.q)}</strong><br>${escapeHtml(faq.a)}</p>`).join("")}
             </article>
+${alertSignupPanel(null)}
           </div>
         </section>
       </main>
@@ -933,7 +965,7 @@ function generateUtilityPages() {
     {
       slug: "privacy",
       title: "Privacy Policy",
-      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. Basic analytics and advertising scripts may be added to understand traffic and support the site.</p><p>If email alerts are added later, subscribed addresses will only be used for the requested aurora alerts.</p>`,
+      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. Basic analytics and advertising scripts may be added to understand traffic and support the site.</p><p>If you join the storm alert waitlist, we store your email address, the city you selected, and the signup date. These are used only to launch and send the aurora alerts you requested, and never sold or shared. To remove your email from the waitlist, contact us via the contact page.</p>`,
     },
   ];
 
