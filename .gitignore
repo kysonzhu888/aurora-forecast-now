@@ -10,3 +10,21 @@ node_modules/
 # Internal handoff notes stay local. Keep the public README.
 *.md
 !README.md
+
+# Generated site output — rebuilt by `node tools/build.mjs`, deployed via deploy.sh.
+# Source of truth is tools/ + lib/ + data/*.json (except forecast.json, a build cache).
+/cities/
+/locations/
+/countries/
+/states/
+/guides/
+/glossary/
+/about/
+/contact/
+/privacy/
+/aurora-australis/
+/index.html
+/sitemap.xml
+/robots.txt
+/ads.txt
+/data/forecast.json
