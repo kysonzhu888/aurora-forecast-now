@@ -8,6 +8,9 @@ const root = path.resolve(__dirname, "..");
 const config = readJson("site.config.json");
 const cities = readJson(path.join("data", "cities.json"));
 const media = readJson(path.join("data", "media.json"));
+// 20 个重点城市的本地观测知识层（观测点/季节/拍摄/城市专属 FAQ）。
+// 只覆盖部分城市：有数据的多渲染几个 section（渐进增强），没有的保持模板原样。
+const cityContent = readJson(path.join("data", "city-content.json"));
 
 const site = {
   name: config.name,
@@ -545,7 +548,7 @@ function generateCityPages() {
               </div>
             </aside>
           </section>
-
+${cityLocalKnowledge(city)}
           ${adUnit({
             slotKey: "inArticle",
             fallbackTitle: "Keep checking nearby skies",
@@ -679,6 +682,42 @@ function generateLocationPages() {
 
 // Storm alert waitlist 表单：citySlug 为空 = 全站（首页/hub），有值 = 城市页。
 // honeypot 字段 website 视觉隐藏；提交逻辑在 script.js 的 [data-alert-form]。
+// 重点城市的本地知识区块：观测点 + 季节窗口 + 拍摄建议。
+// 没有数据的城市返回空字符串，页面结构与旧版完全一致。
+function cityLocalKnowledge(city) {
+  const content = cityContent[city.slug];
+  if (!content) return "";
+  const spotCards = (content.spots || []).map((spot) => `
+              <article class="panel">
+                <p class="kicker">Viewing spot</p>
+                <h3>${escapeHtml(spot.name)}</h3>
+                <p>${escapeHtml(spot.note)}</p>
+              </article>`).join("");
+  return `
+          <section class="section" style="padding-left:0;padding-right:0">
+            <div class="section-head">
+              <div>
+                <p class="kicker">Local knowledge</p>
+                <h2>Where to watch the ${auroraName(city)} near ${escapeHtml(city.name)}</h2>
+              </div>
+              <p>${escapeHtml(content.intro)}</p>
+            </div>
+            <div class="guide-grid">
+${spotCards}
+              <article class="panel">
+                <p class="kicker">Season &amp; timing</p>
+                <h3>When to go</h3>
+                <p>${escapeHtml(content.season)}</p>
+              </article>
+              <article class="panel">
+                <p class="kicker">Photography</p>
+                <h3>Camera notes</h3>
+                <p>${escapeHtml(content.photo)}</p>
+              </article>
+            </div>
+          </section>`;
+}
+
 function alertSignupPanel(city) {
   const citySlug = city ? city.slug : "";
   const target = city ? city.name : "your city";
@@ -1485,7 +1524,9 @@ function cityPageSchema(city) {
 }
 
 function cityFaqItems(city) {
+  const localFaqs = cityContent[city.slug]?.faqs || [];
   return [
+    ...localFaqs,
     {
       q: `Can I see the ${auroraName(city)} in ${city.name} tonight?`,
       a: city.guidance,

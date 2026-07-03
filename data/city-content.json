@@ -1,0 +1,282 @@
+{
+  "fairbanks": {
+    "intro": "Fairbanks sits directly under the auroral oval, which is why it is often called the aurora capital of the United States. On a clear, dark night between late August and mid-April, some level of aurora is visible more often than not.",
+    "spots": [
+      { "name": "Cleary Summit", "note": "A high pullout on the Steese Highway about 30 minutes northeast of town, with a wide open sky well above the city glow." },
+      { "name": "Murphy Dome", "note": "One of the highest points near Fairbanks, popular with photographers for its 360-degree horizon." },
+      { "name": "Chena Lakes Recreation Area", "note": "Flat, dark, and easy to reach from North Pole, with water reflections on calm autumn nights." }
+    ],
+    "season": "Aurora season in Fairbanks runs from late August to mid-April; the midnight-sun weeks of summer are too bright for viewing. March is a local favorite: long nights, statistically clearer skies, and milder cold than midwinter.",
+    "photo": "Bring a tripod and a wide, fast lens; in strong displays overhead coronas are common, so a focal length wide enough to capture most of the sky pays off.",
+    "faqs": [
+      { "q": "How many nights per year can you see aurora in Fairbanks?", "a": "Local tourism data suggests aurora is visible on well over 200 nights per year given clear skies, because the city sits under the auroral oval. The practical limit is usually cloud cover, not geomagnetic activity." },
+      { "q": "Do I need a high Kp in Fairbanks?", "a": "No. Fairbanks regularly sees overhead aurora at Kp 1 to 3. High Kp mainly pushes the display south of the city, so during major storms the best view can actually be toward the southern sky." }
+    ]
+  },
+  "anchorage": {
+    "intro": "Anchorage sits a few degrees south of the auroral oval, so displays are less frequent than in Fairbanks, but the city's road network makes it easy to escape the glow and face north over water or mountains.",
+    "spots": [
+      { "name": "Glen Alps trailhead", "note": "An elevated Chugach State Park lot above the city lights, with a broad view over the Anchorage bowl." },
+      { "name": "Point Woronzof", "note": "A quick drive from downtown with a dark northern horizon over Knik Arm." },
+      { "name": "Eklutna Lake", "note": "About 45 minutes northeast of the city, deep in a mountain valley with very little artificial light." }
+    ],
+    "season": "Viewing season runs from late August through early April. Around the equinoxes, geomagnetic activity tends to be stronger, which helps a mid-oval city like Anchorage.",
+    "photo": "Compose with Knik Arm or the Chugach ridgeline in the foreground; water and snow both lift the scene when the aurora is low on the northern horizon.",
+    "faqs": [
+      { "q": "Is Anchorage or Fairbanks better for aurora?", "a": "Fairbanks is more reliable because it sits under the auroral oval. Anchorage still gets good displays during active periods, typically needing Kp 3 to 4 or more for a clear show." },
+      { "q": "Can you see aurora from downtown Anchorage?", "a": "During strong storms, yes, but city lights wash out weaker displays. Even a 15 to 30 minute drive to Glen Alps or Point Woronzof makes a large difference." }
+    ]
+  },
+  "yellowknife": {
+    "intro": "Yellowknife markets itself as the aurora capital of North America for good reason: it sits under the auroral oval, has a dry subarctic climate with many clear nights, and flat Canadian Shield horizons in every direction.",
+    "spots": [
+      { "name": "Prelude Lake Territorial Park", "note": "About 30 kilometres east on the Ingraham Trail, a classic dark-sky viewing and photography spot." },
+      { "name": "Vee Lake", "note": "A short drive north of town with open water foregrounds and minimal light pollution." },
+      { "name": "Aurora Village", "note": "The well-known commercial viewing site with heated teepees, useful on very cold nights." }
+    ],
+    "season": "Prime seasons are mid-August to early October and mid-November to early April; the gap avoids freeze-up weeks when lakes are unusable and skies are often cloudy. Deep winter nights are long but can dip below minus 30 Celsius.",
+    "photo": "Winter shoots here are equipment-hostile: carry spare batteries close to your body and let the camera warm up slowly indoors to avoid condensation.",
+    "faqs": [
+      { "q": "Why is Yellowknife so good for aurora?", "a": "Three factors stack: it sits directly under the auroral oval, its continental climate delivers many clear nights, and the flat terrain gives unobstructed horizons." },
+      { "q": "What Kp do I need in Yellowknife?", "a": "Almost none. Kp 0 to 2 is regularly enough for visible displays overhead. Higher Kp mostly makes the show brighter and more dynamic rather than merely possible." }
+    ]
+  },
+  "whitehorse-yukon": {
+    "intro": "Whitehorse combines a small-city footprint with true wilderness darkness minutes from downtown, sitting near the southern edge of the auroral oval.",
+    "spots": [
+      { "name": "Fish Lake Road", "note": "A 15 to 20 minute drive west of downtown that quickly leaves the city glow behind." },
+      { "name": "Takhini Hot Springs area", "note": "North of the city, pairing dark skies with a soak while you wait for the display to build." },
+      { "name": "Schwatka Lake", "note": "Close to town on the Yukon River, handy for a quick check when an alert fires." }
+    ],
+    "season": "Late August through mid-April is the viewing window. Yukon autumn is popular: lakes are still open for reflections and the deep cold has not yet arrived.",
+    "photo": "The Yukon River and lake foregrounds are the local signature; scout compositions in daylight because riverbanks are hazardous in the dark.",
+    "faqs": [
+      { "q": "Is Whitehorse as good as Yellowknife for aurora?", "a": "Slightly less consistent because it sits a bit farther from the center of the auroral oval and terrain is more mountainous, but on active nights the difference is small and the scenery is arguably better." },
+      { "q": "How far from Whitehorse do I need to drive?", "a": "Not far. Within 15 to 25 minutes you can reach genuinely dark sites like Fish Lake Road; the city itself is small enough that even suburban edges work during strong displays." }
+    ]
+  },
+  "churchill-manitoba": {
+    "intro": "Churchill lies under the auroral oval on the flat shore of Hudson Bay, and its remoteness means near-zero light pollution the moment you leave the townsite.",
+    "spots": [
+      { "name": "Hudson Bay shoreline", "note": "Steps from town, with a totally flat and dark northern horizon over the bay." },
+      { "name": "Churchill Northern Studies Centre", "note": "East of town, a research station that also hosts aurora-focused stays in winter." },
+      { "name": "Launch Road viewpoints", "note": "The old rocket range road offers open tundra skies close to the townsite." }
+    ],
+    "season": "Aurora is possible from late August to April, with February and March considered prime: statistically clearer skies and very long nights. Note that October and November are polar bear season, when walking out of town at night is unsafe without a guide.",
+    "photo": "The tundra offers no windbreaks: guard your tripod against gusts and use a lens hood to keep blowing snow off the front element.",
+    "faqs": [
+      { "q": "Is it safe to watch aurora on foot in Churchill?", "a": "In deep winter, generally yes near town, but during polar bear season in October and November you should only go out with local guides or vehicle-based tours." },
+      { "q": "How reliable is Churchill for aurora?", "a": "Very. It sits under the auroral oval, so like Fairbanks or Yellowknife, some aurora is visible on a majority of clear dark nights even at low Kp." }
+    ]
+  },
+  "edmonton": {
+    "intro": "Edmonton is one of the world's largest cities this close to the auroral oval, and during active periods aurora is visible from its northern suburbs; a short drive delivers proper darkness.",
+    "spots": [
+      { "name": "Elk Island National Park", "note": "Part of the Beaver Hills Dark Sky Preserve, about 45 minutes east, the region's flagship dark-sky destination." },
+      { "name": "Highway 28 toward Redwater", "note": "Open farmland northeast of the city with wide, dark northern horizons." },
+      { "name": "Cooking Lake area", "note": "Closer-in option southeast of town when an alert fires late." }
+    ],
+    "season": "September through April works, with equinox months statistically stronger. Summer nights are short this far north, so July displays are rare even during storms.",
+    "photo": "Prairie foregrounds are flat: use grain elevators, lone trees, or lake reflections at Elk Island to anchor the composition.",
+    "faqs": [
+      { "q": "Can you see the northern lights from Edmonton itself?", "a": "During moderate storms, yes, especially from northern edges of the city, but light pollution mutes the color. Elk Island or open farmland north of town is dramatically better." },
+      { "q": "What Kp works for Edmonton?", "a": "Around Kp 3 to 4 usually brings visible displays to dark sites near the city; Kp 5 or more can put aurora overhead." }
+    ]
+  },
+  "calgary": {
+    "intro": "Calgary is a mid-latitude aurora city: displays reach it during stronger geomagnetic storms rather than on quiet nights, so the forecast score matters more here than in the true north.",
+    "spots": [
+      { "name": "Big Hill Springs Provincial Park area", "note": "Northwest of the city, with open prairie horizons away from the main glow." },
+      { "name": "Highway 566 east of Balzac", "note": "Quick access to dark farmland with a clear view north." },
+      { "name": "Ghost Lake", "note": "West on Highway 1A; the reservoir gives reflections while the Rockies stay behind you to the west." }
+    ],
+    "season": "September to April, with the weeks around both equinoxes noticeably more active. Look north: Calgary displays usually sit low on the northern horizon unless the storm is severe.",
+    "photo": "Because the aurora often hugs the horizon here, a level tripod head and a foreground with low tree lines keep compositions clean.",
+    "faqs": [
+      { "q": "What Kp do I need in Calgary?", "a": "Typically Kp 5 or higher for a clear naked-eye show, though cameras pick up activity from around Kp 4 at dark sites north of the city." },
+      { "q": "Which direction should I face from Calgary?", "a": "North. Avoid shooting over the city glow: drive north or northwest so the skyline light dome stays behind you." }
+    ]
+  },
+  "tromso-troms": {
+    "intro": "Tromsø is northern Europe's aurora hub, sitting inside the auroral oval at 69 degrees north with an airport, a lively city center, and fjord scenery in every direction.",
+    "spots": [
+      { "name": "Ersfjordbotn", "note": "The classic fjord-and-mountain foreground about 30 minutes from the center on Kvaløya island." },
+      { "name": "Telegrafbukta beach", "note": "A city beach on the island's southern tip, good for a fast check without a car." },
+      { "name": "Kattfjordeidet", "note": "A mountain pass on Kvaløya that locals use to escape coastal cloud." }
+    ],
+    "season": "The season runs from September to early April. From late November to mid-January the sun never rises, which means aurora can appear as early as mid-afternoon; coastal weather changes fast, so chase clear gaps rather than waiting in one spot.",
+    "photo": "Fjord reflections are the Tromsø signature: shoot from the waterline at Ersfjordbotn and bracket exposures, because displays here can swing from faint arc to overhead corona in minutes.",
+    "faqs": [
+      { "q": "Do I need a tour from Tromsø?", "a": "Not strictly: city buses reach dark beaches and rental cars open Kvaløya. Tours earn their fee on cloudy nights by driving toward inland or Finnish clear skies, sometimes hours away." },
+      { "q": "What about the polar night in Tromsø?", "a": "From roughly November 27 to January 15 the sun stays below the horizon. Aurora hunting works well then, with displays sometimes visible from mid-afternoon." }
+    ]
+  },
+  "abisko-norrbotten-county": {
+    "intro": "Abisko has a legendary microclimate: the surrounding mountains and Lake Torneträsk create a persistent patch of clear sky known as the blue hole, making this small Swedish village statistically one of the most reliable aurora spots on Earth.",
+    "spots": [
+      { "name": "Aurora Sky Station", "note": "A chairlift ride up Mount Nuolja, widely regarded as one of the world's premier viewing platforms." },
+      { "name": "Lake Torneträsk shore", "note": "Flat, dark, and steps from the village, with the blue hole often directly above." },
+      { "name": "Abisko National Park trails", "note": "Marked paths give quick access to full darkness without a vehicle." }
+    ],
+    "season": "September to early April. Statistically, multi-night stays here outperform almost anywhere: local operators cite strong odds of at least one clear display across a three-night visit.",
+    "photo": "Wind funnels down the lake: a heavy tripod or a low stance helps, and the birch forest offers natural windbreaks for foregrounds.",
+    "faqs": [
+      { "q": "Why is Abisko so reliable for aurora?", "a": "The blue hole effect: mountains wring moisture out of incoming Atlantic weather, so Abisko often stays clear while the surrounding region is overcast. Combined with an in-oval latitude, clear-sky odds beat almost any competitor." },
+      { "q": "Is the Aurora Sky Station worth it?", "a": "On a clear night, yes, for the elevated horizon and guided context. On cloudy nights the lakeshore below can be just as good the moment a gap opens." }
+    ]
+  },
+  "rovaniemi-lapland": {
+    "intro": "Rovaniemi, the capital of Finnish Lapland on the Arctic Circle, pairs easy flight access and winter-resort infrastructure with aurora on roughly every other clear night in season.",
+    "spots": [
+      { "name": "Ounasvaara hill", "note": "The town's ski hill, a 10 minute drive or a walkable climb to get above the light dome." },
+      { "name": "Arktikum park shore", "note": "Behind the Arktikum museum, the river opens the northern horizon right from town." },
+      { "name": "Vikajärvi direction", "note": "Twenty to thirty minutes northeast on Highway 4, open lake and forest country with true darkness." }
+    ],
+    "season": "Late August to early April. Midwinter brings long nights but also frequent snow clouds; February and March offer the best balance of darkness and clearer weather.",
+    "photo": "Snow-loaded spruce trees make iconic Lapland foregrounds; expose for the aurora and let the snow lift the shadows.",
+    "faqs": [
+      { "q": "Can you see aurora in Rovaniemi city?", "a": "Sometimes, during strong displays, but the town glow is significant. Ounasvaara hill or the river shore gives a fast upgrade, and a short drive north is better still." },
+      { "q": "How often does Rovaniemi get aurora?", "a": "Finnish Lapland statistics suggest aurora on the order of every second clear night in season, less often than in-oval spots like Tromsø or Abisko but very workable for a several-night stay." }
+    ]
+  },
+  "kiruna-norrbotten-county": {
+    "intro": "Kiruna, Sweden's northernmost city, sits in the auroral zone with a dry inland climate, and it is the gateway to the Icehotel and Esrange rocket range country.",
+    "spots": [
+      { "name": "Luossavaara hill", "note": "The old mine hill at the town edge, a quick climb above the lights." },
+      { "name": "Jukkasjärvi", "note": "The Icehotel village 20 minutes east, on a dark stretch of the Torne River." },
+      { "name": "Nikkaluokta road", "note": "The 60 kilometre dead-end road toward Kebnekaise passes many pitch-dark pullouts." }
+    ],
+    "season": "September to early April, with inland skies often clearer than the Norwegian coast. Deep winter is reliably dark but can be bitterly cold.",
+    "photo": "The Torne River ice near Jukkasjärvi gives clean reflective foregrounds early in the season before the snow settles.",
+    "faqs": [
+      { "q": "Kiruna or Abisko, which should I choose?", "a": "Abisko has the famous clear-sky microclimate and slightly better statistics; Kiruna has more town infrastructure and the Icehotel. They are 90 minutes apart, so many travelers do both." },
+      { "q": "Does the mine affect viewing in Kiruna?", "a": "The mine lights add to the town glow, but a 10 to 20 minute drive in almost any direction reaches genuinely dark sky." }
+    ]
+  },
+  "reykjavik": {
+    "intro": "Reykjavík is the world's most visited aurora base thanks to cheap flights and mild maritime winters, but its weather is fickle: success here is about chasing clear gaps, not waiting under one sky.",
+    "spots": [
+      { "name": "Grótta lighthouse", "note": "The Seltjarnarnes peninsula tip, the city's classic quick-access dark spot facing open sea." },
+      { "name": "Þingvellir National Park", "note": "Forty five minutes east, a UNESCO rift valley with wide horizons and minimal light." },
+      { "name": "Kleifarvatn lake", "note": "A stark volcanic lake on the Reykjanes peninsula, dark and usually quieter than Þingvellir." }
+    ],
+    "season": "Late August to mid-April. Iceland's Atlantic climate means cloud is the main enemy: check the Icelandic Met Office cloud map and be ready to drive an hour toward whichever quadrant is clearing.",
+    "photo": "Wind and salt spray are constant companions: bring lens cloths, and use rocks or your body to shield the tripod near the shore.",
+    "faqs": [
+      { "q": "Can you see the northern lights from Reykjavík itself?", "a": "Yes, during moderate to strong displays, especially from Grótta or dark waterfront stretches, but street lighting mutes weaker shows. A short drive out of town roughly doubles your odds." },
+      { "q": "What Kp do I need in Iceland?", "a": "Iceland sits near the auroral oval, so Kp 2 to 3 with clear skies is often enough. Cloud cover, not geomagnetic activity, is usually the deciding factor." }
+    ]
+  },
+  "akureyri-northeast": {
+    "intro": "Akureyri in north Iceland often enjoys clearer, more stable weather than Reykjavík, sitting deep in Eyjafjörður where mountains shelter the sky from Atlantic fronts.",
+    "spots": [
+      { "name": "Eyjafjörður east shore", "note": "The road along the fjord's far side gives dark water foregrounds looking back at the mountains." },
+      { "name": "Hlíðarfjall road", "note": "The ski-area road climbs quickly above the town lights." },
+      { "name": "Goðafoss direction", "note": "Thirty five minutes east, the waterfall region is a famous aurora foreground." }
+    ],
+    "season": "Late August to mid-April, with northern Iceland statistically drier than the southwest in midwinter, making Akureyri a smart weather hedge for a multi-night Iceland trip.",
+    "photo": "Goðafoss under aurora is a bucket-list frame: bring spiked crampons in winter, as the spray zone becomes sheet ice.",
+    "faqs": [
+      { "q": "Is Akureyri better than Reykjavík for aurora?", "a": "Often, yes: the north sees more stable winter weather and the town is small enough that darkness is minutes away. Flights and rental cars make it an easy add-on." },
+      { "q": "How dark is Akureyri at night?", "a": "The town itself is modest in size; suburbs and the fjord shore get quite dark, and a 10 minute drive in any direction reaches serious darkness." }
+    ]
+  },
+  "inverness-scotland": {
+    "intro": "Inverness is the base for aurora hunting in the Scottish Highlands, where locals call the display the Mirrie Dancers; at 57 degrees north it needs an active storm, but sightings happen many times each winter.",
+    "spots": [
+      { "name": "Chanonry Point", "note": "On the Moray Firth's north-facing shore near Fortrose, a classic Scottish aurora vantage over open water." },
+      { "name": "Culloden Moor", "note": "Open moorland east of the city with wide northern horizons." },
+      { "name": "Loch Ness northern shore", "note": "Dark stretches along the A82 give water foregrounds away from village lights." }
+    ],
+    "season": "September to March, with long midwinter nights compensating for Scotland's changeable weather. Displays usually sit low on the northern horizon, so an open north-facing coastline matters more here than elsewhere.",
+    "photo": "Shoot across the Moray Firth: the water doubles low-horizon color that the naked eye may barely register.",
+    "faqs": [
+      { "q": "Can you really see the northern lights in Scotland?", "a": "Yes, multiple times per winter during active storms, typically as a green glow low on the northern horizon. Cameras reveal far more than the naked eye at this latitude." },
+      { "q": "What Kp do I need in Inverness?", "a": "Roughly Kp 5 or more for a naked-eye show; photographers with dark north-facing coastline can capture activity from around Kp 4." }
+    ]
+  },
+  "duluth": {
+    "intro": "Duluth is the aurora capital of the American Midwest: Lake Superior provides something rare at 46 degrees north, a pitch-dark, dead-flat northern horizon over water.",
+    "spots": [
+      { "name": "Brighton Beach", "note": "The city's go-to shoreline pullout on Congdon Boulevard, minutes from downtown." },
+      { "name": "Stoney Point", "note": "A famous North Shore vantage between Duluth and Two Harbors, popular with local photographers." },
+      { "name": "Palisade Head", "note": "An hour up the shore near Silver Bay, cliff-top views with near-zero light pollution." }
+    ],
+    "season": "September to April brings the best odds, though summer storms can deliver too. Displays here hug the northern horizon, which is exactly what the lake horizon is for.",
+    "photo": "Long exposures over Lake Superior smooth the water into glass; watch for ship lights on the horizon, which read as orange streaks in long exposures.",
+    "faqs": [
+      { "q": "What Kp do I need in Duluth?", "a": "Around Kp 5 for an obvious naked-eye display, though cameras on the dark North Shore regularly capture aurora at Kp 4 or even less during substorms." },
+      { "q": "Why is Lake Superior good for aurora?", "a": "The lake gives a totally flat, unlit northern horizon, so even low-hanging displays that trees or hills would hide remain visible and reflect off the water." }
+    ]
+  },
+  "hobart": {
+    "intro": "Hobart is the southern hemisphere's most accessible aurora city: nowhere else at 43 degrees south combines an airport, sealed roads, and open Southern Ocean horizons this close to the auroral zone.",
+    "spots": [
+      { "name": "Goat Bluff lookout", "note": "On the South Arm Peninsula about 40 minutes from town, the local photographers' benchmark with open sea to the south." },
+      { "name": "Clifton Beach", "note": "A dark southern beach slightly closer in, with dune foregrounds." },
+      { "name": "Bruny Island", "note": "For committed nights: ferry access and some of Tasmania's darkest coastal sky." }
+    ],
+    "season": "Aurora australis is possible year-round, but Tasmanian winter, May to August, offers the longest dark windows; equinox weeks often carry the strongest geomagnetic activity.",
+    "photo": "Face due south over water and expose for the horizon glow: Tasmanian displays often read as color beams on camera well before the naked eye catches them.",
+    "faqs": [
+      { "q": "Can you see the southern lights from Hobart city?", "a": "During strong storms, yes, but light pollution mutes it. The South Arm Peninsula, 30 to 45 minutes away, is dramatically better and is where locals go when alerts fire." },
+      { "q": "What Kp do I need in Hobart?", "a": "Cameras pick up displays from about Kp 4 to 5; memorable naked-eye shows usually need Kp 6 or more with clear, dark southern horizons." }
+    ]
+  },
+  "queenstown-nz": {
+    "intro": "Queenstown's mountain scenery makes it a spectacular aurora frame, and the southern end of Lake Wakatipu points almost directly at the auroral zone.",
+    "spots": [
+      { "name": "Kingston", "note": "The lake's southern tip, 45 minutes away, aiming straight down the water toward the southern sky." },
+      { "name": "Moke Lake", "note": "A dark basin 20 minutes from town, sheltered from the resort glow." },
+      { "name": "Jack's Point lakeshore", "note": "Closer-in southern shoreline access when time is short." }
+    ],
+    "season": "Winter, June to August, brings the longest nights, though strong storms produce displays in any season. Queenstown's mountains can block the lowest part of the display, so lake-aligned southern views matter.",
+    "photo": "Use Lake Wakatipu as a leading line south; calm winter nights give mirror reflections that double the display.",
+    "faqs": [
+      { "q": "Is Queenstown good for the southern lights?", "a": "Yes, during active periods, though Dunedin and Southland's south-facing coasts are more reliable. Queenstown wins on scenery when a storm does arrive." },
+      { "q": "Where should I drive from Queenstown when an alert fires?", "a": "Head south: Kingston at the end of the lake gives the cleanest southern horizon, and Moke Lake is the quick dark-sky option." }
+    ]
+  },
+  "dunedin": {
+    "intro": "Dunedin is New Zealand's aurora city: the Otago Peninsula's south-facing bays deliver dark ocean horizons within half an hour of downtown, and the local photography community is famously active.",
+    "spots": [
+      { "name": "Hoopers Inlet", "note": "The Otago Peninsula's classic aurora amphitheater, dark and sheltered." },
+      { "name": "Sandfly Bay", "note": "South-facing dunes and beach with open Southern Ocean horizon." },
+      { "name": "Tunnel Beach", "note": "Cliff-top drama closer to the city, best for confident navigators at night." }
+    ],
+    "season": "June to August gives the longest dark windows, with equinox storms adding chances in autumn and spring. The peninsula's microclimates mean one bay can be clear while another fogs in.",
+    "photo": "Foreground rocks and inlet reflections at Hoopers are the signature Dunedin frame; arrive before full darkness to set focus safely near cliffs.",
+    "faqs": [
+      { "q": "Why is Dunedin considered NZ's best aurora city?", "a": "Latitude plus geography: at 45.9 degrees south with south-facing peninsula bays, it combines dark ocean horizons and quick access, which is why many of New Zealand's famous aurora photos come from here." },
+      { "q": "Can you see the aurora from Dunedin city?", "a": "Strong storms are visible from dark city edges, but the Otago Peninsula, 20 to 30 minutes away, is the reliable move." }
+    ]
+  },
+  "invercargill": {
+    "intro": "Invercargill and the Southland coast sit at the bottom of mainland New Zealand, closer to the auroral zone than any other kiwi city, with Stewart Island's dark-sky sanctuary just across the strait.",
+    "spots": [
+      { "name": "Oreti Beach", "note": "A vast drive-on beach minutes from town with a wide southwestern sea horizon." },
+      { "name": "Stirling Point, Bluff", "note": "The signposted end of State Highway 1, facing the Southern Ocean." },
+      { "name": "Waituna Lagoon", "note": "A wetland east of the city with serious darkness and water foregrounds." }
+    ],
+    "season": "Winter, June to August, is prime; at this latitude even moderate storms can climb well above the southern horizon. Coastal Southland weather shifts fast, so keep an alternate spot in mind.",
+    "photo": "Oreti's wet sand mirrors the sky at low tide, but check tide times: the beach is broad and the water moves quickly.",
+    "faqs": [
+      { "q": "Is Invercargill the best mainland NZ spot for aurora?", "a": "It is the southernmost city, so displays that stay on the horizon elsewhere climb higher here. Combined with Oreti Beach and Bluff's sea horizons, it is a strong claim, with Dunedin its main rival." },
+      { "q": "What about Stewart Island / Rakiura?", "a": "Across Foveaux Strait, Rakiura is an International Dark Sky Sanctuary with essentially zero light pollution, the premium option if the ferry or flight schedule cooperates." }
+    ]
+  },
+  "ushuaia": {
+    "intro": "Ushuaia, the world's southernmost city, sits closer to the aurora australis zone than any other urban area, though the Beagle Channel's maritime weather makes clear nights the limiting factor.",
+    "spots": [
+      { "name": "Beagle Channel shoreline east of town", "note": "The coastal road toward Playa Larga leaves the port glow quickly with open water to the south." },
+      { "name": "Martial Glacier road", "note": "Elevation above the city cuts light pollution and sometimes gets above low cloud." },
+      { "name": "Ruta 3 toward Lapataia", "note": "Pullouts inside Tierra del Fuego National Park offer full darkness among the lenga forests." }
+    ],
+    "season": "Southern winter, May to August, brings nights long enough for real darkness at 54.8 degrees south. Aurora here is rarer than its latitude suggests because the southern magnetic pole is offset toward the Australia-New Zealand sector, but strong storms deliver.",
+    "photo": "Wind off the channel is relentless: weight the tripod and shoot in bursts between gusts; snow-dusted peaks make dramatic northern-frame backdrops.",
+    "faqs": [
+      { "q": "Can you see the aurora australis from Ushuaia?", "a": "Yes, during strong geomagnetic storms in winter, though less often than in Tasmania or southern New Zealand because the southern auroral oval is shifted away from South America." },
+      { "q": "When is the best time in Ushuaia?", "a": "June and July have the longest nights. Pair aurora hopes with the city's winter-sports season rather than planning a trip around aurora alone." }
+    ]
+  }
+}
