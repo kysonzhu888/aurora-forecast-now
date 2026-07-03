@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { scoreCity, labelForScore, guidanceFor, directionWords, nearestAurora, normalizeLon } from "../lib/forecast-core.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -186,41 +187,10 @@ function parseNoaaIssueTime(value) {
   return new Date(`${String(value).replace(" ", "T")}Z`).getTime();
 }
 
-function nearestAurora(coordinates, city) {
-  if (!coordinates.length) return { value: 0, lat: null, lon: null };
-  const cityLon = city.lon < 0 ? city.lon + 360 : city.lon;
-  let best = null;
-  for (const point of coordinates) {
-    const [lon, lat, value] = point;
-    if (!Number.isFinite(lon) || !Number.isFinite(lat) || !Number.isFinite(value)) continue;
-    const dLat = lat - city.lat;
-    const dLonRaw = Math.abs(lon - cityLon);
-    const dLon = Math.min(dLonRaw, 360 - dLonRaw);
-    const distance = dLat * dLat + dLon * dLon * Math.cos((city.lat * Math.PI) / 180) ** 2;
-    if (!best || distance < best.distance) best = { value, lat, lon: normalizeLon(lon), distance };
-  }
-  return best || { value: 0, lat: null, lon: null };
-}
+// scoreCity / labelForScore / guidanceFor / directionWords / nearestAurora / normalizeLon
+// 已抽取到 ../lib/forecast-core.mjs（与 workers/forecast-worker.js 共用唯一实现）
 
-function scoreCity(city, auroraValue, kp, bestCloud) {
-  // Math.abs：南北半球对称——与 workers/forecast-worker.js 的 scoreCity 保持 lockstep
-  const latitudeBoost = Math.max(0, Math.abs(city.lat) - 39) * 1.25;
-  const auroraBoost = Math.min(52, auroraValue * 1.5);
-  const kpBoost = Math.min(30, kp * 5.8);
-  const cloudBoost = bestCloud == null ? 4 : Math.max(0, 100 - bestCloud) * 0.12;
-  const score = Math.round(Math.min(99, auroraBoost + kpBoost + latitudeBoost + cloudBoost));
-  return Math.max(3, score);
-}
-
-function labelForScore(score) {
-  if (score >= 72) return "Great";
-  if (score >= 52) return "Good";
-  if (score >= 32) return "Possible";
-  return "Low";
-}
-
-// 半球感知辅助：与 workers/forecast-worker.js 的 directionWords 保持 lockstep。
-// 对北半球城市所有输出与旧版逐字节一致（回归零 diff）。
+// 以下是模板专用的半球文案 helper（只有静态生成用，故留在本文件）
 function isSouthern(city) {
   return city.lat < 0;
 }
@@ -235,37 +205,6 @@ function auroraNameTitle(city) {
 
 function auroraNameSentence(city) {
   return isSouthern(city) ? "Southern lights" : "Northern lights";
-}
-
-function directionWords(city) {
-  const southern = isSouthern(city);
-  return {
-    horizon: southern ? "southern" : "northern",
-    look: southern ? "south" : "north",
-    ovalPush: southern ? "north" : "south",
-    darkSites: southern ? "south of town" : "north of town",
-    marginalEdge: southern ? "northern edge" : "southern edge",
-  };
-}
-
-function guidanceFor(city, score, kp, bestCloud) {
-  const dir = directionWords(city);
-  if (score >= 72) {
-    return `Conditions are strong for ${city.name}. Find a dark ${dir.horizon} horizon and check the sky after local twilight.`;
-  }
-  if (score >= 52) {
-    return `${city.name} has a reasonable chance if clouds stay low and the aurora oval pushes ${dir.ovalPush}. Dark sites ${dir.darkSites} help.`;
-  }
-  if (score >= 32) {
-    return `Aurora is possible near ${city.name}, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse.`;
-  }
-  if (kp >= 5) {
-    return `${city.name} is on the ${dir.marginalEdge} for this forecast. Watch updates, but do not expect easy naked-eye aurora.`;
-  }
-  if (bestCloud != null && bestCloud > 70) {
-    return `Cloud cover is the main problem for ${city.name}. Check again if the sky clears later tonight.`;
-  }
-  return `${city.name} is unlikely tonight under the current NOAA forecast. Higher latitude cities have a better setup.`;
 }
 
 function watchWindowFor(city) {
@@ -1627,9 +1566,6 @@ function normalizeUrl(value) {
   return value.replace(/\/+$/, "");
 }
 
-function normalizeLon(lon) {
-  return lon > 180 ? lon - 360 : lon;
-}
 
 function round1(value) {
   return Math.round(value * 10) / 10;
