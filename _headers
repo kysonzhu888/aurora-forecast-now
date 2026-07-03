@@ -1,0 +1,5 @@
+# Cloudflare Pages 自定义响应头
+# 图片资源：浏览器缓存 1 天，过期后 stale-while-revalidate（先用旧图后台换新，用户无感知）
+# CSS/JS 不在此列——无文件名 hash，沿用 Pages 默认 4h+ETag，避免发版后用户看到旧样式
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

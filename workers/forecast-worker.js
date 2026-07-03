@@ -26,7 +26,7 @@ export default {
     const normalizedPath = url.pathname.replace(/\/+$/, "") || "/";
     if (request.method === "OPTIONS") return withCors(new Response(null, { status: 204 }));
     if (normalizedPath === "/api/health" || normalizedPath === "/health") return handleHealth(env);
-    if (normalizedPath === "/api/forecast" || normalizedPath === "/forecast") return handleForecast(request, env, ctx);
+    if (normalizedPath === "/api/forecast" || normalizedPath === "/forecast") return handleForecastWithEdgeCache(request, env, ctx);
     if (normalizedPath === "/api/comments" || normalizedPath === "/comments") return handleComments(request, env);
     return withCors(jsonResponse({ error: "Not found" }, 404));
   },
@@ -35,6 +35,41 @@ export default {
     ctx.waitUntil(handleScheduledRefresh(env, event.scheduledTime));
   },
 };
+
+// 边缘缓存包装层：forecast 数据由 cron 每 5 分钟刷新，同一位置的响应在短窗口内完全相同，
+// 用 Cache API 存 120s，命中时 Worker 主逻辑与 KV 读取都不执行。
+const FORECAST_EDGE_TTL_SECONDS = 120;
+const FORECAST_BROWSER_TTL_SECONDS = 60;
+
+function forecastCacheKey(request) {
+  const url = new URL(request.url);
+  const keep = new URLSearchParams();
+  for (const param of ["city", "q", "lat", "lon"]) {
+    const value = url.searchParams.get(param);
+    if (value !== null && value.trim() !== "") keep.set(param, value.trim().toLowerCase());
+  }
+  return new Request(`${url.origin}/api/forecast?${keep.toString()}`, { method: "GET" });
+}
+
+async function handleForecastWithEdgeCache(request, env, ctx) {
+  if (request.method !== "GET") return handleForecast(request, env, ctx);
+  const cacheKey = forecastCacheKey(request);
+  const edgeCache = caches.default;
+
+  const hit = await edgeCache.match(cacheKey);
+  if (hit) return hit;
+
+  const response = await handleForecast(request, env, ctx);
+  if (response.status !== 200) return response;
+
+  const cacheable = new Response(response.body, response);
+  cacheable.headers.set(
+    "cache-control",
+    `public, max-age=${FORECAST_BROWSER_TTL_SECONDS}, s-maxage=${FORECAST_EDGE_TTL_SECONDS}, stale-while-revalidate=300`,
+  );
+  ctx.waitUntil(edgeCache.put(cacheKey, cacheable.clone()));
+  return cacheable;
+}
 
 async function handleForecast(request, env, ctx) {
   const url = new URL(request.url);
