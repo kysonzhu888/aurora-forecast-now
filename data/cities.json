@@ -1638,5 +1638,125 @@
     "lon": -87.9065,
     "timezone": "America/Chicago",
     "priority": 3
+  },
+  {
+    "slug": "queenstown-nz",
+    "name": "Queenstown",
+    "region": "Otago",
+    "country": "New Zealand",
+    "lat": -45.0312,
+    "lon": 168.6626,
+    "timezone": "Pacific/Auckland",
+    "priority": 1
+  },
+  {
+    "slug": "dunedin",
+    "name": "Dunedin",
+    "region": "Otago",
+    "country": "New Zealand",
+    "lat": -45.8788,
+    "lon": 170.5028,
+    "timezone": "Pacific/Auckland",
+    "priority": 1
+  },
+  {
+    "slug": "invercargill",
+    "name": "Invercargill",
+    "region": "Southland",
+    "country": "New Zealand",
+    "lat": -46.4132,
+    "lon": 168.3538,
+    "timezone": "Pacific/Auckland",
+    "priority": 1
+  },
+  {
+    "slug": "christchurch",
+    "name": "Christchurch",
+    "region": "Canterbury",
+    "country": "New Zealand",
+    "lat": -43.5321,
+    "lon": 172.6362,
+    "timezone": "Pacific/Auckland",
+    "priority": 2
+  },
+  {
+    "slug": "wellington",
+    "name": "Wellington",
+    "region": "Wellington",
+    "country": "New Zealand",
+    "lat": -41.2866,
+    "lon": 174.7756,
+    "timezone": "Pacific/Auckland",
+    "priority": 2
+  },
+  {
+    "slug": "hobart",
+    "name": "Hobart",
+    "region": "Tasmania",
+    "country": "Australia",
+    "lat": -42.8821,
+    "lon": 147.3272,
+    "timezone": "Australia/Hobart",
+    "priority": 1
+  },
+  {
+    "slug": "launceston",
+    "name": "Launceston",
+    "region": "Tasmania",
+    "country": "Australia",
+    "lat": -41.4332,
+    "lon": 147.1441,
+    "timezone": "Australia/Hobart",
+    "priority": 2
+  },
+  {
+    "slug": "devonport-tasmania",
+    "name": "Devonport",
+    "region": "Tasmania",
+    "country": "Australia",
+    "lat": -41.1806,
+    "lon": 146.3464,
+    "timezone": "Australia/Hobart",
+    "priority": 2
+  },
+  {
+    "slug": "melbourne",
+    "name": "Melbourne",
+    "region": "Victoria",
+    "country": "Australia",
+    "lat": -37.8136,
+    "lon": 144.9631,
+    "timezone": "Australia/Melbourne",
+    "priority": 3
+  },
+  {
+    "slug": "ushuaia",
+    "name": "Ushuaia",
+    "region": "Tierra del Fuego",
+    "country": "Argentina",
+    "lat": -54.8019,
+    "lon": -68.303,
+    "timezone": "America/Argentina/Ushuaia",
+    "priority": 1
+  },
+  {
+    "slug": "punta-arenas",
+    "name": "Punta Arenas",
+    "region": "Magallanes",
+    "country": "Chile",
+    "lat": -53.1638,
+    "lon": -70.9171,
+    "timezone": "America/Punta_Arenas",
+    "priority": 2
+  },
+  {
+    "slug": "stanley-falklands",
+    "name": "Stanley",
+    "region": "Falkland Islands",
+    "country": "Falkland Islands",
+    "lat": -51.6977,
+    "lon": -57.8517,
+    "timezone": "Atlantic/Stanley",
+    "priority": 2
   }
 ]

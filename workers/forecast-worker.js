@@ -629,7 +629,8 @@ function nearestAurora(coordinates, city) {
 }
 
 function scoreCity(city, auroraValue, kp, bestCloud) {
-  const latitudeBoost = Math.max(0, city.lat - 39) * 1.25;
+  // Math.abs：南北半球对称——南半球高纬（如 -45 的 Queenstown）与北半球同纬度同等加成
+  const latitudeBoost = Math.max(0, Math.abs(city.lat) - 39) * 1.25;
   const auroraBoost = Math.min(52, auroraValue * 1.5);
   const kpBoost = Math.min(30, kp * 5.8);
   const cloudBoost = bestCloud == null ? 4 : Math.max(0, 100 - bestCloud) * 0.12;
@@ -644,11 +645,24 @@ function labelForScore(score) {
   return "Low";
 }
 
+// 半球感知的方向词：北半球看北边地平线（oval 向赤道扩张=向南），南半球全部对调。
+// 对北半球城市输出与旧版逐字节一致（回归零 diff）。
+function directionWords(city) {
+  const southern = city.lat < 0;
+  return {
+    horizon: southern ? "southern" : "northern",
+    ovalPush: southern ? "north" : "south",
+    darkSites: southern ? "south of town" : "north of town",
+    marginalEdge: southern ? "northern edge" : "southern edge",
+  };
+}
+
 function guidanceFor(city, score, kp, bestCloud) {
-  if (score >= 72) return `Conditions are strong for ${city.name}. Find a dark northern horizon and check the sky after local twilight.`;
-  if (score >= 52) return `${city.name} has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help.`;
+  const dir = directionWords(city);
+  if (score >= 72) return `Conditions are strong for ${city.name}. Find a dark ${dir.horizon} horizon and check the sky after local twilight.`;
+  if (score >= 52) return `${city.name} has a reasonable chance if clouds stay low and the aurora oval pushes ${dir.ovalPush}. Dark sites ${dir.darkSites} help.`;
   if (score >= 32) return `Aurora is possible near ${city.name}, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse.`;
-  if (kp >= 5) return `${city.name} is on the southern edge for this forecast. Watch updates, but do not expect easy naked-eye aurora.`;
+  if (kp >= 5) return `${city.name} is on the ${dir.marginalEdge} for this forecast. Watch updates, but do not expect easy naked-eye aurora.`;
   if (bestCloud != null && bestCloud > 70) return `Cloud cover is the main problem for ${city.name}. Check again if the sky clears later tonight.`;
   return `${city.name} is unlikely tonight under the current NOAA forecast. Higher latitude cities have a better setup.`;
 }

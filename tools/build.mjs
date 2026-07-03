@@ -43,6 +43,7 @@ writeDataFiles();
 generateHomePage();
 generateCityPages();
 generateLocationPages();
+generateAuroraAustralisHub();
 generateCountryPages();
 generateRegionPages();
 generateGuidePages();
@@ -199,7 +200,8 @@ function nearestAurora(coordinates, city) {
 }
 
 function scoreCity(city, auroraValue, kp, bestCloud) {
-  const latitudeBoost = Math.max(0, city.lat - 39) * 1.25;
+  // Math.abs：南北半球对称——与 workers/forecast-worker.js 的 scoreCity 保持 lockstep
+  const latitudeBoost = Math.max(0, Math.abs(city.lat) - 39) * 1.25;
   const auroraBoost = Math.min(52, auroraValue * 1.5);
   const kpBoost = Math.min(30, kp * 5.8);
   const cloudBoost = bestCloud == null ? 4 : Math.max(0, 100 - bestCloud) * 0.12;
@@ -214,18 +216,48 @@ function labelForScore(score) {
   return "Low";
 }
 
+// 半球感知辅助：与 workers/forecast-worker.js 的 directionWords 保持 lockstep。
+// 对北半球城市所有输出与旧版逐字节一致（回归零 diff）。
+function isSouthern(city) {
+  return city.lat < 0;
+}
+
+function auroraName(city) {
+  return isSouthern(city) ? "southern lights" : "northern lights";
+}
+
+function auroraNameTitle(city) {
+  return isSouthern(city) ? "Southern Lights (Aurora Australis)" : "Northern Lights";
+}
+
+function auroraNameSentence(city) {
+  return isSouthern(city) ? "Southern lights" : "Northern lights";
+}
+
+function directionWords(city) {
+  const southern = isSouthern(city);
+  return {
+    horizon: southern ? "southern" : "northern",
+    look: southern ? "south" : "north",
+    ovalPush: southern ? "north" : "south",
+    darkSites: southern ? "south of town" : "north of town",
+    marginalEdge: southern ? "northern edge" : "southern edge",
+  };
+}
+
 function guidanceFor(city, score, kp, bestCloud) {
+  const dir = directionWords(city);
   if (score >= 72) {
-    return `Conditions are strong for ${city.name}. Find a dark northern horizon and check the sky after local twilight.`;
+    return `Conditions are strong for ${city.name}. Find a dark ${dir.horizon} horizon and check the sky after local twilight.`;
   }
   if (score >= 52) {
-    return `${city.name} has a reasonable chance if clouds stay low and the aurora oval pushes south. Dark sites north of town help.`;
+    return `${city.name} has a reasonable chance if clouds stay low and the aurora oval pushes ${dir.ovalPush}. Dark sites ${dir.darkSites} help.`;
   }
   if (score >= 32) {
     return `Aurora is possible near ${city.name}, but it may require a camera, a darker location, or a stronger-than-forecast Kp pulse.`;
   }
   if (kp >= 5) {
-    return `${city.name} is on the southern edge for this forecast. Watch updates, but do not expect easy naked-eye aurora.`;
+    return `${city.name} is on the ${dir.marginalEdge} for this forecast. Watch updates, but do not expect easy naked-eye aurora.`;
   }
   if (bestCloud != null && bestCloud > 70) {
     return `Cloud cover is the main problem for ${city.name}. Check again if the sky clears later tonight.`;
@@ -277,7 +309,9 @@ function writeDataFiles() {
 }
 
 function generateHomePage() {
-  const topCities = forecast.cities.slice(0, 12);
+  // 首页北极光区块只放北半球城市；南半球单独一个区块导流到 /aurora-australis/
+  const topCities = forecast.cities.filter((city) => city.lat >= 0).slice(0, 12);
+  const topSouthernCities = forecast.cities.filter((city) => city.lat < 0).slice(0, 6);
   const priorityCities = [...forecast.cities]
     .sort((a, b) => a.priority - b.priority || b.score - a.score)
     .slice(0, 36);
@@ -334,6 +368,19 @@ function generateHomePage() {
           </div>
           <div class="city-grid">
             ${topCities.map((city) => cityCard(city, "")).join("")}
+          </div>
+        </section>
+
+        <section class="section compact-section">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Southern hemisphere</p>
+              <h2>Southern lights (aurora australis) chances now</h2>
+            </div>
+            <p>It is aurora season below the equator too: New Zealand, Tasmania, and far-south South America. <a href="aurora-australis/">See the full southern lights forecast</a>.</p>
+          </div>
+          <div class="city-grid">
+            ${topSouthernCities.map((city) => cityCard(city, "")).join("")}
           </div>
         </section>
 
@@ -440,8 +487,8 @@ function generateCityPages() {
     const regionPath = `/states/${regionSlug(city)}/`;
     const countryPath = `/countries/${slugify(city.country)}/`;
     writePage(["cities", city.slug], layout({
-      title: `${city.name} Aurora Forecast Tonight: Northern Lights Chance`,
-      description: `Northern lights forecast for ${city.name}, ${city.region}: aurora chance, Kp index, cloud cover, and viewing guidance for tonight.`,
+      title: `${city.name} Aurora Forecast Tonight: ${auroraNameTitle(city)} Chance`,
+      description: `${auroraNameSentence(city)} forecast for ${city.name}, ${city.region}: aurora chance, Kp index, cloud cover, and viewing guidance for tonight.`,
       path: `/cities/${city.slug}/`,
       schema: [cityPageSchema(city), cityFaqSchema(city), breadcrumbSchema([
         ["Home", "/"],
@@ -454,7 +501,7 @@ function generateCityPages() {
           <section class="city-hero">
             <div>
               <p class="kicker">${escapeHtml(city.region)} aurora forecast</p>
-              <h1>${escapeHtml(city.name)} northern lights forecast tonight</h1>
+              <h1>${escapeHtml(city.name)} ${auroraName(city)} forecast tonight</h1>
               <p class="lead">${escapeHtml(city.guidance)}</p>
               <div class="hero-actions">
                 <a class="button" href="../../#cities">Search more cities</a>
@@ -479,7 +526,7 @@ function generateCityPages() {
               <p class="kicker">Tonight plan</p>
               <h2>Should you go out?</h2>
               <p>${escapeHtml(cityPlan(city))}</p>
-              <p>For most mid-latitude locations, a clear northern horizon matters more than standing downtown. Look north, avoid street lights, and give your eyes at least 15 minutes to adapt.</p>
+              <p>For most mid-latitude locations, a clear ${directionWords(city).horizon} horizon matters more than standing downtown. Look ${directionWords(city).look}, avoid street lights, and give your eyes at least 15 minutes to adapt.</p>
             </article>
             <aside class="panel">
               <p class="kicker">Current data</p>
@@ -514,7 +561,7 @@ function generateCityPages() {
               </article>
               <article class="panel">
                 <p class="kicker">Country page</p>
-                <h3>${escapeHtml(city.country)} northern lights cities</h3>
+                <h3>${escapeHtml(city.country)} ${auroraName(city)} cities</h3>
                 <p>Use the country collection to jump between high-latitude cities and storm-watch edge cases.</p>
                 <a class="text-link" href="../..${countryPath}">Browse ${escapeHtml(city.country)}</a>
               </article>
@@ -623,14 +670,84 @@ function generateLocationPages() {
   }));
 }
 
+function generateAuroraAustralisHub() {
+  const southernCities = [...forecast.cities]
+    .filter((city) => city.lat < 0)
+    .sort((a, b) => b.score - a.score);
+  if (!southernCities.length) return;
+  const bestCity = southernCities[0];
+  const southernGuides = guidePages.filter((guide) => guide.slug.startsWith("southern-lights-"));
+  const hubFaqs = [
+    { q: "Can you see the aurora australis tonight?", a: `Check the live city scores below. Right now the strongest southern signal is ${bestCity.name} at ${bestCity.score}. Scores combine NOAA aurora grid data, Kp forecast, latitude, and cloud cover.` },
+    { q: "Where are the southern lights most visible?", a: "Tasmania, the southern South Island of New Zealand, and far-south South America (Ushuaia, Punta Arenas) are the most accessible aurora australis regions." },
+    { q: "What Kp do I need for the southern lights?", a: "Photographic aurora is possible from Kp 4 to 5 in Tasmania and southern New Zealand. Naked-eye displays usually need Kp 6 or stronger with dark, clear skies." },
+    { q: "When is southern lights season?", a: "Southern hemisphere winter, May to August, offers the longest dark windows. Weeks around the equinoxes often bring stronger geomagnetic activity." },
+  ];
+  writePage(["aurora-australis"], layout({
+    title: "Southern Lights Forecast Tonight: Aurora Australis by City",
+    description: "Live aurora australis forecast for New Zealand, Tasmania, and southern South America: city scores, Kp index, cloud cover, and viewing guidance.",
+    path: "/aurora-australis/",
+    schema: [collectionPageSchema({
+      title: "Southern lights forecast cities",
+      description: "Aurora australis forecast city collection for the southern hemisphere.",
+      path: "/aurora-australis/",
+      items: southernCities.map((city) => ({ name: `${city.name}, ${city.region}`, path: `/cities/${city.slug}/` })),
+    }), faqPageSchema(hubFaqs), breadcrumbSchema([["Home", "/"], ["Aurora Australis", "/aurora-australis/"]])],
+    body: `
+      <main class="city-page">
+        ${breadcrumbLinks([["Home", "../"], ["Aurora Australis", ""]])}
+        <section class="city-hero">
+          <div>
+            <p class="kicker">Southern hemisphere</p>
+            <h1>Southern lights forecast tonight</h1>
+            <p class="lead">Live aurora australis viewing chances for New Zealand, Tasmania, and far-south South America. Face south from a dark sky site; scores update from NOAA space weather and local cloud cover.</p>
+          </div>
+          <aside class="verdict">
+            <span class="badge ${labelClass(bestCity.label)}">${escapeHtml(bestCity.label)}</span>
+            <div class="verdict-score">${bestCity.score}</div>
+            <p>Best southern chance right now: ${escapeHtml(bestCity.name)}, ${escapeHtml(bestCity.region)}.</p>
+          </aside>
+        </section>
+        <section class="section compact-section">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Live scores</p>
+              <h2>Aurora australis cities ranked tonight</h2>
+            </div>
+          </div>
+          <div class="city-grid">
+            ${southernCities.map((city) => cityCard(city, "../")).join("")}
+          </div>
+        </section>
+        <section class="section compact-section">
+          <div class="guide-grid">
+            ${southernGuides.map((guide) => `
+            <article class="panel">
+              <p class="kicker">${escapeHtml(guide.kicker)}</p>
+              <h3>${escapeHtml(guide.title)}</h3>
+              <p>${escapeHtml(guide.description)}</p>
+              <a class="text-link" href="../guides/${guide.slug}/">Open guide</a>
+            </article>`).join("")}
+            <article class="panel">
+              <p class="kicker">FAQ</p>
+              <h3>Southern lights basics</h3>
+              ${hubFaqs.map((faq) => `<p><strong>${escapeHtml(faq.q)}</strong><br>${escapeHtml(faq.a)}</p>`).join("")}
+            </article>
+          </div>
+        </section>
+      </main>
+    `,
+  }));
+}
+
 function generateCountryPages() {
   for (const country of cityCollections.countries) {
     writePage(["countries", country.slug], layout({
-      title: `${country.name} Northern Lights Forecast Cities`,
+      title: `${country.name} ${auroraNameTitle(country.bestCity)} Forecast Cities`,
       description: `Browse aurora forecast pages for ${country.name}: city scores, cloud cover, Kp index, and viewing guidance.`,
       path: `/countries/${country.slug}/`,
       schema: [collectionPageSchema({
-        title: `${country.name} northern lights forecast`,
+        title: `${country.name} ${auroraName(country.bestCity)} forecast`,
         description: `Aurora forecast city collection for ${country.name}.`,
         path: `/countries/${country.slug}/`,
         items: country.cities.map((city) => ({ name: `${city.name}, ${city.region}`, path: `/cities/${city.slug}/` })),
@@ -641,7 +758,7 @@ function generateCountryPages() {
           <section class="city-hero">
             <div>
               <p class="kicker">Country collection</p>
-              <h1>${escapeHtml(country.name)} northern lights forecast</h1>
+              <h1>${escapeHtml(country.name)} ${auroraName(country.bestCity)} forecast</h1>
               <p class="lead">Compare city-level aurora chances across ${escapeHtml(country.name)}. Scores combine NOAA aurora grid data, Kp forecast, latitude, and local cloud cover.</p>
             </div>
             <aside class="verdict">
@@ -834,6 +951,7 @@ function generateSitemap() {
   const urls = [
     { loc: "/", priority: "1.0", changefreq: "hourly" },
     { loc: "/locations/", priority: "0.9", changefreq: "hourly" },
+    { loc: "/aurora-australis/", priority: "0.9", changefreq: "hourly" },
     { loc: "/guides/", priority: "0.8", changefreq: "weekly" },
     { loc: "/glossary/", priority: "0.7", changefreq: "monthly" },
     ...forecast.cities.map((city) => ({ loc: `/cities/${city.slug}/`, priority: city.priority === 1 ? "0.9" : "0.7", changefreq: "hourly" })),
@@ -900,6 +1018,7 @@ ${headExtras}
       <a class="brand" href="${relativeAsset(pagePath)}"><span class="brand-mark" aria-hidden="true"></span>${escapeHtml(site.name)}</a>
       <div class="nav-links">
         <a href="${relativeAsset(pagePath)}locations/">Locations</a>
+        <a href="${relativeAsset(pagePath)}aurora-australis/">Southern Lights</a>
         <a href="${relativeAsset(pagePath)}guides/">Guides</a>
         <a href="${relativeAsset(pagePath)}glossary/">Glossary</a>
         <a href="${relativeAsset(pagePath)}about/">About</a>
@@ -1136,6 +1255,80 @@ function buildGuidePages() {
         { q: "Why do nearby cities have different scores?", a: "Latitude, cloud cover, and distance to the modeled aurora grid can differ enough to change the practical score." },
       ],
     },
+    {
+      slug: "southern-lights-tasmania",
+      shortTitle: "Tasmania guide",
+      title: "How to See the Southern Lights in Tasmania",
+      description: "Where and when to watch the aurora australis from Hobart and southern Tasmania: best dark-sky spots, Kp guidance, and season windows.",
+      kicker: "Aurora australis",
+      priority: "0.8",
+      intro: "Tasmania is one of the most accessible places on Earth to watch the aurora australis. Face south from a dark coastline, watch the Kp forecast, and pick a winter night with low cloud cover for the best chance.",
+      sections: [
+        {
+          heading: "Why Tasmania works for aurora australis",
+          paragraphs: [
+            "Hobart sits near latitude 43 degrees south, closer to the southern auroral oval than almost any other city with an airport and sealed roads. When geomagnetic activity reaches Kp 5 or higher, displays can climb well above the southern horizon.",
+            "Unlike Antarctica or the sub-Antarctic islands, Tasmania lets you chase a storm alert on the same evening: check the forecast, drive 30 to 60 minutes to a dark coastline, and face south.",
+          ],
+        },
+        {
+          heading: "Best viewing spots near Hobart",
+          paragraphs: [
+            "South Arm Peninsula, Goat Bluff, and Clifton Beach give wide, dark southern horizons within an hour of Hobart. Bruny Island and Cockle Creek go darker still if you have more time.",
+            "Avoid looking across the city glow: the display sits to the south, so position yourself with Hobart's lights behind you, not in front.",
+          ],
+        },
+        {
+          heading: "When to go: season and Kp",
+          paragraphs: [
+            "Winter (May to August) brings the longest, darkest nights, and the weeks around the equinoxes often carry stronger geomagnetic activity. A practical trigger: start watching the sky when the Kp forecast reaches 5 and Tasmanian cloud cover stays low.",
+            "Check the live city scores for Hobart, Launceston, and Devonport on this site before driving: the score already combines aurora oval intensity, Kp, latitude, and cloud cover.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Can you see the southern lights from Hobart itself?", a: "During strong storms, yes, but city light pollution mutes the display. A 30 to 60 minute drive to a dark southern coastline improves the view dramatically." },
+        { q: "What Kp do I need in Tasmania?", a: "Photographic aurora is possible from Kp 4 to 5. Naked-eye colour and structure usually need Kp 6 or stronger with clear, dark skies." },
+        { q: "Is summer viewing possible?", a: "It is harder: Tasmanian summer nights are short and twilight lingers. Winter offers far more dark hours per night." },
+      ],
+    },
+    {
+      slug: "southern-lights-new-zealand",
+      shortTitle: "New Zealand guide",
+      title: "Southern Lights in New Zealand: Best Viewing Spots",
+      description: "Where to watch the aurora australis in New Zealand: Otago and Southland dark-sky spots, Stewart Island, season timing, and Kp guidance.",
+      kicker: "Aurora australis",
+      priority: "0.8",
+      intro: "The southern South Island is New Zealand's aurora country. From Dunedin, Queenstown, and Invercargill, face south on a dark winter night when the Kp forecast reaches 5, and give the sky at least 20 minutes.",
+      sections: [
+        {
+          heading: "Otago: Dunedin and Queenstown",
+          paragraphs: [
+            "Dunedin's Otago Peninsula offers classic aurora vantage points: Hoopers Inlet, Sandfly Bay, and Tunnel Beach all give dark southern horizons within 30 minutes of the city.",
+            "Around Queenstown, escape the town glow toward Kingston at the southern end of Lake Wakatipu, or use elevated lookouts with a clear line to the south.",
+          ],
+        },
+        {
+          heading: "Southland and Stewart Island",
+          paragraphs: [
+            "Invercargill and Bluff sit at the bottom of the South Island, and Stewart Island / Rakiura across the strait is an International Dark Sky Sanctuary: minimal light pollution and an unobstructed southern sea horizon.",
+            "The Aoraki Mackenzie Dark Sky Reserve near Lake Tekapo is farther north, which trades some aurora frequency for exceptionally dark skies during stronger storms.",
+          ],
+        },
+        {
+          heading: "Season, Kp, and practical timing",
+          paragraphs: [
+            "New Zealand winter (June to August) delivers the longest dark windows, and equinox weeks often bring elevated geomagnetic activity. Start paying attention when the Kp forecast reaches 5; naked-eye displays over water usually arrive with Kp 6 or more.",
+            "Before driving, check the live scores for Queenstown, Dunedin, and Invercargill on this site: the score already folds in aurora oval intensity, Kp, latitude, and local cloud cover.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Where is the best place in New Zealand to see the aurora?", a: "The southern coasts of Otago and Southland: Otago Peninsula, the Catlins, Bluff, and Stewart Island / Rakiura offer the darkest southern horizons." },
+        { q: "Can you see the southern lights from Auckland or Wellington?", a: "Only during unusually strong storms, and mostly as a low glow or on camera. The South Island's southern coast is far more reliable." },
+        { q: "What time of night is best?", a: "Local midnight, roughly 11pm to 2am, is statistically strongest, but during big storms displays can appear any time the sky is dark." },
+      ],
+    },
   ];
 }
 
@@ -1262,12 +1455,12 @@ function cityPageSchema(city) {
 function cityFaqItems(city) {
   return [
     {
-      q: `Can I see the northern lights in ${city.name} tonight?`,
+      q: `Can I see the ${auroraName(city)} in ${city.name} tonight?`,
       a: city.guidance,
     },
     {
       q: `What matters most for ${city.name}?`,
-      a: `Watch the city score, Kp forecast, cloud cover, and whether you can find a dark northern horizon away from bright local lights.`,
+      a: `Watch the city score, Kp forecast, cloud cover, and whether you can find a dark ${directionWords(city).horizon} horizon away from bright local lights.`,
     },
     {
       q: `How often does the ${city.name} forecast update?`,
