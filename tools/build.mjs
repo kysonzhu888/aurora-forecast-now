@@ -980,8 +980,11 @@ ${urls.map((url) => `  <url><loc>${site.url}${url.loc}</loc><lastmod>${buildLast
 }
 
 function generateRobots() {
+  // Disallow /api/comments so crawlers that render JS skip the comments fetch (UCH-10/UCH-11).
+  // /api/forecast must stay crawlable: forecast content is client-rendered.
   writeFile("robots.txt", `User-agent: *
 Allow: /
+Disallow: /api/comments
 
 Sitemap: ${site.url}/sitemap.xml
 `);
