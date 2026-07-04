@@ -110,3 +110,21 @@ curl 'https://auroraforecastnow.com/api/forecast?city=Tokyo'
 curl 'https://auroraforecastnow.com/api/forecast?q=Oslo'
 curl 'https://auroraforecastnow.com/api/forecast?lat=40.7128&lon=-74.0060'
 ```
+
+## Development
+
+```bash
+# 重新生成全站静态页（拉 NOAA 实时数据；加 AURORA_USE_EXISTING_FORECAST=1 用缓存数据做 deterministic build）
+node tools/build.mjs
+
+# 评分核心（lib/forecast-core.mjs，build 与 worker 共用）的行为锁定测试
+node --test tests/forecast-core.test.mjs
+
+# 部署（🚨 只用这个脚本，排除清单是安全边界，别用裸 wrangler 命令）
+sh deploy.sh pages    # 静态站
+sh deploy.sh worker   # API worker
+sh deploy.sh all      # 两者
+
+# 查 Cloudflare 流量（不走浏览器；token 见 ~/.cloudflare/api_token）
+python3 ~/sekai.app.dir/tools/cf_api.py daily auroraforecastnow.com
+```
