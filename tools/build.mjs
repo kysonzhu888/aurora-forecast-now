@@ -476,16 +476,7 @@ function generateCityPages() {
               <p>${escapeHtml(cityPlan(city))}</p>
               <p>For most mid-latitude locations, a clear ${directionWords(city).horizon} horizon matters more than standing downtown. Look ${directionWords(city).look}, avoid street lights, and give your eyes at least 15 minutes to adapt.</p>
             </article>
-            <aside class="panel">
-              <p class="kicker">Current data</p>
-              <h3>Last build</h3>
-              <div class="stat-table">
-                <div><span>Generated</span><strong>${formatDateTime(forecast.generatedAt)}</strong></div>
-                <div><span>NOAA observed</span><strong>${formatDateTime(forecast.observationTime)}</strong></div>
-                <div><span>NOAA forecast</span><strong>${formatDateTime(forecast.forecastTime)}</strong></div>
-                <div><span>Nearest grid</span><strong>${formatCoord(city.gridLat, city.gridLon)}</strong></div>
-              </div>
-            </aside>
+${alertSignupPanel(city)}
           </section>
 ${cityLocalKnowledge(city)}
           ${adUnit({
@@ -519,7 +510,16 @@ ${cityLocalKnowledge(city)}
                 <p>Learn how Kp, cloud cover, latitude, and the aurora oval combine into a practical viewing chance.</p>
                 <a class="text-link" href="../../guides/how-to-read-aurora-forecast/">Open guide</a>
               </article>
-${alertSignupPanel(city)}
+              <aside class="panel">
+                <p class="kicker">Current data</p>
+                <h3>Last build</h3>
+                <div class="stat-table">
+                  <div><span>Generated</span><strong>${formatDateTime(forecast.generatedAt)}</strong></div>
+                  <div><span>NOAA observed</span><strong>${formatDateTime(forecast.observationTime)}</strong></div>
+                  <div><span>NOAA forecast</span><strong>${formatDateTime(forecast.forecastTime)}</strong></div>
+                  <div><span>Nearest grid</span><strong>${formatCoord(city.gridLat, city.gridLon)}</strong></div>
+                </div>
+              </aside>
             </div>
           </section>
 
