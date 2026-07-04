@@ -1342,6 +1342,50 @@ function buildGuidePages() {
         { q: "What time of night is best?", a: "Local midnight, roughly 11pm to 2am, is statistically strongest, but during big storms displays can appear any time the sky is dark." },
       ],
     },
+    {
+      slug: "southern-lights-patagonia",
+      shortTitle: "Patagonia guide",
+      title: "Southern Lights in Patagonia: Ushuaia, Punta Arenas & the Falklands",
+      description: "Where and when to see the aurora australis from far-south South America: Ushuaia, Punta Arenas, and the Falkland Islands, with dark-sky spots, season windows, and Kp guidance.",
+      kicker: "Aurora australis",
+      priority: "0.8",
+      intro: "Far-south Patagonia holds some of the closest inhabited land to the southern auroral zone: Ushuaia at nearly 55 degrees south, Punta Arenas at 53, and the Falkland Islands out in the South Atlantic. Big displays are still uncommon and need a strong storm, but when one lands, these skies are as well placed as anywhere on Earth.",
+      sections: [
+        {
+          heading: "Ushuaia and Tierra del Fuego",
+          paragraphs: [
+            "Ushuaia is the world's southernmost city, so it sits closer to the aurora australis zone than any other urban area. The limiting factor is almost always the Beagle Channel's maritime weather, not geomagnetic activity.",
+            "For dark, south-facing horizons, locals use the Beagle Channel shoreline east of town, the Martial Glacier road above the city, and Ruta 3 toward Lapataia in Tierra del Fuego National Park.",
+          ],
+        },
+        {
+          heading: "Punta Arenas and the Strait of Magellan",
+          paragraphs: [
+            "Punta Arenas, at about 53 degrees south, pairs an airport and sealed roads with a low southern horizon over the Strait of Magellan. The Reserva Nacional Magallanes just west of town and its Cerro Mirador viewpoint get you above the city glow quickly.",
+            "For a truly dark horizon, the coastal Ruta 9 running south toward Fuerte Bulnes offers pull-offs over the water, and the remote Cabo Froward hike reaches the southern tip of the South American mainland.",
+          ],
+        },
+        {
+          heading: "The Falkland Islands",
+          paragraphs: [
+            "Stanley sits near 52 degrees south with dark, sparsely populated skies and open South Atlantic horizons. The Cape Pembroke peninsula, a nature reserve about 11 km east of town, and nearby Gypsy Cove give low, south-facing coastal views away from the settlement's lights.",
+            "Because the southern magnetic pole is offset toward Australia, displays in the South Atlantic sector are rarer than at the same latitude in the north, so treat any sighting as a genuine bonus.",
+          ],
+        },
+        {
+          heading: "Season, Kp, and Patagonian weather",
+          paragraphs: [
+            "The dark-sky window runs from about April to September, with June and July offering the longest nights. Ushuaia and Punta Arenas sit far enough south to catch displays during solid storms, but a bright, naked-eye show still generally wants a strong, high-Kp night because this sector sits farther from the geomagnetic pole than its map latitude suggests.",
+            "Clouds and wind are the real gatekeepers here. Check the live city scores for Ushuaia and Punta Arenas on this site, wait for a clear break, and face south over open water.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Where in South America is best for the southern lights?", a: "The far south: Ushuaia in Argentina and Punta Arenas in Chile are the closest cities to the auroral zone, with the Falkland Islands also well placed out in the South Atlantic." },
+        { q: "Is Ushuaia guaranteed to show aurora because it is so far south?", a: "No. Its latitude helps, but the southern magnetic pole's offset and frequent maritime cloud mean clear, storm-night timing matters more than latitude alone." },
+        { q: "What Kp do I need in Patagonia?", a: "The far-south cities can show aurora during active storms, but plan around a strong, high-Kp night for a naked-eye display, and always pair it with a clear, dark southern horizon." },
+      ],
+    },
   ];
 }
 

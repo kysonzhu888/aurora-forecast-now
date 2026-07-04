@@ -278,5 +278,107 @@
       { "q": "Can you see the aurora australis from Ushuaia?", "a": "Yes, during strong geomagnetic storms in winter, though less often than in Tasmania or southern New Zealand because the southern auroral oval is shifted away from South America." },
       { "q": "When is the best time in Ushuaia?", "a": "June and July have the longest nights. Pair aurora hopes with the city's winter-sports season rather than planning a trip around aurora alone." }
     ]
+  },
+  "christchurch": {
+    "intro": "Christchurch sits at about 43.5 degrees south, close enough to the auroral zone that aurora australis is a realistic target during moderate-to-strong storms, though it usually shows as glow and beams low on the southern horizon rather than overhead.",
+    "spots": [
+      { "name": "Birdlings Flat", "note": "A coastal settlement about 45 minutes south of the city near Lake Ellesmere, with wide-open, dark skies and an unobstructed southern sea horizon that local aurora photographers favor." },
+      { "name": "Port Hills", "note": "A 20-minute drive from the city center, these elevated lookouts get you above some of the light dome with views south, though the city glow sits partly in that direction." },
+      { "name": "Lake Ellesmere / Te Waihora", "note": "The large shallow lake southwest of the city offers dark, flat foreground and open southern sightlines, and the still water can mirror strong displays." },
+      { "name": "Banks Peninsula (Akaroa, Le Bons Bay, Okains Bay)", "note": "The peninsula's south- and east-facing bays, roughly 1 to 1.5 hours out, give dark coastal vantage points well clear of Christchurch's lights." }
+    ],
+    "season": "Aurora australis is possible year-round but practically visible from autumn through spring, roughly March to September, with June and July giving the longest dark nights; at this latitude aim for Kp 6 or higher for a clear naked-eye display.",
+    "photo": "Face due south, use a tripod with a wide lens, and try 10 to 20 seconds at a high ISO to pull out color the eye can barely see.",
+    "faqs": [
+      { "q": "Can I see the aurora from central Christchurch?", "a": "Only during strong storms, and city light pollution will wash out most of it, so drive to a dark south-facing spot for a real chance." },
+      { "q": "Do I need to drive to the Mackenzie Dark Sky Reserve?", "a": "No, closer coastal spots work well, but Lake Tekapo / Mount John (about 3 hours away) offers far darker skies if you want to make a trip of it." }
+    ]
+  },
+  "wellington": {
+    "intro": "Wellington sits at about 41.3 degrees south on the North Island, so aurora australis here is an occasional event rather than a reliable one, needing powerful solar storms to push a visible glow above the southern horizon across Cook Strait.",
+    "spots": [
+      { "name": "Owhiro Bay / Red Rocks", "note": "On the city's south coast about 20 minutes from downtown, you face directly south over Cook Strait with the city lights behind you, making it Wellington's most accessible aurora vantage." },
+      { "name": "Wellington south coast (Island Bay to Palmer Head)", "note": "The whole rocky south coastline gives uninterrupted southern sightlines and photogenic foreground, though nearby suburban glow means darker spots are better." },
+      { "name": "Cape Palliser", "note": "About 2 hours' drive around the Wairarapa coast, this south-facing point sits within the Wairarapa Dark Sky Reserve and offers a very dark horizon with the historic lighthouse for foreground." },
+      { "name": "Lake Wairarapa", "note": "Roughly 1.5 hours from the city, its still water faces south and can reflect a strong display, part of the same dark-sky reserve as Cape Palliser." }
+    ],
+    "season": "The realistic window is autumn to spring, about March to September, with June and July darkest; because Wellington is this far north you generally need Kp 7 or higher for a genuine naked-eye display.",
+    "photo": "Shoot from a dark south-facing point like Cape Palliser, expose 15 to 25 seconds wide open at high ISO, and let the camera reveal color the eye may only sense as a pale glow.",
+    "faqs": [
+      { "q": "Is Wellington a good place to see the southern lights?", "a": "Not reliably, it's too far north for regular sightings, but during major storms the south coast and Wairarapa coast do deliver." },
+      { "q": "Where's the best nearby dark-sky spot?", "a": "The Wairarapa Dark Sky Reserve, especially Cape Palliser and Lake Wairarapa, gives the darkest south-facing skies within driving distance." }
+    ]
+  },
+  "melbourne": {
+    "intro": "At about 38 degrees south, Melbourne is a mid-latitude city where aurora australis is an occasional event, not a reliable one; it takes a strong geomagnetic storm and a dark, south-facing horizon to catch it.",
+    "spots": [
+      { "name": "Cape Schanck Lighthouse", "note": "On the southern tip of the Mornington Peninsula about 90 minutes from the CBD, with clifftop panoramas over Bass Strait and a wide-open southern horizon." },
+      { "name": "Flinders Blowhole", "note": "A 15-minute drive from Cape Schanck, with a boardwalk to platforms overlooking the southern ocean and little light pollution." },
+      { "name": "Point Lonsdale Lighthouse", "note": "On the Bellarine Peninsula facing the entrance to Port Phillip, a go-to southern-ocean vantage roughly 90 minutes from town." },
+      { "name": "Rickett's Point, Beaumaris", "note": "A popular closer-in option about 30 minutes from the CBD; the rocky bayside foreshore faces south, though city glow limits it to strong storms." }
+    ],
+    "season": "Winter, roughly May to August, gives the longest dark windows; from this latitude expect to need a major storm around Kp 7 or higher, and even then the color usually shows up on camera before the naked eye.",
+    "photo": "Face due south, use a tripod with a wide lens, and try a 10-20 second exposure at high ISO to pull out color the eye can barely register.",
+    "faqs": [
+      { "q": "Can I see the aurora from central Melbourne?", "a": "Only during exceptional storms, and city light pollution washes out most of it, so it is worth driving to a dark south-facing coast." },
+      { "q": "How often does it happen here?", "a": "Rarely as a naked-eye event; strong displays reach this far north only a handful of times in a good solar year, so watch the forecasts and be ready to move fast." }
+    ]
+  },
+  "launceston": {
+    "intro": "Launceston sits in northern Tasmania at about 41 degrees south, farther from the auroral oval than Hobart, and the aurora glows low to the south, away from the city's north-facing Tamar surrounds, so it is a harder base than the state's south.",
+    "spots": [
+      { "name": "Thousand Lakes Lodge (Central Highlands)", "note": "About 90 minutes south of Launceston on the Central Plateau, with dark skies and unobstructed southern views that locals drive inland to reach." },
+      { "name": "Cradle Mountain / Dove Lake", "note": "Roughly 2.5 hours from Launceston; a dramatic dark-sky setting, but being well north the lights must be strong to rise above the peaks." },
+      { "name": "Ben Lomond area", "note": "The high country southeast of the city offers elevation and darker skies than town, best on nights with a clear southern horizon." }
+    ],
+    "season": "Aim for the cooler months, May to August, when nights are long and dark and displays are usually best between about 10pm and 2am; from this far north you generally need a solid storm, so treat higher Kp readings as your cue to head to a dark inland site.",
+    "photo": "Get away from town lights, face south, and shoot long exposures on a tripod; the highlands give you the darkest foreground.",
+    "faqs": [
+      { "q": "Can I see it from Launceston itself?", "a": "The city's light and northerly position make it tough; most chasers drive south to the Central Highlands or up to darker high country for a clear look." },
+      { "q": "Is Launceston as good as Hobart for aurora?", "a": "No; Hobart is farther south with open ocean horizons, so from Launceston you are trading distance and driving for a fair result." }
+    ]
+  },
+  "devonport-tasmania": {
+    "intro": "Devonport lies on Tasmania's north-west coast at about 41 degrees south, farther from the auroral zone than Hobart and with the ocean to its north rather than south, so seeing the aurora usually means finding a dark south-facing horizon or driving inland.",
+    "spots": [
+      { "name": "Mersey Bluff Lighthouse", "note": "A headland reserve a few minutes from the town center; open coastal lookouts here are a local aurora-photography spot despite the northerly coast." },
+      { "name": "Cradle Mountain / Dove Lake", "note": "Around 90 minutes to 2 hours south of Devonport, a dark-sky icon where strong displays can appear behind the peaks." },
+      { "name": "Mount Roland area", "note": "Inland southeast of Devonport, offering higher, darker ground and clearer views toward the southern horizon than the coast." }
+    ],
+    "season": "The best window is the cooler, darker months of May to September, with displays typically strongest late at night; because Devonport is well north, plan around stronger storms and check community aurora alerts before heading out.",
+    "photo": "Face south, use a tripod and a long exposure at high ISO, and get clear of the town's coastal lights for the cleanest shot.",
+    "faqs": [
+      { "q": "Does the north coast help or hurt aurora viewing?", "a": "It hurts, because the aurora sits to the south and the coast faces north; you want an open southern view, which often means moving inland or to an elevated spot." },
+      { "q": "How does Devonport compare to southern Tasmania?", "a": "It is noticeably harder than Hobart or the far south; expect to need brighter storms and to travel toward the Central Highlands for the best chances." }
+    ]
+  },
+  "punta-arenas": {
+    "intro": "At about 53 degrees south, Punta Arenas sits closer to the southern auroral zone than almost any other city with an airport and sealed roads. Big displays are rare here and need a strong storm, but when one hits, the far-south sky over the Strait of Magellan can light up.",
+    "spots": [
+      { "name": "Reserva Nacional Magallanes (Parque Japones)", "note": "CONAF-managed forest reserve just west of town with several miradores; a quick way to get above the city's light dome, though the best aurora horizon is toward the water to the south." },
+      { "name": "Cerro Mirador", "note": "The reserve's high viewpoint above Punta Arenas, useful for open sky and getting clear of streetlights on a dark night." },
+      { "name": "Cabo Froward", "note": "The southernmost tip of the South American mainland, a remote multi-day hike facing open water down the Strait of Magellan for anyone chasing a true dark, south-facing horizon." },
+      { "name": "Ruta 9 south toward Fuerte Bulnes", "note": "The coastal road south of the city runs along the Strait, giving pull-offs with a low, dark horizon over the water away from town glow." }
+    ],
+    "season": "Aim for the long, dark nights from about April through September; Patagonia is notoriously cloudy and windy, so you need both a clear sky and a strong geomagnetic storm (roughly Kp 7 or higher) for anything visible to the eye this far from the magnetic pole.",
+    "photo": "Face due south over the Strait, put the camera on a tripod, and use a long exposure to pull out the glow, which is often faint to the naked eye here.",
+    "faqs": [
+      { "q": "Can you actually see aurora from Punta Arenas?", "a": "Yes, but only during major storms; the widely reported 2024 displays were described locally as the first in well over a century, so treat any sighting as a rare bonus, not a scheduled event." },
+      { "q": "Which way do I look?", "a": "South, toward the Strait of Magellan and open water, and get away from the city's lights; the darker your southern horizon, the better your odds of catching a low glow." }
+    ]
+  },
+  "stanley-falklands": {
+    "intro": "The Falklands sit near 52 degrees south with dark, sparsely populated skies and open South Atlantic horizons, making Stanley one of the better-placed spots on Earth for aurora australis. Displays are still uncommon and depend on strong storms, but real sightings do happen.",
+    "spots": [
+      { "name": "Cape Pembroke peninsula", "note": "A National Nature Reserve about 11 km east of Stanley with a dark, open coast facing the South Atlantic, well away from town lights." },
+      { "name": "Gypsy Cove", "note": "On the Cape Pembroke peninsula and easily reached from Stanley by taxi or an hour-and-a-half walk, with a low coastal horizon over the sea." },
+      { "name": "Mount Tumbledown", "note": "An elevated ridge just southwest of Stanley that gets you above the town's glow for a wider, darker view of the sky." }
+    ],
+    "season": "The best dark-sky window runs roughly April through August; the South Atlantic is cloudy and windy, so you need a clear break plus high solar activity, and because the southern magnetic pole is offset toward Australia, displays here are rarer than at the same latitude up north.",
+    "photo": "Set up facing south over open water, use a tripod and a long exposure, and let the camera pick up color the eye can miss.",
+    "faqs": [
+      { "q": "Have people really seen the aurora from the Falklands?", "a": "Yes; local reporting confirmed aurora australis visible over the islands during the 2024 solar maximum, though clouds spoiled some earlier attempts, so weather is often the deciding factor." },
+      { "q": "How do I pick a spot near Stanley?", "a": "Head to a dark, south-facing coast like the Cape Pembroke reserve or climb Mount Tumbledown to escape the town lights, then watch low on the southern horizon." }
+    ]
   }
 }
