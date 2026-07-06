@@ -1023,6 +1023,11 @@ function layout({ title, description, path: pagePath, body, schema = [] }) {
   <meta property="og:type" content="website">
   <meta property="og:url" content="${canonical}">
   <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="${site.url}/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The aurora borealis seen from the International Space Station (NASA)">
+  <meta name="twitter:image" content="${site.url}/assets/og-image.jpg">
 ${headExtras}
 </head>
 <body>

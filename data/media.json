@@ -1,4 +1,18 @@
 {
+  "photos": [
+    {
+      "id": "iss-aurora-borealis",
+      "title": "Aurora borealis from the International Space Station",
+      "file": "assets/photos/iss-aurora.jpg",
+      "ogImage": "assets/og-image.jpg",
+      "creator": "NASA / ISS Expedition 72",
+      "source": "NASA Image and Video Library (iss072e159172)",
+      "sourceUrl": "https://images.nasa.gov/details/iss072e159172",
+      "license": "Public Domain (NASA media usage guidelines)",
+      "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "alt": "The aurora borealis glowing green over Earth, seen from the International Space Station"
+    }
+  ],
   "generatedVisuals": [
     {
       "id": "aurora-oval-map",
