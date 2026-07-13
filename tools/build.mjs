@@ -17,6 +17,7 @@ const site = {
   name: config.name,
   url: normalizeUrl(config.siteUrl),
   description: config.description,
+  contentLastmod: normalizeContentLastmod(config.contentLastmod),
   contactEmail: config.contactEmail,
   googleAnalyticsId: (config.googleAnalyticsId || "").trim(),
   adsenseClientId: (config.adsenseClientId || "").trim(),
@@ -35,8 +36,7 @@ const endpoints = {
 const now = new Date();
 const ALERT_LOOKBACK_MS = 72 * 60 * 60 * 1000;
 const useExistingForecast = process.env.AURORA_USE_EXISTING_FORECAST === "1";
-const reusedLastmod = useExistingForecast ? readExistingSitemapLastmod() : "";
-const buildLastmod = reusedLastmod || now.toISOString();
+const buildLastmod = site.contentLastmod;
 const forecast = useExistingForecast ? readJson(path.join("data", "forecast.json")) : await buildForecast();
 const cityCollections = buildCityCollections(forecast.cities);
 const guidePages = buildGuidePages();
@@ -277,12 +277,12 @@ function generateHomePage() {
               </form>
               <div class="live-result" data-live-result hidden></div>
               <div class="hero-meta" aria-label="Current forecast summary">
-                <div class="metric"><span>Max Kp next 36h</span><strong>${forecast.maxKp || "N/A"}</strong></div>
-                <div class="metric"><span>NOAA forecast time</span><strong>${formatDateTime(forecast.forecastTime)}</strong></div>
-                <div class="metric"><span>Best city now</span><strong>${escapeHtml(topCities[0]?.name || "Checking")}</strong></div>
-                <div class="metric"><span>Live cache</span><strong data-live-status>Static fallback</strong></div>
+                <div class="metric"><span>Max Kp next 36h</span><strong data-live-max-kp>Checking</strong></div>
+                <div class="metric"><span>NOAA forecast time</span><strong data-live-forecast-time>Checking</strong></div>
+                <div class="metric"><span>Best city now</span><strong data-live-best-city>Checking</strong></div>
+                <div class="metric"><span>Live cache</span><strong data-live-status>Connecting</strong></div>
               </div>
-              <p class="live-note" data-live-note>Updated from the static build. Live API status will appear when available.</p>
+              <p class="live-note" data-live-note>Live conditions load from the forecast API when you open this page.</p>
             </div>
             ${auroraVisual(topCities.slice(0, 4))}
           </div>
@@ -292,7 +292,7 @@ function generateHomePage() {
           slotKey: "topBanner",
           className: "ad-shell-wide",
           fallbackTitle: "More ways to plan tonight",
-          fallbackText: "Use the forecast atlas while Aurora Forecast Now is being prepared for ad review.",
+          fallbackText: "Compare nearby locations, cloud cover, and the signals behind each city score.",
           links: [
             ["locations/", "Browse locations"],
             ["guides/how-to-read-aurora-forecast/", "Read the score"],
@@ -407,7 +407,7 @@ ${alertSignupPanel(null)}
               <p class="kicker">Data sources</p>
               <h2>Official space weather, plain-English forecast</h2>
             </div>
-            <p>${escapeHtml(forecast.stormSummary)}</p>
+            <p data-live-storm-summary>Live NOAA storm information loads with the current forecast.</p>
           </div>
           <div class="source-grid">
             ${media.dataSources.map((source) => `<a class="source-card" href="${escapeHtml(source.url)}"><h3>${escapeHtml(source.name)}</h3><p>Used for forecast data, Kp values, or local sky conditions.</p></a>`).join("")}
@@ -444,27 +444,27 @@ function generateCityPages() {
         [city.name, `/cities/${city.slug}/`],
       ])],
       body: `
-        <main class="city-page">
+        <main class="city-page" data-live-city-detail data-city-slug="${escapeHtml(city.slug)}">
           ${breadcrumbLinks([["Home", "../../"], ["Locations", "../../locations/"], [city.name, ""]])}
           <section class="city-hero">
             <div>
               <p class="kicker">${escapeHtml(city.region)} aurora forecast</p>
               <h1>${escapeHtml(city.name)} ${auroraName(city)} forecast tonight</h1>
-              <p class="lead">${escapeHtml(city.guidance)}</p>
+              <p class="lead" data-live-city-guidance>Live ${auroraName(city)} conditions for ${escapeHtml(city.name)} load from the forecast API. Use the local guide below while the latest score is checked.</p>
               <div class="hero-actions">
                 <a class="button" href="../../#cities">Search more cities</a>
                 <a class="button secondary" href="https://www.spaceweather.gov/products/aurora-30-minute-forecast">NOAA forecast</a>
               </div>
             </div>
             <aside class="verdict">
-              <span class="badge ${labelClass(city.label)}">${escapeHtml(city.label)}</span>
-              <div class="verdict-score">${city.score}</div>
+              <span class="badge possible" data-live-city-label>Checking</span>
+              <div class="verdict-score" data-live-city-score>—</div>
               <p>Aurora chance score for the next local night window.</p>
               <div class="stat-table">
                 <div><span>Best window</span><strong>${escapeHtml(city.watchWindow)}</strong></div>
-                <div><span>Max Kp</span><strong>${forecast.maxKp || "N/A"}</strong></div>
-                <div><span>NOAA aurora grid</span><strong>${city.aurora}</strong></div>
-                <div><span>Best cloud cover</span><strong>${city.bestCloud == null ? "N/A" : `${city.bestCloud}%`}</strong></div>
+                <div><span>Max Kp</span><strong data-live-city-kp>Checking</strong></div>
+                <div><span>NOAA aurora grid</span><strong data-live-city-aurora>Checking</strong></div>
+                <div><span>Best cloud cover</span><strong data-live-city-cloud>Checking</strong></div>
               </div>
             </aside>
           </section>
@@ -473,7 +473,7 @@ function generateCityPages() {
             <article class="panel">
               <p class="kicker">Tonight plan</p>
               <h2>Should you go out?</h2>
-              <p>${escapeHtml(cityPlan(city))}</p>
+              <p data-live-city-plan>Check the live score, cloud cover, and NOAA storm status before deciding whether to travel.</p>
               <p>For most mid-latitude locations, a clear ${directionWords(city).horizon} horizon matters more than standing downtown. Look ${directionWords(city).look}, avoid street lights, and give your eyes at least 15 minutes to adapt.</p>
             </article>
 ${alertSignupPanel(city)}
@@ -512,12 +512,12 @@ ${cityLocalKnowledge(city)}
               </article>
               <aside class="panel">
                 <p class="kicker">Current data</p>
-                <h3>Last build</h3>
+                <h3>Live forecast status</h3>
                 <div class="stat-table">
-                  <div><span>Generated</span><strong>${formatDateTime(forecast.generatedAt)}</strong></div>
-                  <div><span>NOAA observed</span><strong>${formatDateTime(forecast.observationTime)}</strong></div>
-                  <div><span>NOAA forecast</span><strong>${formatDateTime(forecast.forecastTime)}</strong></div>
-                  <div><span>Nearest grid</span><strong>${formatCoord(city.gridLat, city.gridLon)}</strong></div>
+                  <div><span>Updated</span><strong data-live-city-updated>Checking</strong></div>
+                  <div><span>NOAA forecast</span><strong data-live-city-forecast-time>Checking</strong></div>
+                  <div><span>Source</span><strong>NOAA + Open-Meteo</strong></div>
+                  <div><span>Location</span><strong>${escapeHtml(formatCoord(city.lat, city.lon))}</strong></div>
                 </div>
               </aside>
             </div>
@@ -684,10 +684,9 @@ function generateAuroraAustralisHub() {
     .filter((city) => city.lat < 0)
     .sort((a, b) => b.score - a.score);
   if (!southernCities.length) return;
-  const bestCity = southernCities[0];
   const southernGuides = guidePages.filter((guide) => guide.slug.startsWith("southern-lights-"));
   const hubFaqs = [
-    { q: "Can you see the aurora australis tonight?", a: `Check the live city scores below. Right now the strongest southern signal is ${bestCity.name} at ${bestCity.score}. Scores combine NOAA aurora grid data, Kp forecast, latitude, and cloud cover.` },
+    { q: "Can you see the aurora australis tonight?", a: "Check the live city scores below. They combine NOAA aurora grid data, Kp forecast, latitude, and cloud cover without storing a weather snapshot in the static page." },
     { q: "Where are the southern lights most visible?", a: "Tasmania, the southern South Island of New Zealand, and far-south South America (Ushuaia, Punta Arenas) are the most accessible aurora australis regions." },
     { q: "What Kp do I need for the southern lights?", a: "Photographic aurora is possible from Kp 4 to 5 in Tasmania and southern New Zealand. Naked-eye displays usually need Kp 6 or stronger with dark, clear skies." },
     { q: "When is southern lights season?", a: "Southern hemisphere winter, May to August, offers the longest dark windows. Weeks around the equinoxes often bring stronger geomagnetic activity." },
@@ -712,9 +711,9 @@ function generateAuroraAustralisHub() {
             <p class="lead">Live aurora australis viewing chances for New Zealand, Tasmania, and far-south South America. Face south from a dark sky site; scores update from NOAA space weather and local cloud cover.</p>
           </div>
           <aside class="verdict">
-            <span class="badge ${labelClass(bestCity.label)}">${escapeHtml(bestCity.label)}</span>
-            <div class="verdict-score">${bestCity.score}</div>
-            <p>Best southern chance right now: ${escapeHtml(bestCity.name)}, ${escapeHtml(bestCity.region)}.</p>
+            <span class="badge possible">Live data</span>
+            <div class="verdict-score">—</div>
+            <p>Current southern city scores load from the forecast API below.</p>
           </aside>
         </section>
         <section class="section compact-section">
@@ -772,9 +771,9 @@ function generateCountryPages() {
               <p class="lead">Compare city-level aurora chances across ${escapeHtml(country.name)}. Scores combine NOAA aurora grid data, Kp forecast, latitude, and local cloud cover.</p>
             </div>
             <aside class="verdict">
-              <span class="badge ${labelClass(country.bestCity.label)}">${escapeHtml(country.bestCity.label)}</span>
-              <div class="verdict-score">${country.bestCity.score}</div>
-              <p>Best current city: ${escapeHtml(country.bestCity.name)}, ${escapeHtml(country.bestCity.region)}.</p>
+              <span class="badge possible">Live data</span>
+              <div class="verdict-score">—</div>
+              <p>Compare the current city scores loaded below.</p>
             </aside>
           </section>
           <section class="section compact-section">
@@ -810,9 +809,9 @@ function generateRegionPages() {
               <p class="lead">Use this region page to compare nearby northern lights forecast pages before deciding whether to watch from town, drive north, or wait for a stronger alert.</p>
             </div>
             <aside class="verdict">
-              <span class="badge ${labelClass(region.bestCity.label)}">${escapeHtml(region.bestCity.label)}</span>
-              <div class="verdict-score">${region.bestCity.score}</div>
-              <p>Best current city: ${escapeHtml(region.bestCity.name)}.</p>
+              <span class="badge possible">Live data</span>
+              <div class="verdict-score">—</div>
+              <p>Compare the current city scores loaded below.</p>
             </aside>
           </section>
           <section class="section compact-section">
@@ -959,22 +958,22 @@ function generateUtilityPages() {
 
 function generateSitemap() {
   const urls = [
-    { loc: "/", priority: "1.0", changefreq: "hourly" },
-    { loc: "/locations/", priority: "0.9", changefreq: "hourly" },
-    { loc: "/aurora-australis/", priority: "0.9", changefreq: "hourly" },
-    { loc: "/guides/", priority: "0.8", changefreq: "weekly" },
-    { loc: "/glossary/", priority: "0.7", changefreq: "monthly" },
-    ...forecast.cities.map((city) => ({ loc: `/cities/${city.slug}/`, priority: city.priority === 1 ? "0.9" : "0.7", changefreq: "hourly" })),
-    ...cityCollections.countries.map((country) => ({ loc: `/countries/${country.slug}/`, priority: "0.7", changefreq: "hourly" })),
-    ...cityCollections.regions.map((region) => ({ loc: `/states/${region.slug}/`, priority: region.cities.length > 1 ? "0.7" : "0.5", changefreq: "hourly" })),
-    ...guidePages.map((guide) => ({ loc: `/guides/${guide.slug}/`, priority: guide.priority, changefreq: "weekly" })),
-    { loc: "/about/", priority: "0.3", changefreq: "monthly" },
-    { loc: "/contact/", priority: "0.3", changefreq: "monthly" },
-    { loc: "/privacy/", priority: "0.3", changefreq: "monthly" },
+    { loc: "/", priority: "1.0" },
+    { loc: "/locations/", priority: "0.9" },
+    { loc: "/aurora-australis/", priority: "0.9" },
+    { loc: "/guides/", priority: "0.8" },
+    { loc: "/glossary/", priority: "0.7" },
+    ...forecast.cities.map((city) => ({ loc: `/cities/${city.slug}/`, priority: city.priority === 1 ? "0.9" : "0.7" })),
+    ...cityCollections.countries.map((country) => ({ loc: `/countries/${country.slug}/`, priority: "0.7" })),
+    ...cityCollections.regions.map((region) => ({ loc: `/states/${region.slug}/`, priority: region.cities.length > 1 ? "0.7" : "0.5" })),
+    ...guidePages.map((guide) => ({ loc: `/guides/${guide.slug}/`, priority: guide.priority })),
+    { loc: "/about/", priority: "0.3" },
+    { loc: "/contact/", priority: "0.3" },
+    { loc: "/privacy/", priority: "0.3" },
   ];
   writeFile("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((url) => `  <url><loc>${site.url}${url.loc}</loc><lastmod>${buildLastmod}</lastmod><changefreq>${url.changefreq}</changefreq><priority>${url.priority}</priority></url>`).join("\n")}
+${urls.map((url) => `  <url><loc>${site.url}${url.loc}</loc><lastmod>${buildLastmod}</lastmod><priority>${url.priority}</priority></url>`).join("\n")}
 </urlset>
 `);
 }
@@ -1047,7 +1046,7 @@ ${headExtras}
 ${pageBody}
   <footer class="footer">
     <div class="footer-inner">
-      <span data-live-footer-updated>Forecast guidance, not a guarantee. Updated ${escapeHtml(formatDateTime(forecast.generatedAt))}.</span>
+      <span data-live-footer-updated>Forecast guidance, not a guarantee. Live conditions load from the forecast API.</span>
       <span><a href="${relativeAsset(pagePath)}privacy/">Privacy</a> · <a href="${relativeAsset(pagePath)}sitemap.xml">Sitemap</a></span>
     </div>
   </footer>
@@ -1057,23 +1056,11 @@ ${pageBody}
 `;
 }
 
-function auroraVisual(cityRows) {
-  const dots = forecast.mapDots.map((dot) => `<span class="map-dot" style="--x:${dot.x}%;--y:${dot.y}%;--size:${dot.size}px;--alpha:${dot.alpha};color:${dot.color}"></span>`).join("");
-  const cityPins = cityRows.filter(isNorthAmericaMapCity).map((city) => {
-    const x = round1(((city.lon + 170) / 120) * 100);
-    const y = round1(((75 - city.lat) / 40) * 100);
-    return `<span class="map-city" title="${escapeHtml(city.name)}" style="--x:${x}%;--y:${y}%"></span>`;
-  }).join("");
-  return `<div class="aurora-visual" role="img" aria-label="NOAA aurora forecast map generated from OVATION data">
+function auroraVisual() {
+  return `<div class="aurora-visual" role="img" aria-label="Illustrated aurora forecast backdrop">
     <div class="aurora-band" aria-hidden="true"></div>
-    ${dots}
-    ${cityPins}
-    <div class="visual-label">Generated from NOAA OVATION grid. Bright dots mark stronger aurora probability across the North American view.</div>
+    <div class="visual-label">Live NOAA and cloud-aware city scores load below.</div>
   </div>`;
-}
-
-function isNorthAmericaMapCity(city) {
-  return city.lon >= -170 && city.lon <= -50 && city.lat >= 35 && city.lat <= 75;
 }
 
 function cityCard(city, prefix) {
@@ -1083,26 +1070,19 @@ function cityCard(city, prefix) {
         <h3>${escapeHtml(city.name)}</h3>
         <p>${escapeHtml(city.region)}</p>
       </div>
-      <span class="badge ${labelClass(city.label)}" data-city-label>${escapeHtml(city.label)}</span>
+      <span class="badge possible" data-city-label>Checking</span>
     </div>
     <div class="score-row">
-      <span class="score" data-city-score>${city.score}</span>
+      <span class="score" data-city-score>—</span>
       <p>${escapeHtml(city.watchWindow)}</p>
     </div>
     <div class="mini-stats">
-      <span data-city-kp>Kp ${forecast.maxKp || "N/A"}</span>
-      <span data-city-cloud>Cloud ${city.bestCloud == null ? "N/A" : `${city.bestCloud}%`}</span>
-      <span data-city-aurora>Aurora ${city.aurora}</span>
+      <span data-city-kp>Kp checking</span>
+      <span data-city-cloud>Cloud checking</span>
+      <span data-city-aurora>Aurora checking</span>
       <span>${escapeHtml(city.country)}</span>
     </div>
   </a>`;
-}
-
-function cityPlan(city) {
-  if (city.label === "Great") return `Yes, ${city.name} is one of the stronger locations in this build. Go after local twilight, face north, and prioritize an open dark horizon.`;
-  if (city.label === "Good") return `It is worth watching conditions in ${city.name}. A short drive away from city lights can make the difference if the aurora brightens.`;
-  if (city.label === "Possible") return `${city.name} is a borderline setup. Bring a camera, check cloud breaks, and watch for NOAA alerts before committing to a long drive.`;
-  return `This is probably not a strong night for ${city.name}. Keep the page handy for the next G2 or stronger geomagnetic storm watch.`;
 }
 
 function nearbyCities(city) {
@@ -1520,7 +1500,7 @@ function cityFaqItems(city) {
     ...localFaqs,
     {
       q: `Can I see the ${auroraName(city)} in ${city.name} tonight?`,
-      a: city.guidance,
+      a: `Open this page for the live ${auroraName(city)} score, Kp forecast, cloud cover, and NOAA storm context for ${city.name}.`,
     },
     {
       q: `What matters most for ${city.name}?`,
@@ -1528,7 +1508,7 @@ function cityFaqItems(city) {
     },
     {
       q: `How often does the ${city.name} forecast update?`,
-      a: "The static page is rebuilt from official feeds, while the live API can refresh from Cloudflare KV more frequently during storm watches.",
+      a: "The crawlable page keeps stable location guidance, while the live API refreshes forecast values from Cloudflare KV and official feeds.",
     },
   ];
 }
@@ -1623,26 +1603,9 @@ function round1(value) {
   return Math.round(value * 10) / 10;
 }
 
-function labelClass(label) {
-  return label.toLowerCase();
-}
-
 function formatCoord(lat, lon) {
   if (lat == null || lon == null) return "N/A";
   return `${round1(lat)}, ${round1(lon)}`;
-}
-
-function formatDateTime(value) {
-  if (!value) return "N/A";
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return value;
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZoneName: "short",
-  }).format(date);
 }
 
 function relativeAsset(pagePath) {
@@ -1670,6 +1633,14 @@ function normalizeAdSlots(slots) {
     topBanner: String(slots.topBanner || "").trim(),
     inArticle: String(slots.inArticle || "").trim(),
   };
+}
+
+function normalizeContentLastmod(value) {
+  const date = String(value || "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    throw new Error("site.config.json contentLastmod must use YYYY-MM-DD.");
+  }
+  return date;
 }
 
 function adUnit({ slotKey, className = "", fallbackTitle, fallbackText, links }) {
@@ -1707,13 +1678,6 @@ function haversine(a, b) {
 
 function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(root, relativePath), "utf8"));
-}
-
-function readExistingSitemapLastmod() {
-  const sitemapPath = path.join(root, "sitemap.xml");
-  if (!fs.existsSync(sitemapPath)) return "";
-  const match = fs.readFileSync(sitemapPath, "utf8").match(/<lastmod>([^<]+)<\/lastmod>/);
-  return match ? match[1] : "";
 }
 
 function writePage(parts, html) {

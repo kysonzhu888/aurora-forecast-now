@@ -56,6 +56,10 @@ Cron trigger: */5 * * * *
 
 The generated city pages are SEO entry pages, not the product limit. The saved city pool is curated in `data/city-seeds.json`, resolved into `data/cities.json`, and sorted dynamically by live forecast score at build/runtime. The live API can also score any resolved city or valid latitude/longitude. D1 is still reserved for later user-facing features such as email alerts, favorites, observations, and historical forecast analytics.
 
+The crawlable HTML is a stable location-and-guide shell. Forecast scores, Kp, cloud cover, NOAA timestamps, and alert summaries are hydrated from `/api/forecast` in the browser and remain generated deployment data rather than Git source. Update `site.config.json#contentLastmod` only when the stable page content or template meaning changes; routine NOAA refreshes must not change sitemap `lastmod`.
+
+The current email form is a demand-validation waitlist only. D1 stores signups, but there is no mail-sending system; build delivery, scheduling, and unsubscribe infrastructure only after real signup demand justifies it.
+
 ## SEO Page Matrix
 
 - `/locations/`: full city index and collection hub

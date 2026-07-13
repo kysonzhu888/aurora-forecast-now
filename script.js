@@ -5,6 +5,11 @@ const cityCards = [...document.querySelectorAll("[data-city-card]")];
 const liveStatus = document.querySelector("[data-live-status]");
 const liveNote = document.querySelector("[data-live-note]");
 const liveFooterUpdated = document.querySelector("[data-live-footer-updated]");
+const liveMaxKp = document.querySelector("[data-live-max-kp]");
+const liveForecastTime = document.querySelector("[data-live-forecast-time]");
+const liveBestCity = document.querySelector("[data-live-best-city]");
+const liveStormSummary = document.querySelector("[data-live-storm-summary]");
+const liveCityDetail = document.querySelector("[data-live-city-detail]");
 
 if (searchInput && cityCards.length) {
   searchInput.addEventListener("input", () => {
@@ -47,17 +52,20 @@ async function searchLiveCity(query) {
 }
 
 async function refreshLiveForecast() {
-  if (!liveStatus && !liveFooterUpdated && !cityCards.length) return;
+  if (!liveStatus && !liveFooterUpdated && !cityCards.length && !liveCityDetail) return;
 
   try {
     const response = await fetch("/api/forecast", { cache: "no-store" });
     if (!response.ok) throw new Error(`API ${response.status}`);
     const forecast = await response.json();
     updateLiveStatus(forecast);
+    updateLiveSummary(forecast);
     updateCityCards(forecast);
+    updateLiveCityDetail(forecast);
   } catch (error) {
-    if (liveStatus) liveStatus.textContent = "Static fallback";
-    if (liveNote) liveNote.textContent = "Live forecast API is not available yet. Showing the last generated static forecast.";
+    if (liveStatus) liveStatus.textContent = "Unavailable";
+    if (liveNote) liveNote.textContent = "Live forecast data is temporarily unavailable. Use the viewing guides and NOAA source link while it reconnects.";
+    setLiveCityDetailText("[data-live-city-guidance]", "Live forecast data is temporarily unavailable. Use the local viewing guide and NOAA source link while it reconnects.");
   }
 }
 
@@ -75,6 +83,15 @@ function updateLiveStatus(forecast) {
 
   if (liveFooterUpdated) {
     liveFooterUpdated.textContent = `Forecast guidance, not a guarantee. Updated ${formatDateTime(forecast.cache.updatedAt || forecast.generatedAt)}.`;
+  }
+}
+
+function updateLiveSummary(forecast) {
+  if (liveMaxKp) liveMaxKp.textContent = forecast.maxKp || "N/A";
+  if (liveForecastTime) liveForecastTime.textContent = formatDateTime(forecast.forecastTime || forecast.cache?.updatedAt);
+  if (liveBestCity) liveBestCity.textContent = forecast.cities?.[0]?.name || "N/A";
+  if (liveStormSummary) {
+    liveStormSummary.textContent = forecast.stormSummary || "No active NOAA storm summary is available right now.";
   }
 }
 
@@ -101,6 +118,32 @@ function updateCityCards(forecast) {
     if (cloud) cloud.textContent = `Cloud ${city.bestCloud == null ? "N/A" : `${city.bestCloud}%`}`;
     if (aurora) aurora.textContent = `Aurora ${city.aurora}`;
   }
+}
+
+function updateLiveCityDetail(forecast) {
+  if (!liveCityDetail || !forecast.cities) return;
+  const city = forecast.cities.find((candidate) => candidate.slug === liveCityDetail.dataset.citySlug);
+  if (!city) return;
+
+  const label = liveCityDetail.querySelector("[data-live-city-label]");
+  if (label) {
+    label.textContent = city.label;
+    label.className = `badge ${city.label.toLowerCase()}`;
+  }
+
+  setLiveCityDetailText("[data-live-city-score]", city.score);
+  setLiveCityDetailText("[data-live-city-kp]", forecast.maxKp || "N/A");
+  setLiveCityDetailText("[data-live-city-aurora]", city.aurora ?? "N/A");
+  setLiveCityDetailText("[data-live-city-cloud]", city.bestCloud == null ? "N/A" : `${city.bestCloud}%`);
+  setLiveCityDetailText("[data-live-city-guidance]", city.guidance);
+  setLiveCityDetailText("[data-live-city-plan]", city.guidance);
+  setLiveCityDetailText("[data-live-city-updated]", formatDateTime(forecast.cache?.updatedAt || forecast.generatedAt));
+  setLiveCityDetailText("[data-live-city-forecast-time]", formatDateTime(forecast.forecastTime));
+}
+
+function setLiveCityDetailText(selector, value) {
+  const element = liveCityDetail?.querySelector(selector);
+  if (element) element.textContent = String(value ?? "N/A");
 }
 
 function renderLiveCityResult(forecast) {
