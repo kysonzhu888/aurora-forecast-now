@@ -1,13 +1,25 @@
 import cities from "../data/cities.json";
 import media from "../data/media.json";
 import { scoreCity, labelForScore, guidanceFor, nearestAurora, normalizeLon } from "../lib/forecast-core.mjs";
+import { buildAuroraGridIndex, nearestAuroraFromGrid } from "../lib/forecast-grid.mjs";
+import {
+  FORECAST_CACHE_KEY as CACHE_KEY,
+  FORECAST_METADATA_KEY,
+  FORECAST_SCHEDULE_STATE_KEY,
+  ageSecondsForMetadata,
+  forecastMetadataFromForecast,
+  readForecastMetadata,
+  readForecastScheduleState,
+  runScheduledRefresh,
+} from "../lib/forecast-schedule.mjs";
 
-const CACHE_KEY = "forecast:latest";
 const LOCK_KEY = "forecast:refresh-lock";
 const GEOCODE_PREFIX = "geocode:";
 const NORMAL_MAX_AGE_SECONDS = 30 * 60;
 const STORM_MAX_AGE_SECONDS = 5 * 60;
 const LOCK_TTL_SECONDS = 90;
+const FORECAST_CACHE_TTL_SECONDS = 7 * 24 * 60 * 60;
+const SCHEDULE_STATE_TTL_SECONDS = 2 * 24 * 60 * 60;
 const FALLBACK_FORECAST_URL = "https://auroraforecastnow.com/data/forecast.json";
 const ALERT_LOOKBACK_MS = 72 * 60 * 60 * 1000;
 const MAX_NAME_LENGTH = 40;
@@ -131,14 +143,18 @@ async function handleForecast(request, env, ctx) {
 }
 
 async function handleHealth(env) {
-  const cached = await readCachedForecast(env);
+  const [metadata, lastSchedule] = await Promise.all([
+    readForecastMetadata(env.AURORA_FORECAST_CACHE),
+    readForecastScheduleState(env.AURORA_FORECAST_CACHE),
+  ]);
   return withCors(jsonResponse({
-    ok: true,
-    hasCache: Boolean(cached),
-    updatedAt: cached?.generatedAt || null,
-    ageSeconds: cached ? ageOf(cached) : null,
-    stormMode: Boolean(cached?.stormMode),
-    stormLevel: cached?.stormLevel || 0,
+    ok: Boolean(metadata) && lastSchedule?.status !== "error",
+    hasCache: Boolean(metadata),
+    updatedAt: metadata?.generatedAt || null,
+    ageSeconds: metadata ? ageSecondsForMetadata(metadata) : null,
+    stormMode: Boolean(metadata?.stormMode),
+    stormLevel: metadata?.stormLevel || 0,
+    lastSchedule: lastSchedule || null,
   }));
 }
 
@@ -284,33 +300,26 @@ function normalizeText(value, maxLength) {
 }
 
 async function handleScheduledRefresh(env, scheduledTime) {
-  const cached = await readCachedForecast(env);
-  const alerts = await fetchJson(endpoints.alerts, "alerts");
-  const alertInfo = parseAlertInfo(alerts);
-  const ageSeconds = cached ? ageOf(cached) : Number.POSITIVE_INFINITY;
-  const shouldRefresh = !cached || alertInfo.stormMode || ageSeconds >= NORMAL_MAX_AGE_SECONDS;
-
-  if (!shouldRefresh) {
-    await writeScheduleState(env, {
-      skipped: true,
-      reason: "normal-cache-fresh",
-      scheduledTime,
-      ageSeconds,
-      alertInfo,
-    });
-    return;
-  }
-
-  await refreshWithLock(env, {
-    reason: alertInfo.stormMode ? "scheduled-storm-mode" : "scheduled-normal-expired",
-    preloadedAlerts: alerts,
-    preloadedAlertInfo: alertInfo,
+  return runScheduledRefresh({
+    scheduledTime,
+    normalMaxAgeSeconds: NORMAL_MAX_AGE_SECONDS,
+    readMetadata: () => readForecastMetadata(env.AURORA_FORECAST_CACHE),
+    fetchAlerts: () => fetchJson(endpoints.alerts, "alerts"),
+    parseAlerts: parseAlertInfo,
+    refresh: (options) => refreshWithLock(env, options),
+    writeState: (state) => writeScheduleState(env, state),
   });
 }
 
 async function refreshWithLock(env, options = {}) {
   const existingLock = await env.AURORA_FORECAST_CACHE.get(LOCK_KEY);
-  if (existingLock) return readCachedForecast(env);
+  if (existingLock) {
+    console.info(
+      `[forecast-refresh] lock-active reason=${options.reason || "unknown"} `
+      + `readCachedOnLock=${options.readCachedOnLock !== false}`,
+    );
+    return options.readCachedOnLock === false ? null : readCachedForecast(env);
+  }
 
   await env.AURORA_FORECAST_CACHE.put(LOCK_KEY, JSON.stringify({
     createdAt: new Date().toISOString(),
@@ -319,15 +328,22 @@ async function refreshWithLock(env, options = {}) {
 
   try {
     const forecast = await buildForecast(options);
+    const metadata = forecastMetadataFromForecast(forecast);
     await env.AURORA_FORECAST_CACHE.put(CACHE_KEY, JSON.stringify(forecast), {
-      expirationTtl: 7 * 24 * 60 * 60,
-      metadata: {
-        generatedAt: forecast.generatedAt,
-        stormMode: String(forecast.stormMode),
-        stormLevel: String(forecast.stormLevel),
-      },
+      expirationTtl: FORECAST_CACHE_TTL_SECONDS,
+      metadata,
     });
+    await env.AURORA_FORECAST_CACHE.put(FORECAST_METADATA_KEY, JSON.stringify(metadata), {
+      expirationTtl: FORECAST_CACHE_TTL_SECONDS,
+    });
+    console.info(
+      `[forecast-refresh] completed reason=${options.reason || "unknown"} generatedAt=${forecast.generatedAt} `
+      + `durationMs=${forecast.worker.durationMs} cities=${forecast.cities.length} coordinates=${forecast.rawCoordinates.length}`,
+    );
     return forecast;
+  } catch (error) {
+    console.error(`[forecast-refresh] failed reason=${options.reason || "unknown"} error=${error.message}`, error);
+    throw error;
   } finally {
     await env.AURORA_FORECAST_CACHE.delete(LOCK_KEY);
   }
@@ -344,10 +360,15 @@ async function buildForecast(options = {}) {
 
   const alertInfo = options.preloadedAlertInfo || parseAlertInfo(alerts);
   const coordinates = Array.isArray(ovation?.coordinates) ? ovation.coordinates : [];
+  const auroraGridIndex = buildAuroraGridIndex(coordinates);
   const maxKp = maxUpcomingKp(kpRows);
+  console.info(
+    `[forecast-refresh] grid-index coordinates=${coordinates.length} indexed=${auroraGridIndex.indexedPointCount} `
+    + `cities=${cities.length}`,
+  );
   const cityForecasts = cities
     .map((city) => {
-      const aurora = nearestAurora(coordinates, city);
+      const aurora = nearestAuroraFromGrid(auroraGridIndex, coordinates, city);
       const clouds = cloudBySlug.get(city.slug) || { bestCloud: null, avgCloud: null };
       const score = scoreCity(city, aurora.value, maxKp, clouds.bestCloud);
       const label = labelForScore(score);
@@ -637,10 +658,9 @@ async function readCachedForecast(env) {
 }
 
 async function writeScheduleState(env, state) {
-  await env.AURORA_FORECAST_CACHE.put("forecast:last-schedule", JSON.stringify({
-    ...state,
-    checkedAt: new Date().toISOString(),
-  }), { expirationTtl: 2 * 24 * 60 * 60 });
+  await env.AURORA_FORECAST_CACHE.put(FORECAST_SCHEDULE_STATE_KEY, JSON.stringify(state), {
+    expirationTtl: SCHEDULE_STATE_TTL_SECONDS,
+  });
 }
 
 function ageOf(forecast) {
