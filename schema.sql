@@ -23,3 +23,16 @@ CREATE TABLE IF NOT EXISTS alert_signups (
 
 CREATE INDEX IF NOT EXISTS idx_alert_signups_created
 ON alert_signups (created_at DESC);
+
+-- Aurora Pro 只记录匿名每日聚合漏斗，不存城市、邮箱、license key 或 IP。
+CREATE TABLE IF NOT EXISTS pro_funnel_daily (
+  event_date TEXT NOT NULL,
+  event_name TEXT NOT NULL,
+  page_type TEXT NOT NULL,
+  location_count INTEGER NOT NULL DEFAULT 0,
+  event_count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (event_date, event_name, page_type, location_count)
+);
+
+CREATE INDEX IF NOT EXISTS idx_pro_funnel_daily_event_date
+ON pro_funnel_daily (event_name, event_date DESC);
