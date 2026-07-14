@@ -6,7 +6,7 @@ import {
   FORECAST_CACHE_KEY as CACHE_KEY,
   FORECAST_METADATA_KEY,
   FORECAST_SCHEDULE_STATE_KEY,
-  ageSecondsForMetadata,
+  evaluateForecastHealth,
   forecastMetadataFromForecast,
   readForecastMetadata,
   readForecastScheduleState,
@@ -20,6 +20,7 @@ const STORM_MAX_AGE_SECONDS = 5 * 60;
 const LOCK_TTL_SECONDS = 90;
 const FORECAST_CACHE_TTL_SECONDS = 7 * 24 * 60 * 60;
 const SCHEDULE_STATE_TTL_SECONDS = 2 * 24 * 60 * 60;
+const MAX_SCHEDULE_GAP_SECONDS = 15 * 60;
 const FALLBACK_FORECAST_URL = "https://auroraforecastnow.com/data/forecast.json";
 const ALERT_LOOKBACK_MS = 72 * 60 * 60 * 1000;
 const MAX_NAME_LENGTH = 40;
@@ -38,7 +39,7 @@ export default {
     const url = new URL(request.url);
     const normalizedPath = url.pathname.replace(/\/+$/, "") || "/";
     if (request.method === "OPTIONS") return withCors(new Response(null, { status: 204 }));
-    if (normalizedPath === "/api/health" || normalizedPath === "/health") return handleHealth(env);
+    if (normalizedPath === "/api/health" || normalizedPath === "/health") return handleHealth(request, env);
     if (normalizedPath === "/api/forecast" || normalizedPath === "/forecast") return handleForecastWithEdgeCache(request, env, ctx);
     if (normalizedPath === "/api/comments" || normalizedPath === "/comments") return handleComments(request, env);
     if (normalizedPath === "/api/alerts/subscribe") return handleAlertSubscribe(request, env);
@@ -142,20 +143,56 @@ async function handleForecast(request, env, ctx) {
   })));
 }
 
-async function handleHealth(env) {
-  const [metadata, lastSchedule] = await Promise.all([
+async function readHealthInputs(env) {
+  return Promise.all([
     readForecastMetadata(env.AURORA_FORECAST_CACHE),
     readForecastScheduleState(env.AURORA_FORECAST_CACHE),
   ]);
+}
+
+function healthState(metadata, lastSchedule) {
+  return evaluateForecastHealth({
+    metadata,
+    scheduleState: lastSchedule,
+    normalMaxAgeSeconds: NORMAL_MAX_AGE_SECONDS,
+    stormMaxAgeSeconds: STORM_MAX_AGE_SECONDS,
+    maxScheduleGapSeconds: MAX_SCHEDULE_GAP_SECONDS,
+  });
+}
+
+async function handleHealth(request, env) {
+  let [metadata, lastSchedule] = await readHealthInputs(env);
+  let health = healthState(metadata, lastSchedule);
+  const repairRequested = new URL(request.url).searchParams.get("repair") === "1";
+  const fallback = {
+    requested: repairRequested,
+    attempted: false,
+    refreshed: false,
+  };
+
+  if (repairRequested && health.fallbackNeeded) {
+    fallback.attempted = true;
+    try {
+      const refreshed = await refreshWithLock(env, {
+        reason: "health-fallback",
+        readCachedOnLock: false,
+      });
+      fallback.refreshed = Boolean(refreshed);
+    } catch (error) {
+      fallback.error = error instanceof Error ? error.message : String(error);
+    }
+    [metadata, lastSchedule] = await readHealthInputs(env);
+    health = healthState(metadata, lastSchedule);
+  }
+
   return withCors(jsonResponse({
-    ok: Boolean(metadata) && lastSchedule?.status !== "error",
-    hasCache: Boolean(metadata),
+    ...health,
     updatedAt: metadata?.generatedAt || null,
-    ageSeconds: metadata ? ageSecondsForMetadata(metadata) : null,
     stormMode: Boolean(metadata?.stormMode),
     stormLevel: metadata?.stormLevel || 0,
     lastSchedule: lastSchedule || null,
-  }));
+    fallback,
+  }, health.ok ? 200 : 503));
 }
 
 async function handleComments(request, env) {

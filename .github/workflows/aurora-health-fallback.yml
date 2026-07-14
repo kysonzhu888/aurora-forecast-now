@@ -1,0 +1,35 @@
+name: Aurora forecast health fallback
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aurora-health-fallback
+  cancel-in-progress: false
+
+jobs:
+  refresh-if-stale:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Repair stale forecast cache and verify health
+        shell: bash
+        run: |
+          set -euo pipefail
+          response_file="$RUNNER_TEMP/aurora-health.json"
+          curl --silent --show-error --retry 3 --max-time 45 \
+            "https://auroraforecastnow.com/api/health?repair=1" \
+            --output "$response_file"
+          jq . "$response_file"
+          if ! jq -e '.ok == true and .dataFresh == true' "$response_file" >/dev/null; then
+            echo "::error title=Aurora forecast is stale::The repair probe could not restore a fresh forecast cache."
+            exit 1
+          fi
+          if ! jq -e '.scheduleHealthy == true' "$response_file" >/dev/null; then
+            echo "::warning title=Cloudflare cron is degraded::Forecast data is fresh through the GitHub fallback, but the Cloudflare scheduled handler is stale."
+          fi

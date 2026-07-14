@@ -12,6 +12,7 @@ import {
 import {
   FORECAST_CACHE_KEY,
   FORECAST_METADATA_KEY,
+  evaluateForecastHealth,
   readForecastMetadata,
   runScheduledRefresh,
   scheduledRefreshDecision,
@@ -104,6 +105,67 @@ test("scheduledRefreshDecision distinguishes fresh, expired, storm, and missing 
     scheduledRefreshDecision(null, quietAlertInfo(), 1_800, fixedNowMs).reason,
     "scheduled-cache-metadata-missing",
   );
+});
+
+test("evaluateForecastHealth distinguishes healthy, degraded, and stale data", () => {
+  const recentSchedule = {
+    ok: true,
+    status: "skipped",
+    checkedAt: new Date(fixedNowMs - 5 * 60_000).toISOString(),
+  };
+
+  assert.deepEqual(
+    evaluateForecastHealth({
+      metadata: metadata(),
+      scheduleState: recentSchedule,
+      normalMaxAgeSeconds: 1_800,
+      stormMaxAgeSeconds: 300,
+      maxScheduleGapSeconds: 15 * 60,
+      nowMs: fixedNowMs,
+    }),
+    {
+      ok: true,
+      status: "healthy",
+      hasCache: true,
+      dataFresh: true,
+      scheduleHealthy: true,
+      fallbackNeeded: false,
+      ageSeconds: 60,
+      maxAgeSeconds: 1_800,
+      scheduleAgeSeconds: 300,
+    },
+  );
+
+  const degraded = evaluateForecastHealth({
+    metadata: metadata(),
+    scheduleState: {
+      ...recentSchedule,
+      checkedAt: new Date(fixedNowMs - 60 * 60_000).toISOString(),
+    },
+    normalMaxAgeSeconds: 1_800,
+    stormMaxAgeSeconds: 300,
+    maxScheduleGapSeconds: 15 * 60,
+    nowMs: fixedNowMs,
+  });
+  assert.equal(degraded.ok, true);
+  assert.equal(degraded.status, "degraded");
+  assert.equal(degraded.dataFresh, true);
+  assert.equal(degraded.scheduleHealthy, false);
+  assert.equal(degraded.fallbackNeeded, false);
+
+  const unhealthy = evaluateForecastHealth({
+    metadata: metadata({ generatedAt: new Date(fixedNowMs - 31 * 60_000).toISOString() }),
+    scheduleState: recentSchedule,
+    normalMaxAgeSeconds: 1_800,
+    stormMaxAgeSeconds: 300,
+    maxScheduleGapSeconds: 15 * 60,
+    nowMs: fixedNowMs,
+  });
+  assert.equal(unhealthy.ok, false);
+  assert.equal(unhealthy.status, "unhealthy");
+  assert.equal(unhealthy.dataFresh, false);
+  assert.equal(unhealthy.scheduleHealthy, true);
+  assert.equal(unhealthy.fallbackNeeded, true);
 });
 
 test("runScheduledRefresh records a lightweight skipped health state", async () => {
@@ -227,4 +289,16 @@ test("indexed aurora lookup falls back correctly for a sparse or malformed grid"
   const index = buildAuroraGridIndex(coordinates);
   const city = { lat: 64.84, lon: -147.72 };
   assert.deepEqual(nearestAuroraFromGrid(index, coordinates, city), nearestAurora(coordinates, city));
+});
+
+test("GitHub fallback repairs and validates the public health endpoint every five minutes", () => {
+  const workflow = fs.readFileSync(
+    path.join(root, ".github/workflows/aurora-health-fallback.yml"),
+    "utf8",
+  );
+
+  assert.match(workflow, /cron:\s*["']\*\/5 \* \* \* \*["']/);
+  assert.match(workflow, /api\/health\?repair=1/);
+  assert.match(workflow, /\.ok == true and \.dataFresh == true/);
+  assert.match(workflow, /Cloudflare cron is degraded/);
 });
