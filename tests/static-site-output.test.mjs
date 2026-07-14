@@ -17,6 +17,9 @@ const config = JSON.parse(fs.readFileSync(path.join(root, "site.config.json"), "
 const home = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const city = fs.readFileSync(path.join(root, "cities", "fairbanks", "index.html"), "utf8");
 const sitemap = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
+const pro = fs.readFileSync(path.join(root, "pro", "index.html"), "utf8");
+const proClient = fs.readFileSync(path.join(root, "assets", "pro-access.js"), "utf8");
+const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
 
 test("generated pages expose a stable SEO shell without internal review language", () => {
   assert.doesNotMatch(home, /ad review|reserved for review|ad-ready/i);
@@ -40,4 +43,20 @@ test("sitemap lastmod describes source content instead of forecast refreshes", (
   const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]);
   assert.ok(lastmods.length > 0);
   assert.deepEqual(new Set(lastmods), new Set([config.contentLastmod]));
+});
+
+test("Aurora Pro preview is fail-closed without leaking the GGB product", () => {
+  assert.equal(config.pro.enabled, false);
+  assert.equal(config.pro.checkoutUrl, "");
+  assert.match(pro, /<meta name="robots" content="noindex, follow">/);
+  assert.match(pro, /data-pro-access-page/);
+  assert.match(pro, /data-pro-locked/);
+  assert.match(pro, /data-pro-unlocked hidden/);
+  assert.match(pro, /assets\/pro-access\.js/);
+  assert.doesNotMatch(pro, /1189903|Game Guide Base|gameguidebase/i);
+  assert.doesNotMatch(sitemap, /\/pro\//);
+  assert.doesNotMatch(city, /data-pro-locked|paywall-locked/);
+  assert.match(proClient, /\/api\/pro\/license/);
+  assert.match(proClient, /\/api\/pro\/funnel/);
+  assert.match(proCss, /\.pro-page \[hidden\]\s*\{[^}]*display:\s*none\s*!important/);
 });
