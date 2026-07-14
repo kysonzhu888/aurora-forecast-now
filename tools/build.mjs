@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { scoreCity, labelForScore, guidanceFor, directionWords, nearestAurora, normalizeLon } from "../lib/forecast-core.mjs";
+import { normalizeProConfig, renderProPageBody, serializeProClientConfig } from "./lib/pro-page.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -25,6 +26,7 @@ const site = {
   adsenseAccountId: normalizeAdsenseAccountId(config.adsenseClientId || config.adsensePublisherId || ""),
   adsenseAdSlots: normalizeAdSlots(config.adsenseAdSlots || {}),
   searchConsoleVerification: (config.searchConsoleVerification || "").trim(),
+  pro: normalizeProConfig(config.pro || {}),
 };
 
 const endpoints = {
@@ -53,6 +55,7 @@ generateRegionPages();
 generateGuidePages();
 generateGlossaryPage();
 generateUtilityPages();
+generateProPage();
 generateSitemap();
 generateRobots();
 generateAdsTxt();
@@ -238,7 +241,7 @@ function buildMapDots(coordinates) {
 }
 
 function cleanGenerated() {
-  for (const dir of ["cities", "locations", "countries", "states", "guides", "glossary", "about", "contact", "privacy", "aurora-australis"]) {
+  for (const dir of ["cities", "locations", "countries", "states", "guides", "glossary", "about", "contact", "privacy", "aurora-australis", "pro"]) {
     fs.rmSync(path.join(root, dir), { recursive: true, force: true });
   }
   for (const file of ["index.html", "sitemap.xml", "robots.txt", "ads.txt"]) {
@@ -942,7 +945,7 @@ function generateUtilityPages() {
     {
       slug: "privacy",
       title: "Privacy Policy",
-      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. Basic analytics and advertising scripts may be added to understand traffic and support the site.</p><p>If you join the storm alert waitlist, we store your email address, the city you selected, and the signup date. These are used only to launch and send the aurora alerts you requested, and never sold or shared. To remove your email from the waitlist, contact us via the contact page.</p>`,
+      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. Basic analytics and advertising scripts may be added to understand traffic and support the site.</p><p>If you join the storm alert waitlist, we store your email address, the city you selected, and the signup date. These are used only to launch and send the aurora alerts you requested, and never sold or shared. To remove your email from the waitlist, contact us via the contact page.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
     },
   ];
 
@@ -954,6 +957,22 @@ function generateUtilityPages() {
       body: `<main class="city-page"><a class="breadcrumb" href="../">Aurora Forecast Now</a><section class="panel"><h1>${page.title}</h1>${page.body}</section></main>`,
     }));
   }
+}
+
+function generateProPage() {
+  if (!site.pro.publicPreview && !site.pro.enabled) return;
+  writePage(["pro"], layout({
+    title: "Aurora Pro Saved Location Comparison",
+    description: "Save and compare live aurora forecasts for multiple cities without hiding the free public forecast pages.",
+    path: "/pro/",
+    robots: site.pro.enabled ? "" : "noindex, follow",
+    extraStyles: ["assets/pro.css"],
+    body: renderProPageBody(site.pro),
+    bodyScripts: [
+      `<script>window.AURORA_PRO=${serializeProClientConfig(site.pro)};</script>`,
+      `<script src="${relativeAsset("/pro/")}assets/pro-access.js" defer></script>`,
+    ],
+  }));
 }
 
 function generateSitemap() {
@@ -970,6 +989,7 @@ function generateSitemap() {
     { loc: "/about/", priority: "0.3" },
     { loc: "/contact/", priority: "0.3" },
     { loc: "/privacy/", priority: "0.3" },
+    ...(site.pro.enabled ? [{ loc: "/pro/", priority: "0.6" }] : []),
   ];
   writeFile("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -984,6 +1004,7 @@ function generateRobots() {
   writeFile("robots.txt", `User-agent: *
 Allow: /
 Disallow: /api/comments
+Disallow: /api/pro/
 
 Sitemap: ${site.url}/sitemap.xml
 `);
@@ -998,7 +1019,7 @@ function generateAdsTxt() {
   writeFile("ads.txt", `google.com, pub-${publisherId}, DIRECT, f08c47fec0942fa0\n`);
 }
 
-function layout({ title, description, path: pagePath, body, schema = [] }) {
+function layout({ title, description, path: pagePath, body, schema = [], robots = "", extraStyles = [], bodyScripts = [] }) {
   const canonical = `${site.url}${pagePath}`;
   const pageBody = body.trim();
   const headExtras = [
@@ -1006,6 +1027,8 @@ function layout({ title, description, path: pagePath, body, schema = [] }) {
     site.adsenseAccountId ? `<meta name="google-adsense-account" content="${escapeHtml(site.adsenseAccountId)}">` : "",
     site.googleAnalyticsId ? analyticsTag(site.googleAnalyticsId) : "",
     site.adsenseClientId ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${escapeHtml(site.adsenseClientId)}" crossorigin="anonymous"></script>` : "",
+    robots ? `<meta name="robots" content="${escapeHtml(robots)}">` : "",
+    ...extraStyles.map((href) => `<link rel="stylesheet" href="${relativeAsset(pagePath)}${escapeHtml(href)}">`),
     ...schema.map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`),
   ].filter(Boolean).map((item) => `  ${item}`).join("\n");
   return `<!doctype html>
@@ -1038,6 +1061,7 @@ ${headExtras}
         <a href="${relativeAsset(pagePath)}aurora-australis/">Southern Lights</a>
         <a href="${relativeAsset(pagePath)}guides/">Guides</a>
         <a href="${relativeAsset(pagePath)}glossary/">Glossary</a>
+        ${site.pro.enabled ? `<a href="${relativeAsset(pagePath)}pro/">Pro</a>` : ""}
         <a href="${relativeAsset(pagePath)}about/">About</a>
         <a href="${relativeAsset(pagePath)}contact/">Contact</a>
       </div>
@@ -1051,6 +1075,7 @@ ${pageBody}
     </div>
   </footer>
   <script src="${relativeAsset(pagePath)}script.js"></script>
+  ${bodyScripts.join("\n  ")}
 </body>
 </html>
 `;

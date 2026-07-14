@@ -12,6 +12,8 @@ import {
   readForecastScheduleState,
   runScheduledRefresh,
 } from "../lib/forecast-schedule.mjs";
+import { handleProLicenseRequest } from "../lib/pro-access.mjs";
+import { handleProFunnelRequest } from "../lib/pro-funnel.mjs";
 
 const LOCK_KEY = "forecast:refresh-lock";
 const GEOCODE_PREFIX = "geocode:";
@@ -44,6 +46,8 @@ export default {
     if (normalizedPath === "/api/forecast" || normalizedPath === "/forecast") return handleForecastWithEdgeCache(request, env, ctx);
     if (normalizedPath === "/api/comments" || normalizedPath === "/comments") return handleComments(request, env);
     if (normalizedPath === "/api/alerts/subscribe") return handleAlertSubscribe(request, env);
+    if (normalizedPath === "/api/pro/license") return withCors(await handleProLicenseRequest(request, env));
+    if (normalizedPath === "/api/pro/funnel") return withCors(await handleProFunnelRequest(request, env));
     return withCors(jsonResponse({ error: "Not found" }, 404));
   },
 

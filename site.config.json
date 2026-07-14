@@ -11,5 +11,16 @@
     "topBanner": "",
     "inArticle": ""
   },
-  "searchConsoleVerification": ""
+  "searchConsoleVerification": "",
+  "pro": {
+    "enabled": false,
+    "publicPreview": true,
+    "productName": "Aurora Pro Lifetime",
+    "priceLabel": "Founding lifetime access",
+    "checkoutUrl": "",
+    "myOrdersUrl": "https://app.lemonsqueezy.com/my-orders",
+    "storageKey": "aurora_pro_access_v1",
+    "locationsStorageKey": "aurora_pro_locations_v1",
+    "maxSavedLocations": 5
+  }
 }
