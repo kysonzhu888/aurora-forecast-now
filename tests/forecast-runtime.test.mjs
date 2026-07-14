@@ -317,13 +317,13 @@ test("indexed aurora lookup falls back correctly for a sparse or malformed grid"
   assert.deepEqual(nearestAuroraFromGrid(index, coordinates, city), nearestAurora(coordinates, city));
 });
 
-test("GitHub fallback repairs and validates the public health endpoint every five minutes", () => {
+test("GitHub fallback repairs and validates the public health endpoint every fifteen minutes", () => {
   const workflow = fs.readFileSync(
     path.join(root, ".github/workflows/aurora-health-fallback.yml"),
     "utf8",
   );
 
-  assert.match(workflow, /cron:\s*["']\*\/5 \* \* \* \*["']/);
+  assert.match(workflow, /cron:\s*["']7,22,37,52 \* \* \* \*["']/);
   assert.match(workflow, /aurora-forecast-now-api\.kysonzhu888\.workers\.dev/);
   assert.match(workflow, /api\/health\?repair=1/);
   assert.match(workflow, /\.ok == true and \.dataFresh == true/);
