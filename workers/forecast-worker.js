@@ -17,6 +17,7 @@ const LOCK_KEY = "forecast:refresh-lock";
 const GEOCODE_PREFIX = "geocode:";
 const NORMAL_MAX_AGE_SECONDS = 30 * 60;
 const STORM_MAX_AGE_SECONDS = 5 * 60;
+const SCHEDULE_REFRESH_LEAD_SECONDS = 5 * 60;
 const LOCK_TTL_SECONDS = 90;
 const FORECAST_CACHE_TTL_SECONDS = 7 * 24 * 60 * 60;
 const SCHEDULE_STATE_TTL_SECONDS = 2 * 24 * 60 * 60;
@@ -340,6 +341,7 @@ async function handleScheduledRefresh(env, scheduledTime) {
   return runScheduledRefresh({
     scheduledTime,
     normalMaxAgeSeconds: NORMAL_MAX_AGE_SECONDS,
+    refreshLeadSeconds: SCHEDULE_REFRESH_LEAD_SECONDS,
     readMetadata: () => readForecastMetadata(env.AURORA_FORECAST_CACHE),
     fetchAlerts: () => fetchJson(endpoints.alerts, "alerts"),
     parseAlerts: parseAlertInfo,
