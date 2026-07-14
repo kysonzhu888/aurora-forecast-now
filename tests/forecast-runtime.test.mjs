@@ -107,6 +107,32 @@ test("scheduledRefreshDecision distinguishes fresh, expired, storm, and missing 
   );
 });
 
+test("scheduledRefreshDecision refreshes before the next five-minute cron would cross the SLA", () => {
+  const refreshWindowMetadata = metadata({
+    generatedAt: new Date(fixedNowMs - 1_699_000).toISOString(),
+  });
+  assert.deepEqual(
+    scheduledRefreshDecision(
+      refreshWindowMetadata,
+      quietAlertInfo(),
+      1_800,
+      fixedNowMs,
+      300,
+    ),
+    { shouldRefresh: true, reason: "scheduled-normal-refresh-window", ageSeconds: 1_699 },
+  );
+  assert.equal(
+    scheduledRefreshDecision(
+      metadata({ generatedAt: new Date(fixedNowMs - 1_499_000).toISOString() }),
+      quietAlertInfo(),
+      1_800,
+      fixedNowMs,
+      300,
+    ).shouldRefresh,
+    false,
+  );
+});
+
 test("evaluateForecastHealth distinguishes healthy, degraded, and stale data", () => {
   const recentSchedule = {
     ok: true,
