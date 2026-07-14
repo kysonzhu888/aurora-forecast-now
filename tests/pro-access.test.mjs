@@ -128,6 +128,20 @@ test("pro license endpoint accepts the configured Aurora product and omits custo
   });
 });
 
+test("pro license endpoint accepts a valid newly purchased key before device activation", async () => {
+  const response = await handleProLicenseRequest(
+    jsonRequest({ licenseKey: "new-buyer-key" }),
+    configuredEnv(),
+    { fetchImpl: async () => Response.json(validLicensePayload({ status: "inactive" })) },
+  );
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    license: { status: "inactive", productName: "Aurora Pro Lifetime", source: "lemonsqueezy" },
+  });
+});
+
 function configuredEnv() {
   return { AURORA_LEMONSQUEEZY_PRODUCT_ID: "aurora-product-2026" };
 }
@@ -140,10 +154,10 @@ function jsonRequest(payload) {
   });
 }
 
-function validLicensePayload({ productId = "aurora-product-2026" } = {}) {
+function validLicensePayload({ productId = "aurora-product-2026", status = "active" } = {}) {
   return {
     valid: true,
-    license_key: { status: "active", key: "must-not-leak" },
+    license_key: { status, key: "must-not-leak" },
     meta: {
       product_id: productId,
       product_name: "Aurora Pro Lifetime",
