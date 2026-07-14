@@ -23,8 +23,14 @@ jobs:
           set -euo pipefail
           response_file="$RUNNER_TEMP/aurora-health.json"
           curl --silent --show-error --retry 3 --max-time 45 \
-            "https://auroraforecastnow.com/api/health?repair=1" \
+            --header "Accept: application/json" \
+            "https://aurora-forecast-now-api.kysonzhu888.workers.dev/api/health?repair=1" \
             --output "$response_file"
+          if ! jq empty "$response_file" >/dev/null 2>&1; then
+            echo "::error title=Aurora health response is not JSON::The fallback endpoint returned an unexpected response."
+            sed -n '1,20p' "$response_file"
+            exit 1
+          fi
           jq . "$response_file"
           if ! jq -e '.ok == true and .dataFresh == true' "$response_file" >/dev/null; then
             echo "::error title=Aurora forecast is stale::The repair probe could not restore a fresh forecast cache."

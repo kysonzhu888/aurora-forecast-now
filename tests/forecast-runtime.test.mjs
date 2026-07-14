@@ -298,6 +298,7 @@ test("GitHub fallback repairs and validates the public health endpoint every fiv
   );
 
   assert.match(workflow, /cron:\s*["']\*\/5 \* \* \* \*["']/);
+  assert.match(workflow, /aurora-forecast-now-api\.kysonzhu888\.workers\.dev/);
   assert.match(workflow, /api\/health\?repair=1/);
   assert.match(workflow, /\.ok == true and \.dataFresh == true/);
   assert.match(workflow, /Cloudflare cron is degraded/);
