@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { handleProFunnelRequest } from "../lib/pro-funnel.mjs";
+import {
+  handleProFunnelRequest,
+  recordProFunnelEvent,
+} from "../lib/pro-funnel.mjs";
 
 const endpoint = "https://auroraforecastnow.com/api/pro/funnel";
 
@@ -12,6 +15,21 @@ test("pro funnel rejects unsupported events without touching D1", async () => {
     pageType: "pro",
     locationCount: 2,
     email: "must-not-be-stored@example.com",
+  }), {
+    COMMENTS_DB: { prepare() { prepared = true; } },
+  });
+
+  assert.equal(response.status, 400);
+  assert.equal(prepared, false);
+  assert.deepEqual(await response.json(), { error: "Unsupported Pro funnel event." });
+});
+
+test("public funnel requests cannot forge server-side purchase completion", async () => {
+  let prepared = false;
+  const response = await handleProFunnelRequest(jsonRequest({
+    eventName: "purchase_completed",
+    pageType: "webhook_live",
+    locationCount: 0,
   }), {
     COMMENTS_DB: { prepare() { prepared = true; } },
   });
@@ -60,6 +78,31 @@ test("pro funnel increments only an anonymous daily aggregate", async () => {
   assert.match(calls[0].query, /ON CONFLICT/);
   assert.doesNotMatch(calls[0].query, /city|email|license/i);
   assert.deepEqual(calls[0].values, ["comparison_run", "pro", 5]);
+  assert.equal(calls[0].ran, true);
+});
+
+test("trusted callers can record a server-side purchase without customer data", async () => {
+  const calls = [];
+  await recordProFunnelEvent({
+    COMMENTS_DB: {
+      prepare(query) {
+        calls.push({ query });
+        return {
+          bind(...values) {
+            calls.at(-1).values = values;
+            return { async run() { calls.at(-1).ran = true; } };
+          },
+        };
+      },
+    },
+  }, {
+    eventName: "purchase_completed",
+    pageType: "webhook_test",
+    locationCount: 0,
+  });
+
+  assert.equal(calls.length, 1);
+  assert.deepEqual(calls[0].values, ["purchase_completed", "webhook_test", 0]);
   assert.equal(calls[0].ran, true);
 });
 
