@@ -20,6 +20,17 @@ const sitemap = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
 const pro = fs.readFileSync(path.join(root, "pro", "index.html"), "utf8");
 const proClient = fs.readFileSync(path.join(root, "assets", "pro-access.js"), "utf8");
 const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
+const googleVerification = fs.readFileSync(
+  path.join(root, "google1089c0cca1aa4f0a.html"),
+  "utf8",
+);
+
+test("keeps the exact Google Search Console verification file", () => {
+  assert.equal(
+    googleVerification,
+    "google-site-verification: google1089c0cca1aa4f0a.html\n",
+  );
+});
 
 test("generated pages expose a stable SEO shell without internal review language", () => {
   assert.doesNotMatch(home, /ad review|reserved for review|ad-ready/i);
