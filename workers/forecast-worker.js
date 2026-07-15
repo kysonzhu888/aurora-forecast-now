@@ -14,6 +14,7 @@ import {
 } from "../lib/forecast-schedule.mjs";
 import { handleProLicenseRequest } from "../lib/pro-access.mjs";
 import { handleProFunnelRequest } from "../lib/pro-funnel.mjs";
+import { handleLemonSqueezyWebhook } from "../lib/pro-webhook.mjs";
 
 const LOCK_KEY = "forecast:refresh-lock";
 const GEOCODE_PREFIX = "geocode:";
@@ -48,6 +49,7 @@ export default {
     if (normalizedPath === "/api/alerts/subscribe") return handleAlertSubscribe(request, env);
     if (normalizedPath === "/api/pro/license") return withCors(await handleProLicenseRequest(request, env));
     if (normalizedPath === "/api/pro/funnel") return withCors(await handleProFunnelRequest(request, env));
+    if (normalizedPath === "/api/pro/webhook") return handleLemonSqueezyWebhook(request, env);
     return withCors(jsonResponse({ error: "Not found" }, 404));
   },
 
