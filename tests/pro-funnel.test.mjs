@@ -3,7 +3,7 @@ import test from "node:test";
 
 import {
   handleProFunnelRequest,
-  recordProFunnelEvent,
+  recordDeduplicatedProWebhookEvent,
 } from "../lib/pro-funnel.mjs";
 
 const endpoint = "https://auroraforecastnow.com/api/pro/funnel";
@@ -81,29 +81,39 @@ test("pro funnel increments only an anonymous daily aggregate", async () => {
   assert.equal(calls[0].ran, true);
 });
 
-test("trusted callers can record a server-side purchase without customer data", async () => {
-  const calls = [];
-  await recordProFunnelEvent({
+test("trusted webhook events atomically deduplicate purchase aggregates without customer data", async () => {
+  const prepared = [];
+  const batches = [];
+  const recorded = await recordDeduplicatedProWebhookEvent({
     COMMENTS_DB: {
       prepare(query) {
-        calls.push({ query });
+        const statement = { query };
+        prepared.push(statement);
         return {
           bind(...values) {
-            calls.at(-1).values = values;
-            return { async run() { calls.at(-1).ran = true; } };
+            return { query, values };
           },
         };
       },
+      async batch(statements) {
+        batches.push(statements);
+        return [{ meta: { changes: 1 } }, { meta: { changes: 1 } }];
+      },
     },
   }, {
-    eventName: "purchase_completed",
+    receiptHash: "a".repeat(64),
+    sourceEventName: "order_created",
+    funnelEventName: "purchase_completed",
     pageType: "webhook_test",
-    locationCount: 0,
+    testMode: true,
   });
 
-  assert.equal(calls.length, 1);
-  assert.deepEqual(calls[0].values, ["purchase_completed", "webhook_test", 0]);
-  assert.equal(calls[0].ran, true);
+  assert.equal(recorded, true);
+  assert.equal(prepared.length, 2);
+  assert.match(prepared[0].query, /INSERT OR IGNORE INTO pro_webhook_receipts/);
+  assert.match(prepared[1].query, /WHERE changes\(\) = 1/);
+  assert.deepEqual(batches[0][0].values, ["a".repeat(64), "order_created", 1]);
+  assert.deepEqual(batches[0][1].values, ["purchase_completed", "webhook_test"]);
 });
 
 function jsonRequest(payload) {
