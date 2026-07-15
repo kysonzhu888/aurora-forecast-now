@@ -1,7 +1,9 @@
 const DEFAULT_MY_ORDERS_URL = "https://app.lemonsqueezy.com/my-orders";
+const AURORA_CHECKOUT_HOST = "auroraforecastnow.lemonsqueezy.com";
+const CHECKOUT_PATH_PATTERN = /^\/checkout\/buy\/[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}\/?$/i;
 
 export function normalizeProConfig(rawConfig = {}) {
-  const checkoutUrl = normalizeHttpsUrl(rawConfig.checkoutUrl, "checkoutUrl");
+  const checkoutUrl = normalizeCheckoutUrl(rawConfig.checkoutUrl);
   const enabled = rawConfig.enabled === true;
   if (enabled && !checkoutUrl) {
     throw new Error("site.config.json pro.checkoutUrl is required when pro.enabled is true.");
@@ -135,6 +137,24 @@ function normalizeHttpsUrl(value, fieldName) {
     throw new Error(`site.config.json pro.${fieldName} must use HTTPS.`);
   }
   return url.toString();
+}
+
+function normalizeCheckoutUrl(value) {
+  const checkoutUrl = normalizeHttpsUrl(value, "checkoutUrl");
+  if (!checkoutUrl) return "";
+
+  const url = new URL(checkoutUrl);
+  if (url.hostname !== AURORA_CHECKOUT_HOST) {
+    throw new Error(
+      `site.config.json pro.checkoutUrl must use the dedicated Aurora checkout at ${AURORA_CHECKOUT_HOST}.`,
+    );
+  }
+  if (!CHECKOUT_PATH_PATTERN.test(url.pathname)) {
+    throw new Error(
+      "site.config.json pro.checkoutUrl must use /checkout/buy/<variant UUID>.",
+    );
+  }
+  return checkoutUrl;
 }
 
 function escapeHtml(value) {
