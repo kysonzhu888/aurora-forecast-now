@@ -1,9 +1,17 @@
+import {
+  createOpaqueInstanceName,
+  normalizeOpaqueInstanceName,
+  normalizeStoredAccess,
+  parseLicenseReturnUrl,
+} from "./pro-license-state.mjs";
+
 (() => {
   const root = document.querySelector("[data-pro-access-page]");
   if (!root) return;
 
   const config = window.AURORA_PRO || {};
   const storageKey = config.storageKey || "aurora_pro_access_v1";
+  const instanceNameStorageKey = `${storageKey}_browser_instance`;
   const locationsStorageKey = config.locationsStorageKey || "aurora_pro_locations_v1";
   const maxSavedLocations = clamp(Number(config.maxSavedLocations) || 5, 2, 5);
   const lockedPanel = root.querySelector("[data-pro-locked]");
@@ -20,6 +28,7 @@
   const comparisonResults = root.querySelector("[data-pro-comparison-results]");
   let savedLocations = readSavedLocations();
   let access = readStoredAccess();
+  let ephemeralInstanceName = "";
 
   initialize();
 
@@ -29,17 +38,29 @@
     trackFunnelEvent("pro_view");
     bindInteractions();
 
-    const incomingKey = consumeLicenseKeyFromUrl();
+    const incomingKey = consumeLicenseReturnFromUrl();
     if (incomingKey) {
       if (licenseInput) licenseInput.value = incomingKey;
-      await activateLicense(incomingKey, { reportAttempt: true });
+      await activateLicense(incomingKey, { reportAttempt: true, checkoutReturn: true });
       return;
     }
 
     if (access?.licenseKey) {
       setStatus(licenseStatus, "Checking saved Aurora Pro access...");
-      const result = await validateLicense(access.licenseKey);
+      const needsActivation = !access.instanceId && access.source !== "founder";
+      const result = needsActivation
+        ? await requestLicense({
+          action: "activate",
+          licenseKey: access.licenseKey,
+          instanceName: readOrCreateBrowserInstanceName(),
+        })
+        : await requestLicense({
+          action: "validate",
+          licenseKey: access.licenseKey,
+          instanceId: access.instanceId,
+        });
       if (result.ok) {
+        persistAccess(access.licenseKey, result.license);
         applyAccessState(true);
         setStatus(licenseStatus, "Aurora Pro is active on this browser.", "success");
         if (savedLocations.length) refreshComparison();
@@ -61,14 +82,33 @@
         setStatus(licenseStatus, "Paste your Aurora Pro access key first.", "error");
         return;
       }
-      await activateLicense(key, { reportAttempt: true });
+      await activateLicense(key, { reportAttempt: true, checkoutReturn: false });
     });
 
-    lockButton?.addEventListener("click", () => {
+    lockButton?.addEventListener("click", async () => {
+      const previousAccess = access;
       access = null;
       removeStorage(storageKey);
       applyAccessState(false);
       setStatus(licenseStatus, "Aurora Pro is locked on this browser.");
+
+      if (previousAccess?.source === "lemonsqueezy" && previousAccess.instanceId) {
+        const result = await requestLicense({
+          action: "deactivate",
+          licenseKey: previousAccess.licenseKey,
+          instanceId: previousAccess.instanceId,
+        });
+        if (result.ok) {
+          removeStorage(instanceNameStorageKey);
+          setStatus(licenseStatus, "Aurora Pro is locked and this browser activation was released.", "success");
+        } else {
+          setStatus(
+            licenseStatus,
+            "Aurora Pro is locked locally, but its activation could not be released. Try the key again later or contact support.",
+            "error",
+          );
+        }
+      }
     });
 
     locationForm?.addEventListener("submit", (event) => {
@@ -99,12 +139,20 @@
     refreshButton?.addEventListener("click", refreshComparison);
   }
 
-  async function activateLicense(licenseKey, { reportAttempt }) {
+  async function activateLicense(licenseKey, { reportAttempt, checkoutReturn }) {
     if (reportAttempt) trackFunnelEvent("license_attempt");
-    setStatus(licenseStatus, "Checking Aurora Pro access...");
+    setStatus(licenseStatus, "Activating Aurora Pro on this browser...");
     setLicenseFormDisabled(true);
-    const result = await validateLicense(licenseKey);
-    setLicenseFormDisabled(false);
+    let result;
+    try {
+      result = await requestLicense({
+        action: "activate",
+        licenseKey,
+        instanceName: readOrCreateBrowserInstanceName(),
+      });
+    } finally {
+      setLicenseFormDisabled(false);
+    }
 
     if (!result.ok) {
       if (reportAttempt) trackFunnelEvent("license_failure");
@@ -112,11 +160,11 @@
       return false;
     }
 
-    access = { unlocked: true, licenseKey, unlockedAt: new Date().toISOString() };
-    const persisted = writeJsonStorage(storageKey, access);
+    const persisted = persistAccess(licenseKey, result.license);
     if (licenseInput) licenseInput.value = "";
     applyAccessState(true);
     if (reportAttempt) trackFunnelEvent("license_success");
+    if (checkoutReturn) trackFunnelEvent("checkout_return");
     setStatus(
       licenseStatus,
       persisted
@@ -128,25 +176,36 @@
     return true;
   }
 
-  async function validateLicense(licenseKey) {
+  async function requestLicense({ action, licenseKey, instanceId = "", instanceName = "" }) {
     try {
       const response = await fetch("/api/pro/license", {
         method: "POST",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify({ licenseKey }),
+        body: JSON.stringify({ action, licenseKey, instanceId, instanceName }),
       });
       const payload = await readJsonResponse(response);
       if (!response.ok || !payload.ok) {
-        return { ok: false, status: response.status, error: payload.error || "License validation failed." };
+        return { ok: false, status: response.status, error: payload.error || "License request failed." };
       }
-      return { ok: true, license: payload.license };
+      return { ok: true, license: payload.license, deactivated: payload.deactivated === true };
     } catch (error) {
       return {
         ok: false,
         status: 0,
-        error: error.message || "License validation is temporarily unavailable.",
+        error: error.message || "License service is temporarily unavailable.",
       };
     }
+  }
+
+  function persistAccess(licenseKey, license = {}) {
+    access = {
+      unlocked: true,
+      licenseKey,
+      source: license.source || "",
+      instanceId: license.instanceId || "",
+    };
+    access = normalizeStoredAccess(access);
+    return writeJsonStorage(storageKey, access);
   }
 
   async function refreshComparison() {
@@ -301,24 +360,28 @@
     }).catch(() => {});
   }
 
-  function consumeLicenseKeyFromUrl() {
-    const url = new URL(window.location.href);
-    const key = normalizeLicenseKey(
-      url.searchParams.get("license_key")
-      || url.searchParams.get("licenseKey")
-      || url.searchParams.get("key"),
-    );
-    if (!key) return "";
-    url.searchParams.delete("license_key");
-    url.searchParams.delete("licenseKey");
-    url.searchParams.delete("key");
-    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
-    return key;
+  function consumeLicenseReturnFromUrl() {
+    const result = parseLicenseReturnUrl(window.location.href);
+    if (result.hadSensitiveParams) {
+      window.history.replaceState({}, "", result.cleanUrl);
+    }
+    return result.licenseKey;
   }
 
   function readStoredAccess() {
-    const value = readJsonStorage(storageKey, null);
-    return value?.unlocked && normalizeLicenseKey(value.licenseKey) ? value : null;
+    return normalizeStoredAccess(readJsonStorage(storageKey, null));
+  }
+
+  function readOrCreateBrowserInstanceName() {
+    const storedName = normalizeOpaqueInstanceName(
+      readJsonStorage(instanceNameStorageKey, ""),
+    );
+    if (storedName) return storedName;
+    if (ephemeralInstanceName) return ephemeralInstanceName;
+
+    ephemeralInstanceName = createOpaqueInstanceName();
+    writeJsonStorage(instanceNameStorageKey, ephemeralInstanceName);
+    return ephemeralInstanceName;
   }
 
   function readSavedLocations() {
@@ -399,7 +462,8 @@
   }
 
   function normalizeLicenseKey(value) {
-    return String(value || "").replace(/\s+/g, "").slice(0, 120);
+    const licenseKey = String(value || "").replace(/\s+/g, "");
+    return licenseKey.length <= 120 ? licenseKey : "";
   }
 
   function normalizeLocation(value) {

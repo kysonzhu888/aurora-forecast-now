@@ -19,6 +19,7 @@ const city = fs.readFileSync(path.join(root, "cities", "fairbanks", "index.html"
 const sitemap = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
 const pro = fs.readFileSync(path.join(root, "pro", "index.html"), "utf8");
 const proClient = fs.readFileSync(path.join(root, "assets", "pro-access.js"), "utf8");
+const proLicenseState = fs.readFileSync(path.join(root, "assets", "pro-license-state.mjs"), "utf8");
 const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
 const googleVerification = fs.readFileSync(
   path.join(root, "google1089c0cca1aa4f0a.html"),
@@ -71,5 +72,8 @@ test("Aurora Pro preview is fail-closed without leaking the GGB product", () => 
   assert.doesNotMatch(city, /data-pro-locked|paywall-locked/);
   assert.match(proClient, /\/api\/pro\/license/);
   assert.match(proClient, /\/api\/pro\/funnel/);
+  assert.match(pro, /<script type="module" src="\.\.\/assets\/pro-access\.js"><\/script>/);
+  assert.match(proClient, /from "\.\/pro-license-state\.mjs"/);
+  assert.match(proLicenseState, /parseLicenseReturnUrl/);
   assert.match(proCss, /\.pro-page \[hidden\]\s*\{[^}]*display:\s*none\s*!important/);
 });

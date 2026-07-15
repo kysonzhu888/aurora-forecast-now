@@ -3,6 +3,7 @@
 # 用法:
 #   sh deploy.sh pages    # 只发静态站（Cloudflare Pages）
 #   sh deploy.sh worker   # 只发 API Worker
+#   sh deploy.sh package  # 只生成静态安全包，不上传
 #   sh deploy.sh all      # 两个都发
 #
 # 🚨 排除清单是安全边界：workers 源码 / schema.sql / wrangler.worker.toml
@@ -16,6 +17,10 @@ TARGET="${1:-all}"
 EXCLUDES=(
   --exclude '.deploy'
   --exclude '.git'
+  --exclude '.github'
+  --exclude '.wrangler'
+  --exclude 'lib'
+  --exclude 'tests'
   --exclude 'tools'
   --exclude 'site.config.json'
   --exclude '*.md'
@@ -26,10 +31,14 @@ EXCLUDES=(
   --exclude '技术文章系列'
 )
 
-deploy_pages() {
+package_pages() {
   rm -rf .deploy
   mkdir -p .deploy
   rsync -a "${EXCLUDES[@]}" ./ .deploy/
+}
+
+deploy_pages() {
+  package_pages
   npx wrangler pages deploy .deploy --project-name aurora-forecast-now --branch main
 }
 
@@ -38,8 +47,9 @@ deploy_worker() {
 }
 
 case "$TARGET" in
+  package) package_pages ;;
   pages)  deploy_pages ;;
   worker) deploy_worker ;;
   all)    deploy_worker && deploy_pages ;;
-  *) echo "用法: sh deploy.sh [pages|worker|all]" >&2; exit 1 ;;
+  *) echo "用法: sh deploy.sh [package|pages|worker|all]" >&2; exit 1 ;;
 esac

@@ -36,3 +36,14 @@ CREATE TABLE IF NOT EXISTS pro_funnel_daily (
 
 CREATE INDEX IF NOT EXISTS idx_pro_funnel_daily_event_date
 ON pro_funnel_daily (event_name, event_date DESC);
+
+-- Lemon Squeezy 只保存不可逆事件摘要，用于抵御 webhook 重试重复计数；不存订单号或客户 PII。
+CREATE TABLE IF NOT EXISTS pro_webhook_receipts (
+  event_hash TEXT PRIMARY KEY,
+  source_event_name TEXT NOT NULL,
+  test_mode INTEGER NOT NULL DEFAULT 0,
+  received_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_pro_webhook_receipts_received
+ON pro_webhook_receipts (source_event_name, received_at DESC);
