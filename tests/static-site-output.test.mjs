@@ -21,6 +21,7 @@ const pro = fs.readFileSync(path.join(root, "pro", "index.html"), "utf8");
 const proClient = fs.readFileSync(path.join(root, "assets", "pro-access.js"), "utf8");
 const proLicenseState = fs.readFileSync(path.join(root, "assets", "pro-license-state.mjs"), "utf8");
 const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
+const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
 const googleVerification = fs.readFileSync(
   path.join(root, "google1089c0cca1aa4f0a.html"),
   "utf8",
@@ -39,6 +40,18 @@ test("generated pages expose a stable SEO shell without internal review language
   assert.match(home, /data-live-forecast-time/);
   assert.match(home, /data-live-best-city/);
   assert.doesNotMatch(home, /Updated from the static build/i);
+});
+
+test("generated navigation moves lower-priority links into an accessible mobile menu", () => {
+  assert.match(home, /<a class="nav-secondary"[^>]*>Glossary<\/a>/);
+  assert.match(home, /<a class="nav-secondary"[^>]*>About<\/a>/);
+  assert.match(home, /<a class="nav-secondary"[^>]*>Contact<\/a>/);
+  assert.match(home, /<details class="nav-more">/);
+  assert.match(home, /<summary>More<\/summary>/);
+  assert.match(home, /<div class="nav-more-menu">/);
+  assert.match(styles, /\.nav-more\s*\{[^}]*display:\s*none/s);
+  assert.match(styles, /@media \(max-width: 560px\)[\s\S]*\.nav-secondary\s*\{[^}]*display:\s*none/s);
+  assert.match(styles, /@media \(max-width: 560px\)[\s\S]*\.nav-more\s*\{[^}]*display:\s*block/s);
 });
 
 test("city pages keep live values out of the crawlable fallback", () => {

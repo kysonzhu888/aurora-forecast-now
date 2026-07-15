@@ -1060,10 +1060,19 @@ ${headExtras}
         <a href="${relativeAsset(pagePath)}locations/">Locations</a>
         <a href="${relativeAsset(pagePath)}aurora-australis/">Southern Lights</a>
         <a href="${relativeAsset(pagePath)}guides/">Guides</a>
-        <a href="${relativeAsset(pagePath)}glossary/">Glossary</a>
-        ${site.pro.enabled ? `<a href="${relativeAsset(pagePath)}pro/">Pro</a>` : ""}
-        <a href="${relativeAsset(pagePath)}about/">About</a>
-        <a href="${relativeAsset(pagePath)}contact/">Contact</a>
+        <a class="nav-secondary" href="${relativeAsset(pagePath)}glossary/">Glossary</a>
+        ${site.pro.enabled ? `<a class="nav-secondary" href="${relativeAsset(pagePath)}pro/">Pro</a>` : ""}
+        <a class="nav-secondary" href="${relativeAsset(pagePath)}about/">About</a>
+        <a class="nav-secondary" href="${relativeAsset(pagePath)}contact/">Contact</a>
+        <details class="nav-more">
+          <summary>More</summary>
+          <div class="nav-more-menu">
+            <a href="${relativeAsset(pagePath)}glossary/">Glossary</a>
+            ${site.pro.enabled ? `<a href="${relativeAsset(pagePath)}pro/">Pro</a>` : ""}
+            <a href="${relativeAsset(pagePath)}about/">About</a>
+            <a href="${relativeAsset(pagePath)}contact/">Contact</a>
+          </div>
+        </details>
       </div>
     </nav>
   </header>
