@@ -142,6 +142,154 @@ test("pro license endpoint accepts a valid newly purchased key before device act
   });
 });
 
+test("pro license endpoint validates product identity before activating an opaque browser instance", async () => {
+  const upstreamCalls = [];
+  const response = await handleProLicenseRequest(
+    jsonRequest({
+      action: "activate",
+      licenseKey: "new-buyer-key",
+      instanceName: "Aurora Web 01234567-89ab-cdef-0123-456789abcdef",
+    }),
+    configuredEnv(),
+    {
+      fetchImpl: async (url, options) => {
+        upstreamCalls.push({ url, body: String(options.body) });
+        if (String(url).endsWith("/validate")) {
+          return Response.json(validLicensePayload({ status: "inactive" }));
+        }
+        return Response.json({
+          activated: true,
+          error: null,
+          license_key: { status: "active", key: "must-not-leak" },
+          instance: { id: "47596ad9-a811-4ebf-ac8a-03fc7b6d2a17", name: "must-not-leak" },
+          meta: {
+            product_id: "aurora-product-2026",
+            product_name: "Aurora Pro Lifetime",
+            customer_email: "must-not-leak@example.com",
+          },
+        });
+      },
+    },
+  );
+
+  assert.equal(response.status, 200);
+  assert.equal(upstreamCalls.length, 2);
+  assert.match(upstreamCalls[0].url, /\/licenses\/validate$/);
+  assert.match(upstreamCalls[1].url, /\/licenses\/activate$/);
+  assert.match(upstreamCalls[1].body, /instance_name=Aurora\+Web\+01234567-89ab-cdef-0123-456789abcdef/);
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    license: {
+      status: "active",
+      productName: "Aurora Pro Lifetime",
+      source: "lemonsqueezy",
+      instanceId: "47596ad9-a811-4ebf-ac8a-03fc7b6d2a17",
+    },
+  });
+});
+
+test("pro license endpoint never activates a key for another product", async () => {
+  let callCount = 0;
+  const response = await handleProLicenseRequest(
+    jsonRequest({
+      action: "activate",
+      licenseKey: "other-product-key",
+      instanceName: "Aurora Web 01234567-89ab-cdef-0123-456789abcdef",
+    }),
+    configuredEnv(),
+    {
+      fetchImpl: async () => {
+        callCount += 1;
+        return Response.json(validLicensePayload({ productId: "other-product" }));
+      },
+    },
+  );
+
+  assert.equal(response.status, 403);
+  assert.equal(callCount, 1);
+});
+
+test("pro license endpoint validates a stored instance instead of the whole key", async () => {
+  let upstreamBody = "";
+  const response = await handleProLicenseRequest(
+    jsonRequest({
+      action: "validate",
+      licenseKey: "buyer-key",
+      instanceId: "47596ad9-a811-4ebf-ac8a-03fc7b6d2a17",
+    }),
+    configuredEnv(),
+    {
+      fetchImpl: async (_url, options) => {
+        upstreamBody = String(options.body);
+        return Response.json({
+          ...validLicensePayload(),
+          instance: { id: "47596ad9-a811-4ebf-ac8a-03fc7b6d2a17", name: "must-not-leak" },
+        });
+      },
+    },
+  );
+
+  assert.match(upstreamBody, /instance_id=47596ad9-a811-4ebf-ac8a-03fc7b6d2a17/);
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    license: {
+      status: "active",
+      productName: "Aurora Pro Lifetime",
+      source: "lemonsqueezy",
+      instanceId: "47596ad9-a811-4ebf-ac8a-03fc7b6d2a17",
+    },
+  });
+});
+
+test("pro license endpoint verifies product ownership before deactivating an instance", async () => {
+  const upstreamCalls = [];
+  const response = await handleProLicenseRequest(
+    jsonRequest({
+      action: "deactivate",
+      licenseKey: "buyer-key",
+      instanceId: "47596ad9-a811-4ebf-ac8a-03fc7b6d2a17",
+    }),
+    configuredEnv(),
+    {
+      fetchImpl: async (url, options) => {
+        upstreamCalls.push({ url, body: String(options.body) });
+        if (String(url).endsWith("/validate")) {
+          return Response.json({
+            ...validLicensePayload(),
+            instance: { id: "47596ad9-a811-4ebf-ac8a-03fc7b6d2a17" },
+          });
+        }
+        return Response.json({ deactivated: true, error: null });
+      },
+    },
+  );
+
+  assert.equal(upstreamCalls.length, 2);
+  assert.match(upstreamCalls[1].url, /\/licenses\/deactivate$/);
+  assert.match(upstreamCalls[1].body, /instance_id=47596ad9-a811-4ebf-ac8a-03fc7b6d2a17/);
+  assert.deepEqual(await response.json(), { ok: true, deactivated: true });
+});
+
+test("pro license endpoint rejects malformed instance contracts before upstream calls", async () => {
+  let fetchCalled = false;
+  const options = { fetchImpl: async () => { fetchCalled = true; } };
+
+  const invalidName = await handleProLicenseRequest(jsonRequest({
+    action: "activate",
+    licenseKey: "buyer-key",
+    instanceName: "Kyson's MacBook",
+  }), configuredEnv(), options);
+  assert.equal(invalidName.status, 400);
+
+  const invalidId = await handleProLicenseRequest(jsonRequest({
+    action: "deactivate",
+    licenseKey: "buyer-key",
+    instanceId: "not-a-uuid",
+  }), configuredEnv(), options);
+  assert.equal(invalidId.status, 400);
+  assert.equal(fetchCalled, false);
+});
+
 function configuredEnv() {
   return { AURORA_LEMONSQUEEZY_PRODUCT_ID: "aurora-product-2026" };
 }
