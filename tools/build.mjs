@@ -970,7 +970,7 @@ function generateProPage() {
     body: renderProPageBody(site.pro),
     bodyScripts: [
       `<script>window.AURORA_PRO=${serializeProClientConfig(site.pro)};</script>`,
-      `<script src="${relativeAsset("/pro/")}assets/pro-access.js" defer></script>`,
+      `<script type="module" src="${relativeAsset("/pro/")}assets/pro-access.js"></script>`,
     ],
   }));
 }
