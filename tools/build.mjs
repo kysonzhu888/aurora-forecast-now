@@ -20,6 +20,7 @@ const site = {
   description: config.description,
   contentLastmod: normalizeContentLastmod(config.contentLastmod),
   contactEmail: config.contactEmail,
+  cloudflareWebAnalyticsToken: normalizeCloudflareWebAnalyticsToken(config.cloudflareWebAnalyticsToken),
   googleAnalyticsId: (config.googleAnalyticsId || "").trim(),
   adsenseClientId: (config.adsenseClientId || "").trim(),
   adsensePublisherId: normalizePublisherId(config.adsensePublisherId || config.adsenseClientId || ""),
@@ -945,7 +946,7 @@ function generateUtilityPages() {
     {
       slug: "privacy",
       title: "Privacy Policy",
-      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. Basic analytics and advertising scripts may be added to understand traffic and support the site.</p><p>If you join the storm alert waitlist, we store your email address, the city you selected, and the signup date. These are used only to launch and send the aurora alerts you requested, and never sold or shared. To remove your email from the waitlist, contact us via the contact page.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
+      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you join the storm alert waitlist, we store your email address, the city you selected, and the signup date. These are used only to launch and send the aurora alerts you requested, and never sold or shared. To remove your email from the waitlist, contact us via the contact page.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
     },
   ];
 
@@ -1025,6 +1026,7 @@ function layout({ title, description, path: pagePath, body, schema = [], robots 
   const headExtras = [
     site.searchConsoleVerification ? `<meta name="google-site-verification" content="${escapeHtml(site.searchConsoleVerification)}">` : "",
     site.adsenseAccountId ? `<meta name="google-adsense-account" content="${escapeHtml(site.adsenseAccountId)}">` : "",
+    site.cloudflareWebAnalyticsToken ? cloudflareWebAnalyticsTag(site.cloudflareWebAnalyticsToken) : "",
     site.googleAnalyticsId ? analyticsTag(site.googleAnalyticsId) : "",
     site.adsenseClientId ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${escapeHtml(site.adsenseClientId)}" crossorigin="anonymous"></script>` : "",
     robots ? `<meta name="robots" content="${escapeHtml(robots)}">` : "",
@@ -1650,6 +1652,18 @@ function relativeAsset(pagePath) {
 function analyticsTag(id) {
   return `<script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(id)}"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${escapeHtml(id)}");</script>`;
+}
+
+function cloudflareWebAnalyticsTag(token) {
+  return `<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"${escapeHtml(token)}"}'></script>`;
+}
+
+function normalizeCloudflareWebAnalyticsToken(value) {
+  const token = String(value || "").trim();
+  if (token && !/^[a-f0-9]{32}$/.test(token)) {
+    throw new Error("site.config.json cloudflareWebAnalyticsToken must be a 32-character lowercase hexadecimal token.");
+  }
+  return token;
 }
 
 function normalizePublisherId(value) {
