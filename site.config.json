@@ -4,6 +4,7 @@
   "description": "City-level northern lights forecast, aurora chance, Kp index, and cloud-aware viewing guidance.",
   "contentLastmod": "2026-07-13",
   "contactEmail": "hello@auroraforecastnow.com",
+  "cloudflareWebAnalyticsToken": "fdaa481c4b104e8383de83183ca1f321",
   "googleAnalyticsId": "",
   "adsenseClientId": "ca-pub-7896672979027584",
   "adsensePublisherId": "pub-7896672979027584",

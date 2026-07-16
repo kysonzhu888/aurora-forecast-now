@@ -27,11 +27,35 @@ const googleVerification = fs.readFileSync(
   "utf8",
 );
 
+const generatedHtmlPaths = fs.readdirSync(root, { recursive: true })
+  .filter((relativePath) => relativePath === "index.html" || relativePath.endsWith("/index.html"))
+  .filter((relativePath) => !relativePath.startsWith(".deploy/") && !relativePath.startsWith("node_modules/"));
+
 test("keeps the exact Google Search Console verification file", () => {
   assert.equal(
     googleVerification,
     "google-site-verification: google1089c0cca1aa4f0a.html\n",
   );
+});
+
+test("every generated page includes exactly one Cloudflare Web Analytics beacon", () => {
+  assert.match(config.cloudflareWebAnalyticsToken || "", /^[a-f0-9]{32}$/);
+  assert.ok(generatedHtmlPaths.length > 100, "expected the full generated site");
+
+  for (const relativePath of generatedHtmlPaths) {
+    const html = fs.readFileSync(path.join(root, relativePath), "utf8");
+    const beacons = html.match(/<script[^>]+static\.cloudflareinsights\.com\/beacon\.min\.js[^>]*><\/script>/g) || [];
+    assert.equal(beacons.length, 1, relativePath);
+    assert.match(beacons[0], /type="module"/);
+    assert.match(beacons[0], new RegExp(`data-cf-beacon='\\{"token":"${config.cloudflareWebAnalyticsToken}"\\}'`));
+  }
+});
+
+test("privacy policy describes the active privacy-first analytics", () => {
+  const privacy = fs.readFileSync(path.join(root, "privacy", "index.html"), "utf8");
+  assert.match(privacy, /Cloudflare Web Analytics/);
+  assert.match(privacy, /does not use cookies or local storage/i);
+  assert.doesNotMatch(privacy, /analytics[^.]*may be added/i);
 });
 
 test("generated pages expose a stable SEO shell without internal review language", () => {
