@@ -118,7 +118,7 @@ curl 'https://auroraforecastnow.com/api/forecast?lat=40.7128&lon=-74.0060'
 ## Development
 
 ```bash
-# 重新生成全站静态页（拉 NOAA 实时数据；加 AURORA_USE_EXISTING_FORECAST=1 用缓存数据做 deterministic build）
+# 重新生成全站静态页（拉 NOAA 实时数据；加 AURORA_USE_EXISTING_FORECAST=1 用版本化 fixture 做 deterministic build）
 node tools/build.mjs
 
 # 评分核心（lib/forecast-core.mjs，build 与 worker 共用）的行为锁定测试

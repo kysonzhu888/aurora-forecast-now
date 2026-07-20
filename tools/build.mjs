@@ -40,7 +40,9 @@ const now = new Date();
 const ALERT_LOOKBACK_MS = 72 * 60 * 60 * 1000;
 const useExistingForecast = process.env.AURORA_USE_EXISTING_FORECAST === "1";
 const buildLastmod = site.contentLastmod;
-const forecast = useExistingForecast ? readJson(path.join("data", "forecast.json")) : await buildForecast();
+const forecast = useExistingForecast
+  ? readJson(path.join("data", "forecast.fixture.json"))
+  : await buildForecast();
 const cityCollections = buildCityCollections(forecast.cities);
 const guidePages = buildGuidePages();
 const glossaryEntriesList = glossaryEntries();
@@ -64,7 +66,7 @@ generateAdsTxt();
 console.log(`Generated ${forecast.cities.length} city pages for ${site.name}.`);
 console.log(
   useExistingForecast
-    ? `Forecast reused from data/forecast.json: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`
+    ? `Forecast reused from data/forecast.fixture.json: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`
     : `Forecast updated from NOAA: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`
 );
 
