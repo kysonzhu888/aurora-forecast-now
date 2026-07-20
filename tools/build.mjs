@@ -3,9 +3,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { scoreCity, labelForScore, guidanceFor, directionWords, nearestAurora, normalizeLon } from "../lib/forecast-core.mjs";
 import { renderAlertPrompt } from "./lib/alert-prompt.mjs";
-import { renderAlertSignupPanel } from "./lib/alert-signup-panel.mjs";
 import { renderCitySkyContext } from "./lib/city-sky-context.mjs";
-import { renderPracticalVisualStory } from "./lib/practical-visual-story.mjs";
+import {
+  renderAlertProcess,
+  renderPracticalVisualStory,
+  renderProjectAbout,
+} from "./lib/practical-visual-story.mjs";
 import { normalizeProConfig, renderProPageBody, serializeProClientConfig } from "./lib/pro-page.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -262,11 +265,8 @@ function writeDataFiles() {
 
 function generateHomePage() {
   // 首页北极光区块只放北半球城市；南半球单独一个区块导流到 /aurora-australis/
-  const topCities = forecast.cities.filter((city) => city.lat >= 0).slice(0, 12);
-  const topSouthernCities = forecast.cities.filter((city) => city.lat < 0).slice(0, 6);
-  const priorityCities = [...forecast.cities]
-    .sort((a, b) => a.priority - b.priority || b.score - a.score)
-    .slice(0, 36);
+  const topCities = forecast.cities.filter((city) => city.lat >= 0).slice(0, 6);
+  const topSouthernCities = forecast.cities.filter((city) => city.lat < 0).slice(0, 3);
 
   writePage([], layout({
     title: "Northern Lights Forecast Tonight by City",
@@ -283,35 +283,25 @@ function generateHomePage() {
           <div class="hero-content">
             <p class="kicker">Northern lights forecast tonight</p>
             <h1>Can you see the aurora tonight?</h1>
-            <p class="lead">Aurora Forecast Now turns NOAA space weather data and cloud cover into a city-level viewing chance for the northern lights.</p>
+            <p class="lead">Check your city now, or get one email when conditions are finally worth going outside for.</p>
             <form class="search-box" action="#cities" data-live-search-form>
               <input data-city-search type="search" placeholder="Search a city or state" aria-label="Search a city or state">
               <button class="button" type="submit">Find forecast</button>
             </form>
             <div class="live-result" data-live-result hidden></div>
-            <div class="hero-meta" aria-label="Current forecast summary">
-              <div class="metric"><span>Max Kp next 36h</span><strong data-live-max-kp>Checking</strong></div>
-              <div class="metric"><span>NOAA forecast time</span><strong data-live-forecast-time>Checking</strong></div>
-              <div class="metric"><span>Best city now</span><strong data-live-best-city>Checking</strong></div>
-              <div class="metric"><span>Live cache</span><strong data-live-status>Connecting</strong></div>
+            <div class="hero-actions">
+              <button class="button secondary" type="button" data-open-alert-prompt>Get a free email alert</button>
             </div>
-            <p class="live-note" data-live-note>Live conditions load from the forecast API when you open this page.</p>
+            <div class="hero-meta" aria-label="Current forecast summary">
+              <div class="metric"><span>Best chance now</span><strong data-live-best-city>Checking</strong></div>
+              <div class="metric"><span>Max Kp next 36h</span><strong data-live-max-kp>Checking</strong></div>
+              <div class="metric metric-time"><span>Forecast updated</span><strong data-live-forecast-time>Checking</strong></div>
+            </div>
+            <p class="live-note" data-live-note>Checking the latest space weather and local cloud cover.</p>
           </div>
         </section>
 
-${renderPracticalVisualStory()}
-
-        ${adUnit({
-          slotKey: "topBanner",
-          className: "ad-shell-wide",
-          fallbackTitle: "More ways to plan tonight",
-          fallbackText: "Compare nearby locations, cloud cover, and the signals behind each city score.",
-          links: [
-            ["locations/", "Browse locations"],
-            ["guides/how-to-read-aurora-forecast/", "Read the score"],
-            ["guides/cloud-cover-aurora-viewing/", "Check cloud cover"],
-          ],
-        })}
+${renderAlertProcess()}
 
         <section id="cities" class="section">
           <div class="section-head">
@@ -319,113 +309,29 @@ ${renderPracticalVisualStory()}
               <p class="kicker">City forecast</p>
               <h2>Best northern lights chances now</h2>
             </div>
-            <p>Scores combine NOAA aurora intensity, Kp forecast, latitude, and the best cloud window in the next 24 hours.</p>
+            <a class="text-link" href="locations/">See all locations</a>
           </div>
           <div class="city-grid">
             ${topCities.map((city) => cityCard(city, "")).join("")}
           </div>
         </section>
 
-        <section class="section compact-section">
+${renderPracticalVisualStory()}
+
+        <section class="section">
           <div class="section-head">
             <div>
               <p class="kicker">Southern hemisphere</p>
-              <h2>Southern lights (aurora australis) chances now</h2>
+              <h2>Southern lights tonight</h2>
             </div>
-            <p>It is aurora season below the equator too: New Zealand, Tasmania, and far-south South America. <a href="aurora-australis/">See the full southern lights forecast</a>.</p>
+            <a class="text-link" href="aurora-australis/">Southern lights forecast</a>
           </div>
           <div class="city-grid">
             ${topSouthernCities.map((city) => cityCard(city, "")).join("")}
           </div>
         </section>
 
-        <section class="section compact-section">
-          <div class="guide-grid">
-${alertSignupPanel(null)}
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="section-head">
-            <div>
-              <p class="kicker">Browse locations</p>
-              <h2>City pages for tonight and tomorrow</h2>
-            </div>
-            <p>Use these city pages when you want a stable forecast link, a nearby comparison, or a quick check before driving north.</p>
-          </div>
-          <div class="city-grid">
-            ${priorityCities.map((city) => cityCard(city, "")).join("")}
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="section-head">
-            <div>
-              <p class="kicker">Forecast atlas</p>
-              <h2>Browse by location, guide, or forecast term</h2>
-            </div>
-            <p>Move from a single city result into place collections, plain-English guides, and the forecast terms that explain tonight's setup.</p>
-          </div>
-          <div class="guide-grid">
-            <article class="panel">
-              <h3>Location collections</h3>
-              <p>Start from the full city index, country pages, or state and province collections.</p>
-              ${linkCloud([
-                ["locations/", "All locations"],
-                ...cityCollections.countries.map((country) => [`countries/${country.slug}/`, country.name]),
-                ...cityCollections.regions.slice(0, 8).map((region) => [`states/${region.slug}/`, region.name]),
-              ])}
-            </article>
-            <article class="panel">
-              <h3>Forecast guides</h3>
-              <p>Evergreen pages explain the signals behind each city score.</p>
-              ${linkCloud([["guides/", "All guides"], ...guidePages.map((guide) => [`guides/${guide.slug}/`, guide.shortTitle])])}
-            </article>
-            <article class="panel">
-              <h3>Glossary and data</h3>
-              <p>Plain-English definitions and source pages help readers understand NOAA and local sky inputs.</p>
-              ${linkCloud([
-                ["glossary/", "Forecast glossary"],
-                ["guides/kp-index-aurora-forecast/", "Kp index"],
-                ["guides/cloud-cover-aurora-viewing/", "Cloud cover"],
-                ["guides/aurora-oval-map/", "Aurora oval"],
-              ])}
-            </article>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="guide-grid">
-            <article class="panel">
-              <p class="kicker">How to use it</p>
-              <h3>Start with your city score</h3>
-              <p>Great and Good mean it is worth checking the sky. Possible means camera-first or drive-north conditions. Low means wait for a stronger alert.</p>
-            </article>
-            <article class="panel">
-              <p class="kicker">What matters</p>
-              <h3>Kp is only one signal</h3>
-              <p>Kp helps describe storm strength, but local visibility also depends on aurora oval position, clouds, twilight, moonlight, and light pollution.</p>
-            </article>
-            <article class="panel">
-              <p class="kicker">Update strategy</p>
-              <h3>Built for cached refreshes</h3>
-              <p>The public forecast uses cached official feeds, and storm watches can trigger more frequent refreshes for live city checks.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="section-head">
-            <div>
-              <p class="kicker">Data sources</p>
-              <h2>Official space weather, plain-English forecast</h2>
-            </div>
-            <p data-live-storm-summary>Live NOAA storm information loads with the current forecast.</p>
-          </div>
-          <div class="source-grid">
-            ${media.dataSources.map((source) => `<a class="source-card" href="${escapeHtml(source.url)}"><h3>${escapeHtml(source.name)}</h3><p>Used for forecast data, Kp values, or local sky conditions.</p></a>`).join("")}
-          </div>
-        </section>
+${renderProjectAbout()}
 
         <section class="section">
           <div class="section-head">
@@ -445,8 +351,6 @@ ${alertSignupPanel(null)}
 
 function generateCityPages() {
   for (const city of forecast.cities) {
-    const regionPath = `/states/${regionSlug(city)}/`;
-    const countryPath = `/countries/${slugify(city.country)}/`;
     writePage(["cities", city.slug], layout({
       title: `${city.name} Aurora Forecast Tonight: ${auroraNameTitle(city)} Chance`,
       description: `${auroraNameSentence(city)} forecast for ${city.name}, ${city.region}: aurora chance, Kp index, cloud cover, and viewing guidance for tonight.`,
@@ -465,8 +369,8 @@ function generateCityPages() {
               <h1>${escapeHtml(city.name)} ${auroraName(city)} forecast tonight</h1>
               <p class="lead" data-live-city-guidance>Live ${auroraName(city)} conditions for ${escapeHtml(city.name)} load from the forecast API. Use the local guide below while the latest score is checked.</p>
               <div class="hero-actions">
-                <a class="button" href="../../#cities">Search more cities</a>
-                <a class="button secondary" href="https://www.spaceweather.gov/products/aurora-30-minute-forecast">NOAA forecast</a>
+                <button class="button" type="button" data-open-alert-prompt data-alert-city="${escapeHtml(city.slug)}">Get a free email alert</button>
+                <a class="button secondary" href="../../#cities">Search another city</a>
               </div>
             </div>
             <aside class="verdict">
@@ -489,7 +393,16 @@ function generateCityPages() {
               <p data-live-city-plan>Check the live score, cloud cover, and NOAA storm status before deciding whether to travel.</p>
               <p>For most mid-latitude locations, a clear ${directionWords(city).horizon} horizon matters more than standing downtown. Look ${directionWords(city).look}, avoid street lights, and give your eyes at least 15 minutes to adapt.</p>
             </article>
-${alertSignupPanel(city)}
+            <article class="panel">
+              <p class="kicker">Before you leave</p>
+              <h2>Three checks that matter</h2>
+              <ul class="plain-list">
+                <li><strong>Clouds:</strong> use the lowest cloud window, not the daily average.</li>
+                <li><strong>Direction:</strong> keep the ${directionWords(city).horizon} horizon open.</li>
+                <li><strong>Darkness:</strong> move away from direct street lights and let your eyes adjust.</li>
+              </ul>
+              <a class="text-link" href="../../guides/how-to-read-aurora-forecast/">Read the forecast guide</a>
+            </article>
           </section>
 ${renderCitySkyContext({
   city,
@@ -497,51 +410,8 @@ ${renderCitySkyContext({
   assetPrefix: "../../",
 })}
 ${cityLocalKnowledge(city)}
-          ${adUnit({
-            slotKey: "inArticle",
-            fallbackTitle: "Keep checking nearby skies",
-            fallbackText: "Compare this forecast with nearby locations before you choose a viewing spot.",
-            links: [
-              ["../../locations/", "All locations"],
-              [`../..${regionPath}`, city.region],
-              ["../../guides/how-to-read-aurora-forecast/", "Forecast guide"],
-            ],
-          })}
 
           <section class="section compact-section">
-            <div class="guide-grid">
-              <article class="panel">
-                <p class="kicker">Region page</p>
-                <h3>${escapeHtml(city.region)} aurora forecast</h3>
-                <p>Compare nearby forecast pages that share similar latitude, time zone, and cloud patterns.</p>
-                <a class="text-link" href="../..${regionPath}">Browse ${escapeHtml(city.region)}</a>
-              </article>
-              <article class="panel">
-                <p class="kicker">Country page</p>
-                <h3>${escapeHtml(city.country)} ${auroraName(city)} cities</h3>
-                <p>Use the country collection to jump between high-latitude cities and storm-watch edge cases.</p>
-                <a class="text-link" href="../..${countryPath}">Browse ${escapeHtml(city.country)}</a>
-              </article>
-              <article class="panel">
-                <p class="kicker">Guide</p>
-                <h3>How to read the score</h3>
-                <p>Learn how Kp, cloud cover, latitude, and the aurora oval combine into a practical viewing chance.</p>
-                <a class="text-link" href="../../guides/how-to-read-aurora-forecast/">Open guide</a>
-              </article>
-              <aside class="panel">
-                <p class="kicker">Current data</p>
-                <h3>Live forecast status</h3>
-                <div class="stat-table">
-                  <div><span>Updated</span><strong data-live-city-updated>Checking</strong></div>
-                  <div><span>NOAA forecast</span><strong data-live-city-forecast-time>Checking</strong></div>
-                  <div><span>Source</span><strong>NOAA + Open-Meteo</strong></div>
-                  <div><span>Location</span><strong>${escapeHtml(formatCoord(city.lat, city.lon))}</strong></div>
-                </div>
-              </aside>
-            </div>
-          </section>
-
-          <section class="section" style="padding-left:0;padding-right:0">
             <div class="section-head">
               <div>
                 <p class="kicker">Nearby options</p>
@@ -579,7 +449,7 @@ ${cityLocalKnowledge(city)}
 function generateLocationPages() {
   writePage(["locations"], layout({
     title: "Northern Lights Forecast Locations",
-    description: "Browse aurora forecast city pages, country collections, region pages, and current best viewing chances.",
+    description: "Browse city-level northern and southern lights forecasts and current best viewing chances.",
     path: "/locations/",
     schema: [collectionPageSchema({
       title: "Northern lights forecast locations",
@@ -594,12 +464,12 @@ function generateLocationPages() {
           <div>
             <p class="kicker">Location index</p>
             <h1>Northern lights forecast locations</h1>
-            <p class="lead">Browse aurora forecast pages by city, country, and region. The live search box can also score cities that are not yet part of the saved city list.</p>
+            <p class="lead">Start with the strongest chances, then find your city in one simple list.</p>
           </div>
           <aside class="verdict">
             <span class="badge good">Live</span>
             <div class="verdict-score">${forecast.cities.length}</div>
-            <p>Saved city pages plus dynamic lookup for custom city and coordinate searches.</p>
+            <p>City forecasts available now.</p>
           </aside>
         </section>
         <section class="section compact-section">
@@ -614,31 +484,22 @@ function generateLocationPages() {
           </div>
         </section>
         <section class="section compact-section">
-          <div class="guide-grid">
-            <article class="panel">
-              <p class="kicker">Countries</p>
-              <h3>Browse by country</h3>
-              ${linkCloud(cityCollections.countries.map((country) => [`../countries/${country.slug}/`, country.name]))}
-            </article>
-            <article class="panel">
-              <p class="kicker">Regions</p>
-              <h3>Browse by state or province</h3>
-              ${linkCloud(cityCollections.regions.slice(0, 18).map((region) => [`../states/${region.slug}/`, region.name]))}
-            </article>
-            <article class="panel">
-              <p class="kicker">Guides</p>
-              <h3>Learn the forecast signals</h3>
-              ${linkCloud(guidePages.map((guide) => [`../guides/${guide.slug}/`, guide.shortTitle]))}
-            </article>
+          <div class="section-head">
+            <div>
+              <p class="kicker">All locations</p>
+              <h2>Find your city</h2>
+            </div>
           </div>
+          <ul class="location-list">
+            ${[...forecast.cities].sort((a, b) => a.name.localeCompare(b.name)).map((city) => `
+            <li><a href="../cities/${city.slug}/"><strong>${escapeHtml(city.name)}</strong><span>${escapeHtml(city.region)}, ${escapeHtml(city.country)}</span></a></li>`).join("")}
+          </ul>
         </section>
       </main>
     `,
   }));
 }
 
-// Storm alert waitlist 表单：citySlug 为空 = 全站（首页/hub），有值 = 城市页。
-// honeypot 字段 website 视觉隐藏；提交逻辑在 script.js 的 [data-alert-form]。
 // 重点城市的本地知识区块：观测点 + 季节窗口 + 拍摄建议。
 // 没有数据的城市返回空字符串，页面结构与旧版完全一致。
 function cityLocalKnowledge(city) {
@@ -651,7 +512,7 @@ function cityLocalKnowledge(city) {
                 <p>${escapeHtml(spot.note)}</p>
               </article>`).join("");
   return `
-          <section class="section" style="padding-left:0;padding-right:0">
+          <section class="section compact-section">
             <div class="section-head">
               <div>
                 <p class="kicker">Local knowledge</p>
@@ -673,10 +534,6 @@ ${spotCards}
               </article>
             </div>
           </section>`;
-}
-
-function alertSignupPanel(city) {
-  return renderAlertSignupPanel({ city, cities: forecast.cities });
 }
 
 function generateAuroraAustralisHub() {
@@ -709,6 +566,9 @@ function generateAuroraAustralisHub() {
             <p class="kicker">Southern hemisphere</p>
             <h1>Southern lights forecast tonight</h1>
             <p class="lead">Live aurora australis viewing chances for New Zealand, Tasmania, and far-south South America. Face south from a dark sky site; scores update from NOAA space weather and local cloud cover.</p>
+            <div class="hero-actions">
+              <button class="button" type="button" data-open-alert-prompt>Get a free email alert</button>
+            </div>
           </div>
           <aside class="verdict">
             <span class="badge possible">Live data</span>
@@ -741,7 +601,6 @@ function generateAuroraAustralisHub() {
               <h3>Southern lights basics</h3>
               ${hubFaqs.map((faq) => `<p><strong>${escapeHtml(faq.q)}</strong><br>${escapeHtml(faq.a)}</p>`).join("")}
             </article>
-${alertSignupPanel(null)}
           </div>
         </section>
       </main>
@@ -932,7 +791,7 @@ function generateUtilityPages() {
     {
       slug: "about",
       title: "About Aurora Forecast Now",
-      body: `<p>Aurora Forecast Now is a city-level northern lights forecast built from public space weather data and local cloud forecasts. It is designed for quick viewing decisions, not scientific guarantees.</p><p>Forecasts can change quickly. Always check local weather and safety conditions before driving to a dark-sky site.</p>`,
+      body: `<p>Aurora Forecast Now is an independent project by Kyson Zhu. I built it to turn public space-weather data and local cloud forecasts into a quick viewing decision, not another dashboard full of unexplained numbers.</p><p>The site uses original AI-generated visuals and practical city guides. Forecasts can change quickly, so always check local weather and safety conditions before driving to a dark-sky site.</p>`,
     },
     {
       slug: "contact",
@@ -942,7 +801,7 @@ function generateUtilityPages() {
     {
       slug: "privacy",
       title: "Privacy Policy",
-      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you request a storm alert, we store your email address, selected city, score threshold, subscription status, and relevant timestamps. Confirmation and unsubscribe tokens are stored only as one-way hashes. These details are used only for the aurora alerts you requested and are never sold or shared. Every alert email includes a one-click unsubscribe link; while email delivery is unavailable, requests remain waitlisted.</p><p>Your browser stores only whether you saved or dismissed the first-visit storm reminder and, for a dismissal, when its 14-day pause ends. That prompt state never contains your email address.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
+      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you request a storm alert, we store your email address, selected city, score threshold, subscription status, and relevant timestamps. Confirmation and unsubscribe tokens are stored only as one-way hashes. Resend processes each confirmation and alert email for delivery. These details are used only for the aurora alerts you requested and are never sold. Every alert email includes a one-click unsubscribe link.</p><p>Your browser stores only whether you saved or dismissed the first-visit storm reminder and, for a dismissal, when its 14-day pause ends. That prompt state never contains your email address.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
     },
   ];
 
@@ -1018,6 +877,7 @@ function generateAdsTxt() {
 
 function layout({ title, description, path: pagePath, body, schema = [], robots = "", extraStyles = [], bodyScripts = [] }) {
   const canonical = `${site.url}${pagePath}`;
+  const selectedCitySlug = pagePath.match(/^\/cities\/([^/]+)\/$/)?.[1] || "";
   const pageBody = body.trim();
   const headExtras = [
     site.searchConsoleVerification ? `<meta name="google-site-verification" content="${escapeHtml(site.searchConsoleVerification)}">` : "",
@@ -1077,7 +937,7 @@ ${headExtras}
     </nav>
   </header>
 ${pageBody}
-  ${renderAlertPrompt({ cities: forecast.cities, assetPrefix: relativeAsset(pagePath) })}
+  ${renderAlertPrompt({ cities: forecast.cities, selectedCitySlug })}
   <footer class="footer">
     <div class="footer-inner">
       <span data-live-footer-updated>Forecast guidance, not a guarantee. Live conditions load from the forecast API.</span>
@@ -1630,11 +1490,6 @@ function normalizeUrl(value) {
 
 function round1(value) {
   return Math.round(value * 10) / 10;
-}
-
-function formatCoord(lat, lon) {
-  if (lat == null || lon == null) return "N/A";
-  return `${round1(lat)}, ${round1(lon)}`;
 }
 
 function relativeAsset(pagePath) {

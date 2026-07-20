@@ -25,7 +25,7 @@ html {
 
 body {
   margin: 0;
-  background: linear-gradient(180deg, #101312 0%, #161711 46%, #101312 100%);
+  background: var(--bg);
   color: var(--text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: 0;
@@ -214,17 +214,17 @@ h3 {
 }
 
 h1 {
-  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  font-size: 3.5rem;
   max-width: 870px;
 }
 
 .hero h1 {
-  font-size: clamp(2.25rem, 5vw, 3.8rem);
+  font-size: 3.35rem;
   max-width: 720px;
 }
 
 h2 {
-  font-size: clamp(1.55rem, 3.4vw, 2.3rem);
+  font-size: 2.05rem;
 }
 
 h3 {
@@ -237,7 +237,7 @@ p {
 }
 
 .lead {
-  font-size: clamp(1rem, 2.2vw, 1.24rem);
+  font-size: 1.12rem;
   max-width: 720px;
 }
 
@@ -325,7 +325,7 @@ button.button {
 .hero-meta {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 20px;
   max-width: 720px;
 }
@@ -372,54 +372,6 @@ button.button {
   padding: 40px 22px;
 }
 
-.visual-story {
-  align-items: stretch;
-  display: grid;
-  gap: 16px;
-  grid-template-columns: minmax(0, 0.78fr) repeat(2, minmax(0, 1fr));
-  padding-bottom: 34px;
-  padding-top: 38px;
-}
-
-.story-intro {
-  align-self: center;
-  padding-right: 12px;
-}
-
-.story-intro h2 {
-  font-size: clamp(1.65rem, 3vw, 2.5rem);
-}
-
-.story-visual {
-  background: rgba(244, 247, 239, 0.06);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  margin: 0;
-  overflow: hidden;
-}
-
-.story-visual img {
-  aspect-ratio: 4 / 3;
-  display: block;
-  object-fit: cover;
-  width: 100%;
-}
-
-.story-copy {
-  padding: 18px;
-}
-
-.story-copy p {
-  margin-bottom: 16px;
-}
-
-.story-visual > figcaption {
-  color: var(--muted);
-  font-size: 0.76rem;
-  padding: 0 18px 18px;
-  text-transform: uppercase;
-}
-
 .ad-shell {
   background: rgba(244, 247, 239, 0.07);
   border: 1px solid var(--line);
@@ -442,7 +394,7 @@ button.button {
 }
 
 .ad-fallback h2 {
-  font-size: clamp(1.3rem, 2.4vw, 1.85rem);
+  font-size: 1.65rem;
   margin-bottom: 8px;
 }
 
@@ -516,6 +468,11 @@ button.button {
   padding: 20px;
 }
 
+.panel h2 {
+  font-size: 1.45rem;
+  line-height: 1.2;
+}
+
 .compact-section {
   padding-left: 0;
   padding-right: 0;
@@ -563,6 +520,41 @@ button.button {
   border-color: rgba(116, 242, 164, 0.55);
 }
 
+.plain-list {
+  color: var(--muted);
+  display: grid;
+  gap: 10px;
+  line-height: 1.55;
+  margin: 16px 0 20px;
+  padding-left: 20px;
+}
+
+.location-list {
+  display: grid;
+  gap: 0 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.location-list a {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 4px;
+  min-height: 74px;
+  padding: 14px 0;
+}
+
+.location-list a:hover strong {
+  color: var(--green);
+}
+
+.location-list span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
 .article-body {
   max-width: 860px;
 }
@@ -572,7 +564,7 @@ button.button {
 }
 
 .article-body h2 {
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-size: 1.85rem;
 }
 
 .detail-hero {
@@ -660,7 +652,7 @@ button.button {
 
 .comment-head h2 {
   margin: 0;
-  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+  font-size: 1.7rem;
 }
 
 .comment-head span,
@@ -835,22 +827,13 @@ button.button {
     grid-template-columns: 1fr;
   }
 
-  .visual-story {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .story-intro {
-    grid-column: 1 / -1;
-    max-width: 700px;
-    padding-right: 0;
-  }
-
   .city-grid,
   .guide-grid,
   .source-grid,
   .faq-grid,
   .guide-list,
-  .glossary-grid {
+  .glossary-grid,
+  .location-list {
     grid-template-columns: 1fr;
   }
 
@@ -916,7 +899,11 @@ button.button {
   }
 
   .hero h1 {
-    font-size: clamp(2.1rem, 10vw, 2.8rem);
+    font-size: 2.45rem;
+  }
+
+  .city-hero h1 {
+    font-size: 2.4rem;
   }
 
   .hero .lead {
@@ -947,13 +934,8 @@ button.button {
     line-height: 1.45;
   }
 
-  .visual-story {
-    grid-template-columns: 1fr;
-    padding-top: 30px;
-  }
-
-  .story-intro {
-    grid-column: auto;
+  .metric-time {
+    display: none;
   }
 
   .button,
