@@ -395,6 +395,10 @@ document.querySelectorAll("[data-alert-signup]").forEach((panel) => {
       } else {
         setStatus("Saved for launch. Your location and minimum level are on the waitlist.", "ok");
       }
+      panel.dispatchEvent(new CustomEvent("aurora:alert-saved", {
+        bubbles: true,
+        detail: { delivery: payload.delivery || "unavailable" },
+      }));
       if (form.elements.email) form.elements.email.value = "";
       if (form.elements.website) form.elements.website.value = "";
     } catch (error) {

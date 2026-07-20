@@ -20,6 +20,7 @@
       "file": "assets/photos/aurora-ai-hero.webp",
       "width": 1672,
       "height": 941,
+      "alt": "An AI-created aurora sweeping over a still mountain lake at night",
       "label": "AI-generated visual",
       "source": "Original AI visual created for Aurora Forecast Now"
     },
@@ -29,6 +30,7 @@
       "file": "assets/photos/aurora-ai-field.webp",
       "width": 1448,
       "height": 1086,
+      "alt": "An AI-created aurora observer preparing a tripod beside a dark road",
       "label": "AI-generated visual",
       "source": "Original AI visual created for Aurora Forecast Now"
     },
@@ -38,6 +40,47 @@
       "file": "assets/photos/aurora-ai-south.webp",
       "width": 1536,
       "height": 1024,
+      "alt": "An AI-created southern aurora glowing above a rocky ocean coast",
+      "label": "AI-generated visual",
+      "source": "Original AI visual created for Aurora Forecast Now"
+    },
+    {
+      "id": "aurora-ai-cabin",
+      "title": "Remote aurora cabin",
+      "file": "assets/photos/aurora-ai-cabin.webp",
+      "width": 1448,
+      "height": 1086,
+      "alt": "An AI-created remote cabin under a subtle green aurora and a clear northern sky",
+      "label": "AI-generated visual",
+      "source": "Original AI visual created for Aurora Forecast Now"
+    },
+    {
+      "id": "aurora-ai-forest",
+      "title": "Boreal forest viewing clearing",
+      "file": "assets/photos/aurora-ai-forest.webp",
+      "width": 1448,
+      "height": 1086,
+      "alt": "An AI-created boreal forest clearing with a subtle green aurora above the northern horizon",
+      "label": "AI-generated visual",
+      "source": "Original AI visual created for Aurora Forecast Now"
+    },
+    {
+      "id": "aurora-ai-coast",
+      "title": "Open coastal aurora horizon",
+      "file": "assets/photos/aurora-ai-coast.webp",
+      "width": 1448,
+      "height": 1086,
+      "alt": "An AI-created open black-rock coast with aurora visible between broken clouds",
+      "label": "AI-generated visual",
+      "source": "Original AI visual created for Aurora Forecast Now"
+    },
+    {
+      "id": "aurora-ai-city-edge",
+      "title": "Aurora beyond town lights",
+      "file": "assets/photos/aurora-ai-city-edge.webp",
+      "width": 1448,
+      "height": 1086,
+      "alt": "An AI-created dark lakeshore beyond a small northern town with a faint green aurora",
       "label": "AI-generated visual",
       "source": "Original AI visual created for Aurora Forecast Now"
     },
