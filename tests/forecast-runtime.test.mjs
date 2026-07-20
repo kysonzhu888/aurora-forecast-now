@@ -372,7 +372,34 @@ test("alert signup validates email and saves a pending subscription without retu
   assert.equal(env.sent[0].to, "viewer@example.com");
   assert.match(env.sent[0].text, /Confirm storm alerts/);
   assert.match(env.sent[0].text, /Unsubscribe/);
+  assert.match(env.sent[0].html, /Confirm storm alerts/);
+  assert.match(env.sent[0].html, /auroraforecastnow\.com\/api\/alerts\/confirm/);
   assert.equal("raw" in env.sent[0], false);
+});
+
+test("alert signup can use the signed TinyNeed email relay without exposing its secret", async () => {
+  const calls = [];
+  const env = alertEnv(calls, { relay: true });
+  const response = await handleAlertSubscribe(alertRequest({
+    email: "relay-viewer@example.com",
+    citySlug: "fairbanks",
+    threshold: 60,
+  }), env);
+
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    status: "confirmation_pending",
+    delivery: "email",
+  });
+  assert.equal(env.relayRequests.length, 1);
+  const relayRequest = env.relayRequests[0];
+  assert.equal(relayRequest.url, "https://tinyneed.com/api/aurora-email");
+  assert.match(relayRequest.headers["X-Aurora-Timestamp"], /^\d+$/);
+  assert.match(relayRequest.headers["X-Aurora-Signature"], /^v1=[a-f0-9]{64}$/);
+  assert.equal(JSON.stringify(relayRequest).includes(env.ALERT_EMAIL_RELAY_SECRET), false);
+  assert.deepEqual(Object.keys(relayRequest.body).sort(), ["html", "subject", "text", "to"]);
+  assert.equal(relayRequest.body.to, "relay-viewer@example.com");
+  assert.match(relayRequest.body.html, /Confirm storm alerts/);
 });
 
 test("duplicate alert signup stays non-enumerating and email outages fail closed as waitlist", async () => {
@@ -556,5 +583,19 @@ function alertEnv(calls, options = {}) {
       },
     },
   };
+  if (options.relay) {
+    delete env.EMAIL;
+    env.ALERT_EMAIL_RELAY_URL = "https://tinyneed.com/api/aurora-email";
+    env.ALERT_EMAIL_RELAY_SECRET = "test-only-email-relay-secret-with-32-bytes";
+    env.relayRequests = [];
+    env.ALERT_FETCH = async (url, init) => {
+      env.relayRequests.push({
+        url,
+        headers: init.headers,
+        body: JSON.parse(init.body),
+      });
+      return Response.json({ ok: true });
+    };
+  }
   return env;
 }

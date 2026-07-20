@@ -271,6 +271,7 @@ function alertEnv(env) {
   return {
     ...env,
     alertCitySlugs: new Set(cities.map((city) => city.slug)),
+    alertCityNames: new Map(cities.map((city) => [city.slug, city.name])),
   };
 }
 
