@@ -110,7 +110,7 @@ export function renderProPageBody(proConfig) {
 
     <section class="pro-boundary">
       <h2>What this does—and does not do</h2>
-      <p>Aurora scores are guidance, never a guarantee. Pro does not hide public forecasts, and the current storm-alert form remains a free launch waitlist rather than a paid email service.</p>
+      <p>Aurora scores are guidance, never a guarantee. Pro does not hide public forecasts, and email storm alerts remain a free service.</p>
     </section>
   </main>`;
 }
