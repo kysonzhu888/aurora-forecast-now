@@ -24,6 +24,8 @@ const proLicenseState = fs.readFileSync(path.join(root, "assets", "pro-license-s
 const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
 const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
 const alertStyles = fs.readFileSync(path.join(root, "assets", "alert.css"), "utf8");
+const contentStyles = fs.readFileSync(path.join(root, "assets", "content-density.css"), "utf8");
+const alertPromptClient = fs.readFileSync(path.join(root, "assets", "alert-prompt.js"), "utf8");
 const client = fs.readFileSync(path.join(root, "script.js"), "utf8");
 const googleVerification = fs.readFileSync(
   path.join(root, "google1089c0cca1aa4f0a.html"),
@@ -58,6 +60,7 @@ test("privacy policy describes the active privacy-first analytics", () => {
   const privacy = fs.readFileSync(path.join(root, "privacy", "index.html"), "utf8");
   assert.match(privacy, /Cloudflare Web Analytics/);
   assert.match(privacy, /does not use cookies or local storage/i);
+  assert.match(privacy, /prompt state never contains your email address/i);
   assert.doesNotMatch(privacy, /analytics[^.]*may be added/i);
 });
 
@@ -69,7 +72,21 @@ test("generated pages expose a stable SEO shell without internal review language
   assert.doesNotMatch(home, /Updated from the static build/i);
 });
 
-test("home uses disclosed, responsive AI visuals without decorative radial backgrounds", () => {
+test("home and city pages use seven disclosed, responsive AI visuals", () => {
+  const generatedPhotos = media.generatedVisuals
+    .filter((visual) => visual.file?.startsWith("assets/photos/aurora-ai-"));
+
+  assert.equal(generatedPhotos.length, 7);
+  for (const visual of generatedPhotos) {
+    assert.match(visual.id, /^aurora-ai-/);
+    assert.match(visual.alt, /\S/);
+    assert.equal(visual.label, "AI-generated visual");
+    assert.match(visual.source, /Original AI visual/);
+    assert.ok(Number.isInteger(visual.width) && visual.width > 1000);
+    assert.ok(Number.isInteger(visual.height) && visual.height > 900);
+    assert.equal(fs.existsSync(path.join(root, visual.file)), true, visual.file);
+  }
+
   assert.match(
     home,
     /<section class="hero">\s*<figure class="hero-media">\s*<img class="hero-image" src="assets\/photos\/aurora-ai-hero\.webp" width="1672" height="941" alt="[^"]+" decoding="async" fetchpriority="high">[\s\S]*<div class="hero-content">/,
@@ -82,29 +99,83 @@ test("home uses disclosed, responsive AI visuals without decorative radial backg
     home,
     /<img src="assets\/photos\/aurora-ai-south\.webp" width="1536" height="1024" alt="[^"]+" loading="lazy" decoding="async">/,
   );
+  assert.match(
+    home,
+    /<img src="assets\/photos\/aurora-ai-city-edge\.webp" width="1448" height="1086" alt="[^"]+" loading="lazy" decoding="async">/,
+  );
+  assert.match(
+    home,
+    /<img src="assets\/photos\/aurora-ai-coast\.webp" width="1448" height="1086" alt="[^"]+" loading="lazy" decoding="async">/,
+  );
+  assert.match(
+    home,
+    /<img class="alert-prompt-image" src="assets\/photos\/aurora-ai-cabin\.webp" width="1448" height="1086" alt="[^"]+"/,
+  );
+  assert.match(
+    city,
+    /<img class="city-sky-image" src="\.\.\/\.\.\/assets\/photos\/aurora-ai-forest\.webp" width="1448" height="1086" alt="[^"]+"/,
+  );
   assert.equal(
     [...home.matchAll(/<figcaption>AI-generated visual<\/figcaption>/g)].length,
-    3,
-  );
-  assert.deepEqual(
-    media.generatedVisuals
-      .filter((visual) => visual.file?.startsWith("assets/photos/aurora-ai-"))
-      .map((visual) => visual.label),
-    ["AI-generated visual", "AI-generated visual", "AI-generated visual"],
+    6,
   );
   assert.match(styles, /\.hero-image\s*\{[^}]*object-fit:\s*cover;[^}]*width:\s*100%;/s);
   assert.match(
     styles,
     /\.hero\s*\{[^}]*border:\s*0;[^}]*border-radius:\s*0;[^}]*margin:\s*0;[^}]*max-width:\s*none;/s,
   );
-  assert.match(styles, /\.hero h1\s*\{[^}]*font-size:[^}]*max-width:\s*720px;\s*\}/s);
   assert.match(
     home,
     /<figure class="story-visual">[\s\S]*?<div class="story-copy">[\s\S]*?<\/div>\s*<figcaption>AI-generated visual<\/figcaption>\s*<\/figure>/,
   );
-  assert.match(styles, /\.story-visual img\s*\{[^}]*aspect-ratio:[^;]+;[^}]*object-fit:\s*cover;/s);
+  assert.match(
+    contentStyles,
+    /\.story-visual img\s*\{[^}]*aspect-ratio:[^;]+;[^}]*height:\s*auto;[^}]*object-fit:\s*cover;/s,
+  );
   assert.match(styles, /@media \(max-width: 560px\)[\s\S]*\.hero-meta\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/s);
   assert.doesNotMatch(styles, /radial-gradient\(/);
+  assert.doesNotMatch(contentStyles, /radial-gradient\(/);
+});
+
+test("first visits get an accessible alert prompt with privacy-safe suppression", () => {
+  for (const page of [home, city]) {
+    assert.match(page, /<dialog class="alert-prompt" data-alert-prompt/);
+    assert.match(page, /aria-labelledby="alert-prompt-title"/);
+    assert.match(page, /data-alert-prompt-close[^>]*aria-label="Close storm reminder"/);
+    assert.match(page, /<select name="citySlug"[^>]*required/);
+    assert.match(page, /<input name="email" type="email"[^>]*autocomplete="email"[^>]*required/);
+    assert.match(page, /<input name="threshold" type="hidden" value="60">/);
+    assert.match(page, /name="website"[^>]*tabindex="-1"[^>]*aria-hidden="true"/);
+    assert.match(page, /role="status" aria-live="polite"/);
+  }
+
+  assert.match(home, /href="assets\/content-density\.css"/);
+  assert.match(city, /href="\.\.\/\.\.\/assets\/content-density\.css"/);
+  assert.match(home, /<script type="module" src="assets\/alert-prompt\.js"><\/script>/);
+  assert.match(city, /<script type="module" src="\.\.\/\.\.\/assets\/alert-prompt\.js"><\/script>/);
+  assert.match(alertPromptClient, /showModal\(\)/);
+  assert.match(alertPromptClient, /aurora:alert-saved/);
+  assert.match(alertPromptClient, /document\.addEventListener\("aurora:alert-saved"/);
+  assert.match(client, /new CustomEvent\("aurora:alert-saved"/);
+  assert.doesNotMatch(alertPromptClient, /localStorage\.[^(]+\([^)]*email/is);
+});
+
+test("typography and layouts expose denser practical information", () => {
+  assert.match(styles, /h1\s*\{[^}]*font-size:\s*clamp\(2\.2rem,\s*6vw,\s*4\.2rem\)/s);
+  assert.match(styles, /\.hero h1\s*\{[^}]*font-size:\s*clamp\(2\.25rem,\s*5vw,\s*3\.8rem\)/s);
+  assert.match(styles, /h2\s*\{[^}]*font-size:\s*clamp\(1\.55rem,\s*3\.4vw,\s*2\.3rem\)/s);
+  assert.match(styles, /\.section\s*\{[^}]*padding:\s*40px 22px/s);
+  assert.match(styles, /\.city-page\s*\{[^}]*padding:\s*32px 22px 52px/s);
+  assert.match(
+    styles,
+    /@media \(max-width: 560px\)[\s\S]*\.hero h1\s*\{[^}]*font-size:\s*clamp\(2\.1rem,\s*10vw,\s*2\.8rem\)/s,
+  );
+  assert.match(contentStyles, /\.story-grid\s*\{[^}]*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/s);
+  assert.match(contentStyles, /\.city-sky-context\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*0\.9fr\)\s*minmax\(0,\s*1\.1fr\)/s);
+  assert.equal((home.match(/class="story-visual"/g) || []).length, 4);
+  assert.equal((city.match(/class="sky-signal"/g) || []).length, 4);
+  assert.match(city, /Face the northern horizon/);
+  assert.match(city, /10:00 PM to 2:00 AM local time/);
 });
 
 test("generated navigation moves lower-priority links into an accessible mobile menu", () => {

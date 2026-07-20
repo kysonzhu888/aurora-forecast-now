@@ -2,7 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { scoreCity, labelForScore, guidanceFor, directionWords, nearestAurora, normalizeLon } from "../lib/forecast-core.mjs";
+import { renderAlertPrompt } from "./lib/alert-prompt.mjs";
 import { renderAlertSignupPanel } from "./lib/alert-signup-panel.mjs";
+import { renderCitySkyContext } from "./lib/city-sky-context.mjs";
+import { renderPracticalVisualStory } from "./lib/practical-visual-story.mjs";
 import { normalizeProConfig, renderProPageBody, serializeProClientConfig } from "./lib/pro-page.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -296,29 +299,7 @@ function generateHomePage() {
           </div>
         </section>
 
-        <section class="section visual-story" aria-labelledby="visual-story-title">
-          <div class="story-intro">
-            <p class="kicker">From forecast to horizon</p>
-            <h2 id="visual-story-title">Plan the observation, then meet the sky</h2>
-            <p>The live score handles the decision. These two scenes keep the fieldwork in view without turning the forecast into a gallery.</p>
-          </div>
-          <figure class="story-visual">
-            <img src="assets/photos/aurora-ai-field.webp" width="1448" height="1086" alt="An AI-created scene of an aurora observer preparing a tripod beside a dark road" loading="lazy" decoding="async">
-            <div class="story-copy">
-              <h3>Prepare before dark</h3>
-              <p>Scout a safe horizon, dress for a long wait, and keep batteries warm.</p>
-            </div>
-            <figcaption>AI-generated visual</figcaption>
-          </figure>
-          <figure class="story-visual">
-            <img src="assets/photos/aurora-ai-south.webp" width="1536" height="1024" alt="An AI-created southern aurora glowing above a rocky ocean coast" loading="lazy" decoding="async">
-            <div class="story-copy">
-              <h3>Look south below the equator</h3>
-              <p>Open coastal horizons can reveal aurora australis color low over the sea.</p>
-            </div>
-            <figcaption>AI-generated visual</figcaption>
-          </figure>
-        </section>
+${renderPracticalVisualStory()}
 
         ${adUnit({
           slotKey: "topBanner",
@@ -510,6 +491,11 @@ function generateCityPages() {
             </article>
 ${alertSignupPanel(city)}
           </section>
+${renderCitySkyContext({
+  city,
+  direction: directionWords(city),
+  assetPrefix: "../../",
+})}
 ${cityLocalKnowledge(city)}
           ${adUnit({
             slotKey: "inArticle",
@@ -956,7 +942,7 @@ function generateUtilityPages() {
     {
       slug: "privacy",
       title: "Privacy Policy",
-      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you request a storm alert, we store your email address, selected city, score threshold, subscription status, and relevant timestamps. Confirmation and unsubscribe tokens are stored only as one-way hashes. These details are used only for the aurora alerts you requested and are never sold or shared. Every alert email includes a one-click unsubscribe link; while email delivery is unavailable, requests remain waitlisted.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
+      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you request a storm alert, we store your email address, selected city, score threshold, subscription status, and relevant timestamps. Confirmation and unsubscribe tokens are stored only as one-way hashes. These details are used only for the aurora alerts you requested and are never sold or shared. Every alert email includes a one-click unsubscribe link; while email delivery is unavailable, requests remain waitlisted.</p><p>Your browser stores only whether you saved or dismissed the first-visit storm reminder and, for a dismissal, when its 14-day pause ends. That prompt state never contains your email address.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
     },
   ];
 
@@ -1053,6 +1039,7 @@ function layout({ title, description, path: pagePath, body, schema = [], robots 
   <link rel="canonical" href="${canonical}">
   <link rel="stylesheet" href="${relativeAsset(pagePath)}styles.css">
   <link rel="stylesheet" href="${relativeAsset(pagePath)}assets/alert.css">
+  <link rel="stylesheet" href="${relativeAsset(pagePath)}assets/content-density.css">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:type" content="website">
@@ -1090,6 +1077,7 @@ ${headExtras}
     </nav>
   </header>
 ${pageBody}
+  ${renderAlertPrompt({ cities: forecast.cities, assetPrefix: relativeAsset(pagePath) })}
   <footer class="footer">
     <div class="footer-inner">
       <span data-live-footer-updated>Forecast guidance, not a guarantee. Live conditions load from the forecast API.</span>
@@ -1097,6 +1085,7 @@ ${pageBody}
     </div>
   </footer>
   <script src="${relativeAsset(pagePath)}script.js"></script>
+  <script type="module" src="${relativeAsset(pagePath)}assets/alert-prompt.js"></script>
   ${bodyScripts.join("\n  ")}
 </body>
 </html>
