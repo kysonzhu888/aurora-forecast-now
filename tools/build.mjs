@@ -272,26 +272,51 @@ function generateHomePage() {
     body: `
       <main>
         <section class="hero">
-          <div class="hero-grid">
-            <div>
-              <p class="kicker">Northern lights forecast tonight</p>
-              <h1>Can you see the aurora tonight?</h1>
-              <p class="lead">Aurora Forecast Now turns NOAA space weather data and cloud cover into a city-level viewing chance for the northern lights.</p>
-              <form class="search-box" action="#cities" data-live-search-form>
-                <input data-city-search type="search" placeholder="Search a city or state" aria-label="Search a city or state">
-                <button class="button" type="submit">Find forecast</button>
-              </form>
-              <div class="live-result" data-live-result hidden></div>
-              <div class="hero-meta" aria-label="Current forecast summary">
-                <div class="metric"><span>Max Kp next 36h</span><strong data-live-max-kp>Checking</strong></div>
-                <div class="metric"><span>NOAA forecast time</span><strong data-live-forecast-time>Checking</strong></div>
-                <div class="metric"><span>Best city now</span><strong data-live-best-city>Checking</strong></div>
-                <div class="metric"><span>Live cache</span><strong data-live-status>Connecting</strong></div>
-              </div>
-              <p class="live-note" data-live-note>Live conditions load from the forecast API when you open this page.</p>
+          <figure class="hero-media">
+            <img class="hero-image" src="assets/photos/aurora-ai-hero.webp" width="1672" height="941" alt="An AI-created aurora sweeping over a still mountain lake at night" decoding="async" fetchpriority="high">
+            <figcaption>AI-generated visual</figcaption>
+          </figure>
+          <div class="hero-content">
+            <p class="kicker">Northern lights forecast tonight</p>
+            <h1>Can you see the aurora tonight?</h1>
+            <p class="lead">Aurora Forecast Now turns NOAA space weather data and cloud cover into a city-level viewing chance for the northern lights.</p>
+            <form class="search-box" action="#cities" data-live-search-form>
+              <input data-city-search type="search" placeholder="Search a city or state" aria-label="Search a city or state">
+              <button class="button" type="submit">Find forecast</button>
+            </form>
+            <div class="live-result" data-live-result hidden></div>
+            <div class="hero-meta" aria-label="Current forecast summary">
+              <div class="metric"><span>Max Kp next 36h</span><strong data-live-max-kp>Checking</strong></div>
+              <div class="metric"><span>NOAA forecast time</span><strong data-live-forecast-time>Checking</strong></div>
+              <div class="metric"><span>Best city now</span><strong data-live-best-city>Checking</strong></div>
+              <div class="metric"><span>Live cache</span><strong data-live-status>Connecting</strong></div>
             </div>
-            ${auroraVisual(topCities.slice(0, 4))}
+            <p class="live-note" data-live-note>Live conditions load from the forecast API when you open this page.</p>
           </div>
+        </section>
+
+        <section class="section visual-story" aria-labelledby="visual-story-title">
+          <div class="story-intro">
+            <p class="kicker">From forecast to horizon</p>
+            <h2 id="visual-story-title">Plan the observation, then meet the sky</h2>
+            <p>The live score handles the decision. These two scenes keep the fieldwork in view without turning the forecast into a gallery.</p>
+          </div>
+          <figure class="story-visual">
+            <img src="assets/photos/aurora-ai-field.webp" width="1448" height="1086" alt="An AI-created scene of an aurora observer preparing a tripod beside a dark road" loading="lazy" decoding="async">
+            <div class="story-copy">
+              <h3>Prepare before dark</h3>
+              <p>Scout a safe horizon, dress for a long wait, and keep batteries warm.</p>
+            </div>
+            <figcaption>AI-generated visual</figcaption>
+          </figure>
+          <figure class="story-visual">
+            <img src="assets/photos/aurora-ai-south.webp" width="1536" height="1024" alt="An AI-created southern aurora glowing above a rocky ocean coast" loading="lazy" decoding="async">
+            <div class="story-copy">
+              <h3>Look south below the equator</h3>
+              <p>Open coastal horizons can reveal aurora australis color low over the sea.</p>
+            </div>
+            <figcaption>AI-generated visual</figcaption>
+          </figure>
         </section>
 
         ${adUnit({
@@ -1092,13 +1117,6 @@ ${pageBody}
 </body>
 </html>
 `;
-}
-
-function auroraVisual() {
-  return `<div class="aurora-visual" role="img" aria-label="Illustrated aurora forecast backdrop">
-    <div class="aurora-band" aria-hidden="true"></div>
-    <div class="visual-label">Live NOAA and cloud-aware city scores load below.</div>
-  </div>`;
 }
 
 function cityCard(city, prefix) {

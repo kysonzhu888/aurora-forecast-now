@@ -15,6 +15,33 @@
   ],
   "generatedVisuals": [
     {
+      "id": "aurora-ai-hero",
+      "title": "Aurora over a mountain lake",
+      "file": "assets/photos/aurora-ai-hero.webp",
+      "width": 1672,
+      "height": 941,
+      "label": "AI-generated visual",
+      "source": "Original AI visual created for Aurora Forecast Now"
+    },
+    {
+      "id": "aurora-ai-field",
+      "title": "Aurora observation preparation",
+      "file": "assets/photos/aurora-ai-field.webp",
+      "width": 1448,
+      "height": 1086,
+      "label": "AI-generated visual",
+      "source": "Original AI visual created for Aurora Forecast Now"
+    },
+    {
+      "id": "aurora-ai-south",
+      "title": "Southern aurora over a rocky coast",
+      "file": "assets/photos/aurora-ai-south.webp",
+      "width": 1536,
+      "height": 1024,
+      "label": "AI-generated visual",
+      "source": "Original AI visual created for Aurora Forecast Now"
+    },
+    {
       "id": "aurora-oval-map",
       "title": "Aurora oval forecast map",
       "source": "Generated from NOAA SWPC OVATION aurora forecast grid",

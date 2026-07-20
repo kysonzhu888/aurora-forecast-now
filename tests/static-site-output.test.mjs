@@ -14,6 +14,7 @@ execFileSync(process.execPath, ["tools/build.mjs"], {
 });
 
 const config = JSON.parse(fs.readFileSync(path.join(root, "site.config.json"), "utf8"));
+const media = JSON.parse(fs.readFileSync(path.join(root, "data", "media.json"), "utf8"));
 const home = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const city = fs.readFileSync(path.join(root, "cities", "fairbanks", "index.html"), "utf8");
 const sitemap = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
@@ -64,6 +65,44 @@ test("generated pages expose a stable SEO shell without internal review language
   assert.match(home, /data-live-forecast-time/);
   assert.match(home, /data-live-best-city/);
   assert.doesNotMatch(home, /Updated from the static build/i);
+});
+
+test("home uses disclosed, responsive AI visuals without decorative radial backgrounds", () => {
+  assert.match(
+    home,
+    /<section class="hero">\s*<figure class="hero-media">\s*<img class="hero-image" src="assets\/photos\/aurora-ai-hero\.webp" width="1672" height="941" alt="[^"]+" decoding="async" fetchpriority="high">[\s\S]*<div class="hero-content">/,
+  );
+  assert.match(
+    home,
+    /<img src="assets\/photos\/aurora-ai-field\.webp" width="1448" height="1086" alt="[^"]+" loading="lazy" decoding="async">/,
+  );
+  assert.match(
+    home,
+    /<img src="assets\/photos\/aurora-ai-south\.webp" width="1536" height="1024" alt="[^"]+" loading="lazy" decoding="async">/,
+  );
+  assert.equal(
+    [...home.matchAll(/<figcaption>AI-generated visual<\/figcaption>/g)].length,
+    3,
+  );
+  assert.deepEqual(
+    media.generatedVisuals
+      .filter((visual) => visual.file?.startsWith("assets/photos/aurora-ai-"))
+      .map((visual) => visual.label),
+    ["AI-generated visual", "AI-generated visual", "AI-generated visual"],
+  );
+  assert.match(styles, /\.hero-image\s*\{[^}]*object-fit:\s*cover;[^}]*width:\s*100%;/s);
+  assert.match(
+    styles,
+    /\.hero\s*\{[^}]*border:\s*0;[^}]*border-radius:\s*0;[^}]*margin:\s*0;[^}]*max-width:\s*none;/s,
+  );
+  assert.match(styles, /\.hero h1\s*\{[^}]*font-size:[^}]*max-width:\s*720px;\s*\}/s);
+  assert.match(
+    home,
+    /<figure class="story-visual">[\s\S]*?<div class="story-copy">[\s\S]*?<\/div>\s*<figcaption>AI-generated visual<\/figcaption>\s*<\/figure>/,
+  );
+  assert.match(styles, /\.story-visual img\s*\{[^}]*aspect-ratio:[^;]+;[^}]*object-fit:\s*cover;/s);
+  assert.match(styles, /@media \(max-width: 560px\)[\s\S]*\.hero-meta\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/s);
+  assert.doesNotMatch(styles, /radial-gradient\(/);
 });
 
 test("generated navigation moves lower-priority links into an accessible mobile menu", () => {
