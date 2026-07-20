@@ -17,6 +17,14 @@ import {
   runScheduledRefresh,
   scheduledRefreshDecision,
 } from "../lib/forecast-schedule.mjs";
+import {
+  handleAlertSubscribe,
+  handleAlertToken,
+  runAlertCron,
+  runAlertCronIfConfigured,
+  createAlertToken,
+  hashAlertToken,
+} from "../lib/alerts.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const cities = JSON.parse(fs.readFileSync(path.join(root, "data/cities.json"), "utf8"));
@@ -329,3 +337,224 @@ test("GitHub fallback repairs and validates the public health endpoint every fif
   assert.match(workflow, /\.ok == true and \.dataFresh == true/);
   assert.match(workflow, /Cloudflare cron is degraded/);
 });
+
+test("alert signup validates email and saves a pending subscription without returning secrets", async () => {
+  const calls = [];
+  const env = alertEnv(calls);
+  const invalid = await handleAlertSubscribe(alertRequest({ email: "not-an-email" }), env);
+  assert.equal(invalid.status, 400);
+  const unknownCity = await handleAlertSubscribe(alertRequest({
+    email: "viewer@example.com",
+    citySlug: "made-up-city",
+  }), env);
+  assert.equal(unknownCity.status, 400);
+  assert.equal(calls.length, 0);
+
+  const response = await handleAlertSubscribe(alertRequest({
+    email: " Viewer@Example.com ",
+    citySlug: "fairbanks",
+    threshold: 70,
+  }), env);
+  assert.equal(response.status, 201);
+  assert.deepEqual(await response.json(), { ok: true, status: "confirmation_pending", delivery: "email" });
+  const stored = calls.find((call) => /INSERT OR IGNORE INTO alert_subscriptions/.test(call.query)).values;
+  const tokenUpdate = calls.find((call) => /UPDATE alert_subscriptions SET/.test(call.query)).values;
+  assert.equal(stored.includes("viewer@example.com"), true);
+  assert.equal(stored.includes("fairbanks"), true);
+  assert.equal(stored.includes(70), true);
+  assert.equal(tokenUpdate.some((value) => /^[a-f0-9]{64}$/.test(String(value))), true);
+  assert.equal(tokenUpdate.some((value) => String(value).includes("confirm.")), false);
+  assert.equal(env.sent.length, 1);
+  assert.deepEqual(env.sent[0].from, {
+    email: "alerts@auroraforecastnow.com",
+    name: "Aurora Forecast Now",
+  });
+  assert.equal(env.sent[0].to, "viewer@example.com");
+  assert.match(env.sent[0].text, /Confirm storm alerts/);
+  assert.match(env.sent[0].text, /Unsubscribe/);
+  assert.equal("raw" in env.sent[0], false);
+});
+
+test("duplicate alert signup stays non-enumerating and email outages fail closed as waitlist", async () => {
+  const calls = [];
+  const env = alertEnv(calls);
+  const first = await handleAlertSubscribe(alertRequest({ email: "same@example.com", citySlug: "tromso" }), env);
+  const duplicate = await handleAlertSubscribe(alertRequest({ email: "same@example.com", citySlug: "tromso" }), env);
+  assert.deepEqual(await duplicate.json(), await first.json());
+
+  const offline = await handleAlertSubscribe(alertRequest({ email: "saved@example.com", citySlug: "tromso" }), {
+    COMMENTS_DB: env.COMMENTS_DB,
+  });
+  assert.equal(offline.status, 201);
+  assert.deepEqual(await offline.json(), { ok: true, status: "waitlist", delivery: "unavailable" });
+});
+
+test("an active duplicate updates settings without sending another confirmation request", async () => {
+  const calls = [];
+  const existingId = "active-subscription";
+  const tokenSecret = "test-only-alert-token-secret";
+  const unsubscribeToken = await createAlertToken("unsubscribe", existingId, tokenSecret);
+  const env = alertEnv(calls, {
+    existingId,
+    existingStatus: "active",
+    existingUnsubscribeHash: await hashAlertToken(unsubscribeToken),
+  });
+
+  const response = await handleAlertSubscribe(alertRequest({
+    email: "active@example.com",
+    citySlug: "fairbanks",
+    threshold: 80,
+  }), env);
+
+  assert.deepEqual(await response.json(), {
+    ok: true,
+    status: "confirmation_pending",
+    delivery: "email",
+  });
+  assert.equal(env.sent.length, 1);
+  assert.match(env.sent[0].subject, /settings updated/i);
+  assert.match(env.sent[0].text, /Score 80/);
+  assert.match(env.sent[0].text, /unsubscribe\?token=/);
+  assert.doesNotMatch(env.sent[0].text, /confirm\?token=/);
+});
+
+test("confirmation and one-click unsubscribe accept only hashed-token matches", async () => {
+  const calls = [];
+  const env = alertEnv(calls, { tokenChanges: 1 });
+  const confirmed = await handleAlertToken(
+    new Request("https://auroraforecastnow.com/api/alerts/confirm?token=confirm-secret"),
+    env,
+    "confirm",
+  );
+  assert.equal(confirmed.status, 200);
+  assert.match(await confirmed.text(), /Alerts confirmed/);
+  assert.equal(calls.at(-1).values.includes("confirm-secret"), false);
+  assert.equal(calls.at(-1).values.some((value) => /^[a-f0-9]{64}$/.test(String(value))), true);
+
+  const unsubscribed = await handleAlertToken(
+    new Request("https://auroraforecastnow.com/api/alerts/unsubscribe?token=unsubscribe-secret"),
+    env,
+    "unsubscribe",
+  );
+  assert.equal(unsubscribed.status, 200);
+  assert.match(await unsubscribed.text(), /Unsubscribed/);
+
+  const invalid = await handleAlertToken(
+    new Request("https://auroraforecastnow.com/api/alerts/confirm?token=wrong"),
+    alertEnv([], { tokenChanges: 0 }),
+    "confirm",
+  );
+  assert.equal(invalid.status, 400);
+  assert.doesNotMatch(await invalid.text(), /wrong/);
+});
+
+test("alert cron sends threshold matches once and includes forecast details and private action links", async () => {
+  const calls = [];
+  const tokenSecret = "test-only-alert-token-secret";
+  const unsubscribeToken = await createAlertToken("unsubscribe", "sub-1", tokenSecret);
+  const env = alertEnv(calls, {
+    candidates: [{
+      id: "sub-1",
+      email: "viewer@example.com",
+      city_slug: "fairbanks",
+      threshold: 60,
+      unsubscribe_token_hash: await hashAlertToken(unsubscribeToken),
+    }],
+    deliveryChanges: [1, 0],
+  });
+  const forecast = {
+    generatedAt: "2026-07-21T01:02:03.000Z",
+    maxKp: 6,
+    cities: [{ slug: "fairbanks", name: "Fairbanks", score: 82 }],
+  };
+
+  const first = await runAlertCron(env, forecast);
+  const second = await runAlertCron(env, forecast);
+  assert.deepEqual(first, { configured: true, matched: 1, sent: 1 });
+  assert.deepEqual(second, { configured: true, matched: 1, sent: 0 });
+  assert.equal(env.sent.length, 1);
+  assert.match(env.sent[0].text, /Fairbanks/);
+  assert.match(env.sent[0].text, /Score 82/);
+  assert.match(env.sent[0].text, /Kp 6/);
+  assert.match(env.sent[0].text, /cities\/fairbanks/);
+  assert.match(env.sent[0].text, /unsubscribe\?token=/);
+  assert.equal(JSON.stringify(first).includes("viewer@example.com"), false);
+});
+
+test("alert cron does not load the forecast when email delivery is unavailable", async () => {
+  let forecastLoads = 0;
+  const result = await runAlertCronIfConfigured({}, async () => {
+    forecastLoads += 1;
+    return { generatedAt: "2026-07-21T01:02:03.000Z", cities: [] };
+  });
+
+  assert.deepEqual(result, { configured: false, matched: 0, sent: 0 });
+  assert.equal(forecastLoads, 0);
+});
+
+test("alert D1 migration is rerunnable and preserves legacy waitlist rows", () => {
+  const schema = fs.readFileSync(path.join(root, "schema.sql"), "utf8");
+  assert.match(schema, /CREATE TABLE IF NOT EXISTS alert_subscriptions/);
+  assert.match(schema, /INSERT OR IGNORE INTO alert_subscriptions[\s\S]*FROM alert_signups/);
+  assert.match(schema, /CREATE TABLE IF NOT EXISTS alert_deliveries/);
+  assert.doesNotMatch(schema, /ALTER TABLE alert_signups/);
+});
+
+function alertRequest(payload) {
+  return new Request("https://auroraforecastnow.com/api/alerts/subscribe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
+function alertEnv(calls, options = {}) {
+  let deliveryIndex = 0;
+  const env = {
+    ALERT_FROM_EMAIL: "alerts@auroraforecastnow.com",
+    ALERT_TOKEN_SECRET: "test-only-alert-token-secret",
+    alertCitySlugs: new Set(["fairbanks", "tromso"]),
+    sent: [],
+    EMAIL: {
+      async send(message) {
+        env.sent.push(message);
+      },
+    },
+    COMMENTS_DB: {
+      prepare(query) {
+        const call = { query };
+        calls.push(call);
+        return {
+          bind(...values) {
+            call.values = values;
+            return {
+              async run() {
+                if (/INSERT OR IGNORE INTO alert_deliveries/.test(query)) {
+                  return { meta: { changes: options.deliveryChanges?.[deliveryIndex++] ?? 1 } };
+                }
+                if (/confirmation_token_hash|unsubscribe_token_hash/.test(query) && /UPDATE/.test(query)) {
+                  return { meta: { changes: options.tokenChanges ?? 1 } };
+                }
+                return { meta: { changes: 1 } };
+              },
+              async all() {
+                return { results: options.candidates || [] };
+              },
+              async first() {
+                return {
+                  id: options.existingId || calls.find((item) => /INSERT OR IGNORE INTO alert_subscriptions/.test(item.query))?.values?.[0],
+                  status: options.existingStatus || "waitlist",
+                  unsubscribe_token_hash: options.existingUnsubscribeHash || null,
+                };
+              },
+            };
+          },
+          async all() {
+            return { results: options.candidates || [] };
+          },
+        };
+      },
+    },
+  };
+  return env;
+}
