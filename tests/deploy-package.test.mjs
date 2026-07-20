@@ -14,6 +14,7 @@ fs.copyFileSync(path.join(root, "deploy.sh"), path.join(fixtureRoot, "deploy.sh"
 for (const relativePath of [
   ".github/workflows/hidden.yml",
   ".wrangler/cache/account.json",
+  "assets/alert.css",
   "assets/pro-access.js",
   "assets/pro-license-state.mjs",
   "data/forecast.json",
@@ -53,6 +54,7 @@ test("Aurora Pages package keeps the generated site and Pro browser modules", ()
   for (const relativePath of [
     "index.html",
     "pro/index.html",
+    "assets/alert.css",
     "assets/pro-access.js",
     "assets/pro-license-state.mjs",
     "data/forecast.json",

@@ -353,7 +353,7 @@ async function readJsonResponse(response) {
   return response.json();
 }
 
-// Storm alert waitlist：与评论表单同风格，POST /api/alerts/subscribe
+// Storm alert signup：API delivery capability 决定 live confirmation 或 launch-save 文案。
 document.querySelectorAll("[data-alert-signup]").forEach((panel) => {
   const form = panel.querySelector("[data-alert-form]");
   const status = panel.querySelector("[data-alert-status]");
@@ -375,7 +375,7 @@ document.querySelectorAll("[data-alert-signup]").forEach((panel) => {
       ? form.elements.citySlug.value
       : (panel.dataset.alertCity || "");
     if (submit) submit.disabled = true;
-    setStatus("Joining...");
+    setStatus("Saving your alert...");
     try {
       const response = await fetch("/api/alerts/subscribe", {
         method: "POST",
@@ -389,16 +389,23 @@ document.querySelectorAll("[data-alert-signup]").forEach((panel) => {
         }),
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.error || "Could not join the waitlist.");
-      setStatus(
-        payload.delivery === "email"
-          ? "Check your inbox to confirm storm alerts."
-          : "Saved to the waitlist. Email delivery is not live yet.",
-        "ok",
-      );
-      form.reset();
+      if (!response.ok) throw new Error(payload.error || "Could not save your alert.");
+      if (payload.delivery === "email") {
+        setStatus("Live email sent. Check your inbox to confirm or review this alert.", "ok");
+      } else {
+        setStatus("Saved for launch. Your location and minimum level are on the waitlist.", "ok");
+      }
+      if (form.elements.email) form.elements.email.value = "";
+      if (form.elements.website) form.elements.website.value = "";
     } catch (error) {
-      setStatus(error.message || "Something went wrong. Please try again.", "error");
+      const message = String(error?.message || "");
+      setStatus(
+        !message || /failed to fetch|networkerror/i.test(message)
+          ? "Could not save your alert. Check your connection and try again."
+          : message,
+        "error",
+      );
+    } finally {
       if (submit) submit.disabled = false;
     }
   });

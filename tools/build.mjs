@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { scoreCity, labelForScore, guidanceFor, directionWords, nearestAurora, normalizeLon } from "../lib/forecast-core.mjs";
+import { renderAlertSignupPanel } from "./lib/alert-signup-panel.mjs";
 import { normalizeProConfig, renderProPageBody, serializeProClientConfig } from "./lib/pro-page.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -689,45 +690,7 @@ ${spotCards}
 }
 
 function alertSignupPanel(city) {
-  const citySlug = city ? city.slug : "";
-  const target = city ? city.name : "your selected city";
-  const cityField = city ? "" : `
-                  <label>
-                    <span>City</span>
-                    <select name="citySlug" required>
-                      ${[...forecast.cities]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((option) => `<option value="${escapeHtml(option.slug)}">${escapeHtml(option.name)}, ${escapeHtml(option.region)}</option>`)
-                        .join("")}
-                    </select>
-                  </label>`;
-  return `
-            <article class="panel" data-alert-signup data-alert-city="${escapeHtml(citySlug)}">
-              <p class="kicker">Storm alerts</p>
-              <h3>Get an email when a storm hits ${escapeHtml(target)}</h3>
-              <p>Email delivery is not live yet. Your request stays on the waitlist unless a confirmation email is successfully sent.</p>
-              <form class="comment-form" data-alert-form>
-                <div class="comment-fields">
-                  <label>
-                    <span>Email</span>
-                    <input name="email" type="email" maxlength="254" placeholder="you@example.com" autocomplete="email" required>
-                  </label>
-${cityField}
-                  <label>
-                    <span>Alert me at score</span>
-                    <select name="threshold">
-                      <option value="50">50</option>
-                      <option value="60" selected>60</option>
-                      <option value="70">70</option>
-                      <option value="80">80</option>
-                    </select>
-                  </label>
-                  <input name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
-                </div>
-                <button type="submit" class="text-link">Save alert request</button>
-              </form>
-              <p data-alert-status role="status"></p>
-            </article>`;
+  return renderAlertSignupPanel({ city, cities: forecast.cities });
 }
 
 function generateAuroraAustralisHub() {
@@ -1089,6 +1052,7 @@ function layout({ title, description, path: pagePath, body, schema = [], robots 
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${canonical}">
   <link rel="stylesheet" href="${relativeAsset(pagePath)}styles.css">
+  <link rel="stylesheet" href="${relativeAsset(pagePath)}assets/alert.css">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:type" content="website">

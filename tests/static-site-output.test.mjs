@@ -23,6 +23,8 @@ const proClient = fs.readFileSync(path.join(root, "assets", "pro-access.js"), "u
 const proLicenseState = fs.readFileSync(path.join(root, "assets", "pro-license-state.mjs"), "utf8");
 const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
 const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
+const alertStyles = fs.readFileSync(path.join(root, "assets", "alert.css"), "utf8");
+const client = fs.readFileSync(path.join(root, "script.js"), "utf8");
 const googleVerification = fs.readFileSync(
   path.join(root, "google1089c0cca1aa4f0a.html"),
   "utf8",
@@ -154,9 +156,36 @@ test("Aurora Pro preview is fail-closed without leaking the GGB product", () => 
   assert.match(proCss, /\.pro-page \[hidden\]\s*\{[^}]*display:\s*none\s*!important/);
 });
 
-test("storm alert form exposes threshold choice and defaults to an honest waitlist state", () => {
-  assert.match(city, /name="threshold"/);
-  assert.match(city, /Alert me at score/);
-  assert.match(city, /Email delivery is not live yet/);
-  assert.doesNotMatch(city, /We'll email you when storm alerts launch/);
+test("home and city alerts share an accessible three-step flow with honest capability states", () => {
+  for (const page of [home, city]) {
+    assert.match(
+      page,
+      /Choose a location[\s\S]*Choose your minimum level[\s\S]*Add your email/,
+    );
+    assert.equal((page.match(/type="radio" name="threshold"/g) || []).length, 4);
+    assert.match(page, /type="radio" name="threshold" value="60" checked/);
+    assert.doesNotMatch(page, /<select name="threshold"/);
+    assert.match(page, /How alerts work/);
+    assert.match(page, /Choose a location[\s\S]*Wait for a storm[\s\S]*Check cloud cover/);
+    assert.match(page, /name="website"[^>]*tabindex="-1"[^>]*aria-hidden="true"/);
+  }
+
+  assert.match(home, /<option value="" selected disabled>Select a city<\/option>/);
+  assert.match(city, /<option value="fairbanks" selected>Fairbanks, Alaska<\/option>/);
+  const cityAlertForm = city.match(/<form class="comment-form alert-form"[\s\S]*?<\/form>/)?.[0] || "";
+  assert.equal((cityAlertForm.match(/<option /g) || []).length, 2);
+  assert.match(home, /href="assets\/alert\.css"/);
+  assert.match(city, /href="\.\.\/\.\.\/assets\/alert\.css"/);
+  assert.match(client, /Saving your alert/);
+  assert.match(client, /Live email sent/);
+  assert.match(client, /Saved for launch/);
+  assert.match(client, /Check your connection and try again/);
+  assert.doesNotMatch(client, /settings_updated/);
+  assert.doesNotMatch(styles, /\.alert-signup/);
+  assert.match(alertStyles, /\.alert-signup\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/s);
+  assert.match(alertStyles, /\.alert-threshold-option span\s*\{[^}]*overflow-wrap:\s*anywhere/s);
+  assert.match(
+    alertStyles,
+    /@media \(max-width: 560px\)[\s\S]*\.alert-threshold-options\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s,
+  );
 });
