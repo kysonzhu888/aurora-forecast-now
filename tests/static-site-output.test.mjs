@@ -25,6 +25,7 @@ const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
 const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
 const alertStyles = fs.readFileSync(path.join(root, "assets", "alert.css"), "utf8");
 const contentStyles = fs.readFileSync(path.join(root, "assets", "content-density.css"), "utf8");
+const pageHeaders = fs.readFileSync(path.join(root, "_headers"), "utf8");
 const alertPromptClient = fs.readFileSync(path.join(root, "assets", "alert-prompt.js"), "utf8");
 const client = fs.readFileSync(path.join(root, "script.js"), "utf8");
 const googleVerification = fs.readFileSync(
@@ -70,6 +71,26 @@ test("generated pages expose a stable SEO shell without internal review language
   assert.match(home, /data-live-forecast-time/);
   assert.match(home, /data-live-best-city/);
   assert.doesNotMatch(home, /Updated from the static build/i);
+});
+
+test("versioned CSS and JavaScript cannot mix a new page with stale edge assets", () => {
+  assert.match(config.assetVersion || "", /^[a-z0-9][a-z0-9._-]{0,31}$/i);
+
+  for (const assetPath of [
+    "styles.css",
+    "assets/alert.css",
+    "assets/content-density.css",
+    "script.js",
+    "assets/alert-prompt.js",
+  ]) {
+    assert.match(home, new RegExp(`${assetPath.replaceAll(".", "\\.")}\\?v=${config.assetVersion}`));
+  }
+
+  assert.match(city, new RegExp(`\\.\\./\\.\\./styles\\.css\\?v=${config.assetVersion}`));
+  assert.match(pro, new RegExp(`\\.\\./assets/pro\\.css\\?v=${config.assetVersion}`));
+  assert.match(pro, new RegExp(`\\.\\./assets/pro-access\\.js\\?v=${config.assetVersion}`));
+  assert.doesNotMatch(pageHeaders, /^\/assets\/\*$/m);
+  assert.match(pageHeaders, /^\/assets\/photos\/\*$/m);
 });
 
 test("home and city pages use seven disclosed, responsive AI visuals", () => {
@@ -150,10 +171,10 @@ test("first visits get an accessible alert prompt with privacy-safe suppression"
     assert.match(page, /role="status" aria-live="polite"/);
   }
 
-  assert.match(home, /href="assets\/content-density\.css"/);
-  assert.match(city, /href="\.\.\/\.\.\/assets\/content-density\.css"/);
-  assert.match(home, /<script type="module" src="assets\/alert-prompt\.js"><\/script>/);
-  assert.match(city, /<script type="module" src="\.\.\/\.\.\/assets\/alert-prompt\.js"><\/script>/);
+  assert.match(home, new RegExp(`href="assets/content-density\\.css\\?v=${config.assetVersion}"`));
+  assert.match(city, new RegExp(`href="\\.\\./\\.\\./assets/content-density\\.css\\?v=${config.assetVersion}"`));
+  assert.match(home, new RegExp(`<script type="module" src="assets/alert-prompt\\.js\\?v=${config.assetVersion}"></script>`));
+  assert.match(city, new RegExp(`<script type="module" src="\\.\\./\\.\\./assets/alert-prompt\\.js\\?v=${config.assetVersion}"></script>`));
   assert.match(alertPromptClient, /showModal\(\)/);
   assert.match(alertPromptClient, /aurora:alert-saved/);
   assert.match(alertPromptClient, /document\.addEventListener\("aurora:alert-saved"/);
@@ -236,7 +257,7 @@ test("Aurora Pro preview is fail-closed without leaking the GGB product", () => 
   assert.doesNotMatch(city, /data-pro-locked|paywall-locked/);
   assert.match(proClient, /\/api\/pro\/license/);
   assert.match(proClient, /\/api\/pro\/funnel/);
-  assert.match(pro, /<script type="module" src="\.\.\/assets\/pro-access\.js"><\/script>/);
+  assert.match(pro, new RegExp(`<script type="module" src="\\.\\./assets/pro-access\\.js\\?v=${config.assetVersion}"></script>`));
   assert.match(proClient, /from "\.\/pro-license-state\.mjs"/);
   assert.match(proLicenseState, /parseLicenseReturnUrl/);
   assert.match(proCss, /\.pro-page \[hidden\]\s*\{[^}]*display:\s*none\s*!important/);
@@ -252,8 +273,8 @@ test("home and city alerts use one compact popup with honest capability states",
 
   assert.match(home, /<option value="" selected disabled>Select a city<\/option>/);
   assert.match(city, /<option value="fairbanks" selected>Fairbanks, Alaska<\/option>/);
-  assert.match(home, /href="assets\/alert\.css"/);
-  assert.match(city, /href="\.\.\/\.\.\/assets\/alert\.css"/);
+  assert.match(home, new RegExp(`href="assets/alert\\.css\\?v=${config.assetVersion}"`));
+  assert.match(city, new RegExp(`href="\\.\\./\\.\\./assets/alert\\.css\\?v=${config.assetVersion}"`));
   assert.match(client, /Saving your alert/);
   assert.match(client, /Confirmation email sent/);
   assert.match(client, /temporarily unavailable/);

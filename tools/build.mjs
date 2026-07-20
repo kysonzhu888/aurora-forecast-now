@@ -26,6 +26,7 @@ const site = {
   url: normalizeUrl(config.siteUrl),
   description: config.description,
   contentLastmod: normalizeContentLastmod(config.contentLastmod),
+  assetVersion: normalizeAssetVersion(config.assetVersion),
   contactEmail: config.contactEmail,
   cloudflareWebAnalyticsToken: normalizeCloudflareWebAnalyticsToken(config.cloudflareWebAnalyticsToken),
   googleAnalyticsId: (config.googleAnalyticsId || "").trim(),
@@ -826,7 +827,7 @@ function generateProPage() {
     body: renderProPageBody(site.pro),
     bodyScripts: [
       `<script>window.AURORA_PRO=${serializeProClientConfig(site.pro)};</script>`,
-      `<script type="module" src="${relativeAsset("/pro/")}assets/pro-access.js"></script>`,
+      `<script type="module" src="${versionedAsset("/pro/", "assets/pro-access.js")}"></script>`,
     ],
   }));
 }
@@ -886,7 +887,7 @@ function layout({ title, description, path: pagePath, body, schema = [], robots 
     site.googleAnalyticsId ? analyticsTag(site.googleAnalyticsId) : "",
     site.adsenseClientId ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${escapeHtml(site.adsenseClientId)}" crossorigin="anonymous"></script>` : "",
     robots ? `<meta name="robots" content="${escapeHtml(robots)}">` : "",
-    ...extraStyles.map((href) => `<link rel="stylesheet" href="${relativeAsset(pagePath)}${escapeHtml(href)}">`),
+    ...extraStyles.map((href) => `<link rel="stylesheet" href="${versionedAsset(pagePath, href)}">`),
     ...schema.map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`),
   ].filter(Boolean).map((item) => `  ${item}`).join("\n");
   return `<!doctype html>
@@ -897,9 +898,9 @@ function layout({ title, description, path: pagePath, body, schema = [], robots 
   <title>${escapeHtml(title)} | ${escapeHtml(site.name)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${canonical}">
-  <link rel="stylesheet" href="${relativeAsset(pagePath)}styles.css">
-  <link rel="stylesheet" href="${relativeAsset(pagePath)}assets/alert.css">
-  <link rel="stylesheet" href="${relativeAsset(pagePath)}assets/content-density.css">
+  <link rel="stylesheet" href="${versionedAsset(pagePath, "styles.css")}">
+  <link rel="stylesheet" href="${versionedAsset(pagePath, "assets/alert.css")}">
+  <link rel="stylesheet" href="${versionedAsset(pagePath, "assets/content-density.css")}">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:type" content="website">
@@ -944,8 +945,8 @@ ${pageBody}
       <span><a href="${relativeAsset(pagePath)}privacy/">Privacy</a> · <a href="${relativeAsset(pagePath)}sitemap.xml">Sitemap</a></span>
     </div>
   </footer>
-  <script src="${relativeAsset(pagePath)}script.js"></script>
-  <script type="module" src="${relativeAsset(pagePath)}assets/alert-prompt.js"></script>
+  <script src="${versionedAsset(pagePath, "script.js")}"></script>
+  <script type="module" src="${versionedAsset(pagePath, "assets/alert-prompt.js")}"></script>
   ${bodyScripts.join("\n  ")}
 </body>
 </html>
@@ -1497,6 +1498,10 @@ function relativeAsset(pagePath) {
   return depth === 0 ? "" : "../".repeat(depth);
 }
 
+function versionedAsset(pagePath, assetPath) {
+  return `${relativeAsset(pagePath)}${escapeHtml(assetPath)}?v=${encodeURIComponent(site.assetVersion)}`;
+}
+
 function analyticsTag(id) {
   return `<script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(id)}"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${escapeHtml(id)}");</script>`;
@@ -1537,6 +1542,14 @@ function normalizeContentLastmod(value) {
     throw new Error("site.config.json contentLastmod must use YYYY-MM-DD.");
   }
   return date;
+}
+
+function normalizeAssetVersion(value) {
+  const version = String(value || "").trim();
+  if (!/^[a-z0-9][a-z0-9._-]{0,31}$/i.test(version)) {
+    throw new Error("site.config.json assetVersion must use 1-32 URL-safe characters.");
+  }
+  return version;
 }
 
 function adUnit({ slotKey, className = "", fallbackTitle, fallbackText, links }) {
