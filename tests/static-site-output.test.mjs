@@ -153,3 +153,10 @@ test("Aurora Pro preview is fail-closed without leaking the GGB product", () => 
   assert.match(proLicenseState, /parseLicenseReturnUrl/);
   assert.match(proCss, /\.pro-page \[hidden\]\s*\{[^}]*display:\s*none\s*!important/);
 });
+
+test("storm alert form exposes threshold choice and defaults to an honest waitlist state", () => {
+  assert.match(city, /name="threshold"/);
+  assert.match(city, /Alert me at score/);
+  assert.match(city, /Email delivery is not live yet/);
+  assert.doesNotMatch(city, /We'll email you when storm alerts launch/);
+});

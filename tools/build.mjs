@@ -690,21 +690,41 @@ ${spotCards}
 
 function alertSignupPanel(city) {
   const citySlug = city ? city.slug : "";
-  const target = city ? city.name : "your city";
+  const target = city ? city.name : "your selected city";
+  const cityField = city ? "" : `
+                  <label>
+                    <span>City</span>
+                    <select name="citySlug" required>
+                      ${[...forecast.cities]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((option) => `<option value="${escapeHtml(option.slug)}">${escapeHtml(option.name)}, ${escapeHtml(option.region)}</option>`)
+                        .join("")}
+                    </select>
+                  </label>`;
   return `
             <article class="panel" data-alert-signup data-alert-city="${escapeHtml(citySlug)}">
               <p class="kicker">Storm alerts</p>
               <h3>Get an email when a storm hits ${escapeHtml(target)}</h3>
-              <p>We are building free storm email alerts. Join the waitlist and we will notify you when they launch.</p>
+              <p>Email delivery is not live yet. Your request stays on the waitlist unless a confirmation email is successfully sent.</p>
               <form class="comment-form" data-alert-form>
                 <div class="comment-fields">
                   <label>
                     <span>Email</span>
                     <input name="email" type="email" maxlength="254" placeholder="you@example.com" autocomplete="email" required>
                   </label>
+${cityField}
+                  <label>
+                    <span>Alert me at score</span>
+                    <select name="threshold">
+                      <option value="50">50</option>
+                      <option value="60" selected>60</option>
+                      <option value="70">70</option>
+                      <option value="80">80</option>
+                    </select>
+                  </label>
                   <input name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
                 </div>
-                <button type="submit" class="text-link">Join the waitlist</button>
+                <button type="submit" class="text-link">Save alert request</button>
               </form>
               <p data-alert-status role="status"></p>
             </article>`;
@@ -973,7 +993,7 @@ function generateUtilityPages() {
     {
       slug: "privacy",
       title: "Privacy Policy",
-      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you join the storm alert waitlist, we store your email address, the city you selected, and the signup date. These are used only to launch and send the aurora alerts you requested, and never sold or shared. To remove your email from the waitlist, contact us via the contact page.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
+      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you request a storm alert, we store your email address, selected city, score threshold, subscription status, and relevant timestamps. Confirmation and unsubscribe tokens are stored only as one-way hashes. These details are used only for the aurora alerts you requested and are never sold or shared. Every alert email includes a one-click unsubscribe link; while email delivery is unavailable, requests remain waitlisted.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
     },
   ];
 

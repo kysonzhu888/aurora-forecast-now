@@ -370,6 +370,10 @@ document.querySelectorAll("[data-alert-signup]").forEach((panel) => {
     const submit = form.querySelector("button[type=submit]");
     const email = form.elements.email ? form.elements.email.value : "";
     const website = form.elements.website ? form.elements.website.value : "";
+    const threshold = form.elements.threshold ? Number(form.elements.threshold.value) : 60;
+    const citySlug = form.elements.citySlug
+      ? form.elements.citySlug.value
+      : (panel.dataset.alertCity || "");
     if (submit) submit.disabled = true;
     setStatus("Joining...");
     try {
@@ -379,13 +383,19 @@ document.querySelectorAll("[data-alert-signup]").forEach((panel) => {
         body: JSON.stringify({
           email,
           website,
-          citySlug: panel.dataset.alertCity || "",
+          threshold,
+          citySlug,
           sourcePath: window.location.pathname,
         }),
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || "Could not join the waitlist.");
-      setStatus("You're on the list. We'll email you when storm alerts launch.", "ok");
+      setStatus(
+        payload.delivery === "email"
+          ? "Check your inbox to confirm storm alerts."
+          : "Saved to the waitlist. Email delivery is not live yet.",
+        "ok",
+      );
       form.reset();
     } catch (error) {
       setStatus(error.message || "Something went wrong. Please try again.", "error");
