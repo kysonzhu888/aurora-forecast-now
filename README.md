@@ -58,7 +58,11 @@ The generated city pages are SEO entry pages, not the product limit. The saved c
 
 The crawlable HTML is a stable location-and-guide shell. Forecast scores, Kp, cloud cover, NOAA timestamps, and alert summaries are hydrated from `/api/forecast` in the browser and remain generated deployment data rather than Git source. Update `site.config.json#contentLastmod` only when the stable page content or template meaning changes; routine NOAA refreshes must not change sitemap `lastmod`.
 
-The current email form is a demand-validation waitlist only. D1 stores signups, but there is no mail-sending system; build delivery, scheduling, and unsubscribe infrastructure only after real signup demand justifies it.
+Storm alert requests are stored in D1 with city, score threshold, lifecycle status, and timestamps. Confirmation and unsubscribe tokens are persisted only as SHA-256 hashes. The five-minute Worker cron evaluates active subscriptions against the latest cached forecast, claims a per-forecast delivery receipt, applies a six-hour cooldown, and sends one recipient per message.
+
+Email delivery is fail-closed. Without all of `EMAIL` (Cloudflare Email Service binding), `ALERT_FROM_EMAIL`, and the `ALERT_TOKEN_SECRET` secret, subscriptions remain in the visible waitlist state and no live-delivery claim is shown. Enabling arbitrary-recipient delivery is the sole external infrastructure gate: the Cloudflare account must already have Workers Paid and an onboarded sending domain. Do not purchase or enable those services as part of deployment automation.
+
+After applying `schema.sql`, deployment acceptance should smoke-test `GET /api/health` and a `POST /api/alerts/subscribe` before and after the Worker change. A configured account should return `confirmation_pending` and deliver confirmation; an unentitled account should return `waitlist` with `delivery: unavailable` while still saving the request.
 
 ## SEO Page Matrix
 
@@ -118,7 +122,7 @@ curl 'https://auroraforecastnow.com/api/forecast?lat=40.7128&lon=-74.0060'
 ## Development
 
 ```bash
-# 重新生成全站静态页（拉 NOAA 实时数据；加 AURORA_USE_EXISTING_FORECAST=1 用缓存数据做 deterministic build）
+# 重新生成全站静态页（拉 NOAA 实时数据；加 AURORA_USE_EXISTING_FORECAST=1 用版本化 fixture 做 deterministic build）
 node tools/build.mjs
 
 # 评分核心（lib/forecast-core.mjs，build 与 worker 共用）的行为锁定测试

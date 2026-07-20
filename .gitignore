@@ -12,7 +12,8 @@ node_modules/
 !README.md
 
 # Generated site output — rebuilt by `node tools/build.mjs`, deployed via deploy.sh.
-# Source of truth is tools/ + lib/ + data/*.json (except forecast.json, a build cache).
+# Source of truth is tools/ + lib/ + data/*.json. forecast.json is a local
+# build cache; forecast.fixture.json is the versioned offline test input.
 /cities/
 /locations/
 /countries/

@@ -15,6 +15,11 @@ import {
 import { handleProLicenseRequest } from "../lib/pro-access.mjs";
 import { handleProFunnelRequest } from "../lib/pro-funnel.mjs";
 import { handleLemonSqueezyWebhook } from "../lib/pro-webhook.mjs";
+import {
+  handleAlertSubscribe,
+  handleAlertToken,
+  runAlertCronIfConfigured,
+} from "../lib/alerts.mjs";
 
 const LOCK_KEY = "forecast:refresh-lock";
 const GEOCODE_PREFIX = "geocode:";
@@ -46,7 +51,12 @@ export default {
     if (normalizedPath === "/api/health" || normalizedPath === "/health") return handleHealth(request, env);
     if (normalizedPath === "/api/forecast" || normalizedPath === "/forecast") return handleForecastWithEdgeCache(request, env, ctx);
     if (normalizedPath === "/api/comments" || normalizedPath === "/comments") return handleComments(request, env);
-    if (normalizedPath === "/api/alerts/subscribe") return handleAlertSubscribe(request, env);
+    if (normalizedPath === "/api/alerts/subscribe") {
+      const limited = await alertRateLimitResponse(request, env);
+      return limited || withCors(await handleAlertSubscribe(request, alertEnv(env)));
+    }
+    if (normalizedPath === "/api/alerts/confirm") return handleAlertToken(request, env, "confirm");
+    if (normalizedPath === "/api/alerts/unsubscribe") return handleAlertToken(request, env, "unsubscribe");
     if (normalizedPath === "/api/pro/license") return withCors(await handleProLicenseRequest(request, env));
     if (normalizedPath === "/api/pro/funnel") return withCors(await handleProFunnelRequest(request, env));
     if (normalizedPath === "/api/pro/webhook") return handleLemonSqueezyWebhook(request, env);
@@ -255,35 +265,16 @@ async function handleComments(request, env) {
   return withCors(jsonResponse({ ok: true, comments: await listComments(env, pageKey) }, 201));
 }
 
-const MAX_EMAIL_LENGTH = 254;
 const ALERT_RATE_LIMIT_PER_MINUTE = 3;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-async function handleAlertSubscribe(request, env) {
-  if (request.method !== "POST") {
-    return withCors(jsonResponse({ error: "Method not allowed." }, 405));
-  }
+function alertEnv(env) {
+  return {
+    ...env,
+    alertCitySlugs: new Set(cities.map((city) => city.slug)),
+  };
+}
 
-  let payload;
-  try {
-    payload = await request.json();
-  } catch {
-    return withCors(jsonResponse({ error: "Invalid JSON body." }, 400));
-  }
-
-  // honeypot：正常用户看不到 website 字段；bot 填了就假装成功，不暴露识别逻辑
-  if (normalizeText(payload.website, 200)) {
-    return withCors(jsonResponse({ ok: true }, 201));
-  }
-
-  const email = normalizeText(payload.email, MAX_EMAIL_LENGTH).toLowerCase();
-  if (!email || !EMAIL_PATTERN.test(email)) {
-    return withCors(jsonResponse({ error: "Please enter a valid email address." }, 400));
-  }
-  const citySlug = normalizeText(payload.citySlug, 80);
-  const sourcePath = normalizeText(payload.sourcePath, 200);
-
-  // KV 限流：同 IP 每分钟最多 3 次（KV 非原子，边界超发可接受，够挡脚本滥用）
+async function alertRateLimitResponse(request, env) {
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   const rateKey = `alerts-rl:${ip}`;
   const currentCount = Number((await env.AURORA_FORECAST_CACHE.get(rateKey)) || 0);
@@ -291,22 +282,7 @@ async function handleAlertSubscribe(request, env) {
     return withCors(jsonResponse({ error: "Too many requests. Try again in a minute." }, 429));
   }
   await env.AURORA_FORECAST_CACHE.put(rateKey, String(currentCount + 1), { expirationTtl: 60 });
-
-  const db = commentsDb(env);
-  if (!db) {
-    return withCors(jsonResponse({ error: "Signup storage is not configured yet." }, 503));
-  }
-
-  // INSERT OR IGNORE：同 email+city 重复报名幂等返回成功，不泄露是否已存在
-  await db
-    .prepare(`
-      INSERT OR IGNORE INTO alert_signups (id, email, city_slug, source_path, created_at)
-      VALUES (?, ?, ?, ?, ?)
-    `)
-    .bind(crypto.randomUUID(), email, citySlug, sourcePath, new Date().toISOString())
-    .run();
-
-  return withCors(jsonResponse({ ok: true }, 201));
+  return null;
 }
 
 async function listComments(env, pageKey) {
@@ -344,7 +320,7 @@ function normalizeText(value, maxLength) {
 }
 
 async function handleScheduledRefresh(env, scheduledTime) {
-  return runScheduledRefresh({
+  const state = await runScheduledRefresh({
     scheduledTime,
     normalMaxAgeSeconds: NORMAL_MAX_AGE_SECONDS,
     refreshLeadSeconds: SCHEDULE_REFRESH_LEAD_SECONDS,
@@ -354,6 +330,14 @@ async function handleScheduledRefresh(env, scheduledTime) {
     refresh: (options) => refreshWithLock(env, options),
     writeState: (state) => writeScheduleState(env, state),
   });
+  const alerts = await runAlertCronIfConfigured(
+    alertEnv(env),
+    () => readCachedForecast(env),
+  );
+  console.info(
+    `[alert-cron] configured=${alerts.configured} matched=${alerts.matched} sent=${alerts.sent}`,
+  );
+  return state;
 }
 
 async function refreshWithLock(env, options = {}) {

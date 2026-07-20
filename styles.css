@@ -25,13 +25,11 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at 18% 0%, rgba(116, 242, 164, 0.18), transparent 30rem),
-    radial-gradient(circle at 82% 12%, rgba(255, 122, 168, 0.14), transparent 28rem),
-    linear-gradient(180deg, #101312 0%, #161711 46%, #101312 100%);
+  background: linear-gradient(180deg, #101312 0%, #161711 46%, #101312 100%);
   color: var(--text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: 0;
+  overflow-x: clip;
 }
 
 a {
@@ -145,17 +143,57 @@ a {
 }
 
 .hero {
-  margin: 0 auto;
-  max-width: var(--max);
-  min-height: calc(100vh - 68px);
-  padding: 62px 22px 28px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  display: grid;
+  isolation: isolate;
+  margin: 0;
+  max-width: none;
+  min-height: clamp(650px, calc(100svh - 140px), 760px);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
 }
 
-.hero-grid {
-  align-items: center;
-  display: grid;
-  gap: 34px;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+.hero-media {
+  inset: 0;
+  margin: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.hero-media::after {
+  background: rgba(5, 9, 8, 0.42);
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.hero-image {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.hero-media figcaption {
+  background: rgba(5, 9, 8, 0.7);
+  border: 1px solid rgba(244, 247, 239, 0.2);
+  border-radius: 999px;
+  color: rgba(244, 247, 239, 0.82);
+  font-size: 0.72rem;
+  padding: 6px 9px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  z-index: 1;
+}
+
+.hero-content {
+  align-self: center;
+  max-width: 790px;
+  padding: clamp(34px, 5vw, 68px);
 }
 
 .kicker {
@@ -178,6 +216,11 @@ h3 {
 h1 {
   font-size: clamp(2.45rem, 8vw, 5.8rem);
   max-width: 870px;
+}
+
+.hero h1 {
+  font-size: clamp(2.7rem, 6vw, 4.7rem);
+  max-width: 720px;
 }
 
 h2 {
@@ -229,8 +272,8 @@ button.button {
 }
 
 .search-box {
-  background: rgba(244, 247, 239, 0.06);
-  border: 1px solid var(--line);
+  background: rgba(5, 9, 8, 0.72);
+  border: 1px solid rgba(244, 247, 239, 0.28);
   border-radius: 8px;
   display: grid;
   gap: 10px;
@@ -241,7 +284,7 @@ button.button {
 }
 
 .live-result {
-  background: rgba(244, 247, 239, 0.06);
+  background: rgba(5, 9, 8, 0.82);
   border: 1px solid var(--line);
   border-radius: 8px;
   margin-top: 12px;
@@ -298,8 +341,10 @@ button.button {
 }
 
 .metric {
-  min-height: 96px;
-  padding: 16px;
+  backdrop-filter: blur(12px);
+  background: rgba(5, 9, 8, 0.62);
+  min-height: 82px;
+  padding: 13px;
 }
 
 .metric span {
@@ -310,8 +355,8 @@ button.button {
 
 .metric strong {
   display: block;
-  font-size: 1.35rem;
-  margin-top: 8px;
+  font-size: 1.16rem;
+  margin-top: 6px;
 }
 
 .live-note {
@@ -321,78 +366,58 @@ button.button {
   max-width: 720px;
 }
 
-.aurora-visual {
-  aspect-ratio: 1 / 1;
-  background:
-    linear-gradient(180deg, rgba(255, 209, 102, 0.08), transparent 40%),
-    radial-gradient(circle at 50% 18%, rgba(116, 242, 164, 0.3), transparent 22rem),
-    #0b0f0d;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.36);
-  overflow: hidden;
-  position: relative;
-}
-
-.aurora-visual::before {
-  background-image:
-    linear-gradient(rgba(244, 247, 239, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(244, 247, 239, 0.08) 1px, transparent 1px);
-  background-size: 20% 20%;
-  content: "";
-  inset: 0;
-  position: absolute;
-}
-
-.aurora-band {
-  background: linear-gradient(90deg, transparent, rgba(116, 242, 164, 0.16), rgba(255, 122, 168, 0.13), transparent);
-  filter: blur(4px);
-  height: 28%;
-  left: -12%;
-  position: absolute;
-  right: -12%;
-  top: 13%;
-  transform: rotate(-8deg);
-}
-
-.map-dot {
-  border-radius: 50%;
-  box-shadow: 0 0 18px currentColor;
-  height: var(--size);
-  left: var(--x);
-  opacity: var(--alpha);
-  position: absolute;
-  top: var(--y);
-  transform: translate(-50%, -50%);
-  width: var(--size);
-}
-
-.map-city {
-  background: var(--text);
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  height: 10px;
-  left: var(--x);
-  position: absolute;
-  top: var(--y);
-  transform: translate(-50%, -50%);
-  width: 10px;
-  z-index: 4;
-}
-
-.visual-label {
-  bottom: 14px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  left: 14px;
-  position: absolute;
-  right: 14px;
-}
-
 .section {
   margin: 0 auto;
   max-width: var(--max);
   padding: 54px 22px;
+}
+
+.visual-story {
+  align-items: stretch;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 0.78fr) repeat(2, minmax(0, 1fr));
+  padding-bottom: 34px;
+  padding-top: 38px;
+}
+
+.story-intro {
+  align-self: center;
+  padding-right: 12px;
+}
+
+.story-intro h2 {
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+}
+
+.story-visual {
+  background: rgba(244, 247, 239, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 0;
+  overflow: hidden;
+}
+
+.story-visual img {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.story-copy {
+  padding: 18px;
+}
+
+.story-copy p {
+  margin-bottom: 16px;
+}
+
+.story-visual > figcaption {
+  color: var(--muted);
+  font-size: 0.76rem;
+  padding: 0 18px 18px;
+  text-transform: uppercase;
 }
 
 .ad-shell {
@@ -805,14 +830,19 @@ button.button {
 }
 
 @media (max-width: 880px) {
-  .hero {
-    min-height: auto;
-  }
-
-  .hero-grid,
   .city-hero,
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .visual-story {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .story-intro {
+    grid-column: 1 / -1;
+    max-width: 700px;
+    padding-right: 0;
   }
 
   .city-grid,
@@ -820,8 +850,7 @@ button.button {
   .source-grid,
   .faq-grid,
   .guide-list,
-  .glossary-grid,
-  .hero-meta {
+  .glossary-grid {
     grid-template-columns: 1fr;
   }
 
@@ -877,12 +906,61 @@ button.button {
     grid-template-columns: 1fr;
   }
 
+  .hero {
+    min-height: min(650px, calc(100svh - 104px));
+  }
+
+  .hero-content {
+    align-self: end;
+    padding: 52px 20px 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 12vw, 3.4rem);
+  }
+
+  .hero .lead {
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+
+  .hero .search-box {
+    margin-top: 18px;
+  }
+
+  .hero-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 16px;
+  }
+
+  .metric {
+    min-height: 72px;
+    padding: 10px;
+  }
+
+  .metric strong {
+    font-size: 1rem;
+  }
+
+  .live-note {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .visual-story {
+    grid-template-columns: 1fr;
+    padding-top: 30px;
+  }
+
+  .story-intro {
+    grid-column: auto;
+  }
+
   .button,
   button.button {
     width: 100%;
   }
 
-  .hero,
   .section,
   .city-page {
     padding-left: 18px;

@@ -14,6 +14,7 @@ execFileSync(process.execPath, ["tools/build.mjs"], {
 });
 
 const config = JSON.parse(fs.readFileSync(path.join(root, "site.config.json"), "utf8"));
+const media = JSON.parse(fs.readFileSync(path.join(root, "data", "media.json"), "utf8"));
 const home = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const city = fs.readFileSync(path.join(root, "cities", "fairbanks", "index.html"), "utf8");
 const sitemap = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
@@ -22,6 +23,8 @@ const proClient = fs.readFileSync(path.join(root, "assets", "pro-access.js"), "u
 const proLicenseState = fs.readFileSync(path.join(root, "assets", "pro-license-state.mjs"), "utf8");
 const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
 const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
+const alertStyles = fs.readFileSync(path.join(root, "assets", "alert.css"), "utf8");
+const client = fs.readFileSync(path.join(root, "script.js"), "utf8");
 const googleVerification = fs.readFileSync(
   path.join(root, "google1089c0cca1aa4f0a.html"),
   "utf8",
@@ -64,6 +67,44 @@ test("generated pages expose a stable SEO shell without internal review language
   assert.match(home, /data-live-forecast-time/);
   assert.match(home, /data-live-best-city/);
   assert.doesNotMatch(home, /Updated from the static build/i);
+});
+
+test("home uses disclosed, responsive AI visuals without decorative radial backgrounds", () => {
+  assert.match(
+    home,
+    /<section class="hero">\s*<figure class="hero-media">\s*<img class="hero-image" src="assets\/photos\/aurora-ai-hero\.webp" width="1672" height="941" alt="[^"]+" decoding="async" fetchpriority="high">[\s\S]*<div class="hero-content">/,
+  );
+  assert.match(
+    home,
+    /<img src="assets\/photos\/aurora-ai-field\.webp" width="1448" height="1086" alt="[^"]+" loading="lazy" decoding="async">/,
+  );
+  assert.match(
+    home,
+    /<img src="assets\/photos\/aurora-ai-south\.webp" width="1536" height="1024" alt="[^"]+" loading="lazy" decoding="async">/,
+  );
+  assert.equal(
+    [...home.matchAll(/<figcaption>AI-generated visual<\/figcaption>/g)].length,
+    3,
+  );
+  assert.deepEqual(
+    media.generatedVisuals
+      .filter((visual) => visual.file?.startsWith("assets/photos/aurora-ai-"))
+      .map((visual) => visual.label),
+    ["AI-generated visual", "AI-generated visual", "AI-generated visual"],
+  );
+  assert.match(styles, /\.hero-image\s*\{[^}]*object-fit:\s*cover;[^}]*width:\s*100%;/s);
+  assert.match(
+    styles,
+    /\.hero\s*\{[^}]*border:\s*0;[^}]*border-radius:\s*0;[^}]*margin:\s*0;[^}]*max-width:\s*none;/s,
+  );
+  assert.match(styles, /\.hero h1\s*\{[^}]*font-size:[^}]*max-width:\s*720px;\s*\}/s);
+  assert.match(
+    home,
+    /<figure class="story-visual">[\s\S]*?<div class="story-copy">[\s\S]*?<\/div>\s*<figcaption>AI-generated visual<\/figcaption>\s*<\/figure>/,
+  );
+  assert.match(styles, /\.story-visual img\s*\{[^}]*aspect-ratio:[^;]+;[^}]*object-fit:\s*cover;/s);
+  assert.match(styles, /@media \(max-width: 560px\)[\s\S]*\.hero-meta\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/s);
+  assert.doesNotMatch(styles, /radial-gradient\(/);
 });
 
 test("generated navigation moves lower-priority links into an accessible mobile menu", () => {
@@ -113,4 +154,38 @@ test("Aurora Pro preview is fail-closed without leaking the GGB product", () => 
   assert.match(proClient, /from "\.\/pro-license-state\.mjs"/);
   assert.match(proLicenseState, /parseLicenseReturnUrl/);
   assert.match(proCss, /\.pro-page \[hidden\]\s*\{[^}]*display:\s*none\s*!important/);
+});
+
+test("home and city alerts share an accessible three-step flow with honest capability states", () => {
+  for (const page of [home, city]) {
+    assert.match(
+      page,
+      /Choose a location[\s\S]*Choose your minimum level[\s\S]*Add your email/,
+    );
+    assert.equal((page.match(/type="radio" name="threshold"/g) || []).length, 4);
+    assert.match(page, /type="radio" name="threshold" value="60" checked/);
+    assert.doesNotMatch(page, /<select name="threshold"/);
+    assert.match(page, /How alerts work/);
+    assert.match(page, /Choose a location[\s\S]*Wait for a storm[\s\S]*Check cloud cover/);
+    assert.match(page, /name="website"[^>]*tabindex="-1"[^>]*aria-hidden="true"/);
+  }
+
+  assert.match(home, /<option value="" selected disabled>Select a city<\/option>/);
+  assert.match(city, /<option value="fairbanks" selected>Fairbanks, Alaska<\/option>/);
+  const cityAlertForm = city.match(/<form class="comment-form alert-form"[\s\S]*?<\/form>/)?.[0] || "";
+  assert.equal((cityAlertForm.match(/<option /g) || []).length, 2);
+  assert.match(home, /href="assets\/alert\.css"/);
+  assert.match(city, /href="\.\.\/\.\.\/assets\/alert\.css"/);
+  assert.match(client, /Saving your alert/);
+  assert.match(client, /Live email sent/);
+  assert.match(client, /Saved for launch/);
+  assert.match(client, /Check your connection and try again/);
+  assert.doesNotMatch(client, /settings_updated/);
+  assert.doesNotMatch(styles, /\.alert-signup/);
+  assert.match(alertStyles, /\.alert-signup\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/s);
+  assert.match(alertStyles, /\.alert-threshold-option span\s*\{[^}]*overflow-wrap:\s*anywhere/s);
+  assert.match(
+    alertStyles,
+    /@media \(max-width: 560px\)[\s\S]*\.alert-threshold-options\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s,
+  );
 });

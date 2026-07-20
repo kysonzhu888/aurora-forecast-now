@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { scoreCity, labelForScore, guidanceFor, directionWords, nearestAurora, normalizeLon } from "../lib/forecast-core.mjs";
+import { renderAlertSignupPanel } from "./lib/alert-signup-panel.mjs";
 import { normalizeProConfig, renderProPageBody, serializeProClientConfig } from "./lib/pro-page.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -40,7 +41,9 @@ const now = new Date();
 const ALERT_LOOKBACK_MS = 72 * 60 * 60 * 1000;
 const useExistingForecast = process.env.AURORA_USE_EXISTING_FORECAST === "1";
 const buildLastmod = site.contentLastmod;
-const forecast = useExistingForecast ? readJson(path.join("data", "forecast.json")) : await buildForecast();
+const forecast = useExistingForecast
+  ? readJson(path.join("data", "forecast.fixture.json"))
+  : await buildForecast();
 const cityCollections = buildCityCollections(forecast.cities);
 const guidePages = buildGuidePages();
 const glossaryEntriesList = glossaryEntries();
@@ -64,7 +67,7 @@ generateAdsTxt();
 console.log(`Generated ${forecast.cities.length} city pages for ${site.name}.`);
 console.log(
   useExistingForecast
-    ? `Forecast reused from data/forecast.json: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`
+    ? `Forecast reused from data/forecast.fixture.json: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`
     : `Forecast updated from NOAA: ${forecast.observationTime || "fallback"}, max Kp ${forecast.maxKp}.`
 );
 
@@ -270,26 +273,51 @@ function generateHomePage() {
     body: `
       <main>
         <section class="hero">
-          <div class="hero-grid">
-            <div>
-              <p class="kicker">Northern lights forecast tonight</p>
-              <h1>Can you see the aurora tonight?</h1>
-              <p class="lead">Aurora Forecast Now turns NOAA space weather data and cloud cover into a city-level viewing chance for the northern lights.</p>
-              <form class="search-box" action="#cities" data-live-search-form>
-                <input data-city-search type="search" placeholder="Search a city or state" aria-label="Search a city or state">
-                <button class="button" type="submit">Find forecast</button>
-              </form>
-              <div class="live-result" data-live-result hidden></div>
-              <div class="hero-meta" aria-label="Current forecast summary">
-                <div class="metric"><span>Max Kp next 36h</span><strong data-live-max-kp>Checking</strong></div>
-                <div class="metric"><span>NOAA forecast time</span><strong data-live-forecast-time>Checking</strong></div>
-                <div class="metric"><span>Best city now</span><strong data-live-best-city>Checking</strong></div>
-                <div class="metric"><span>Live cache</span><strong data-live-status>Connecting</strong></div>
-              </div>
-              <p class="live-note" data-live-note>Live conditions load from the forecast API when you open this page.</p>
+          <figure class="hero-media">
+            <img class="hero-image" src="assets/photos/aurora-ai-hero.webp" width="1672" height="941" alt="An AI-created aurora sweeping over a still mountain lake at night" decoding="async" fetchpriority="high">
+            <figcaption>AI-generated visual</figcaption>
+          </figure>
+          <div class="hero-content">
+            <p class="kicker">Northern lights forecast tonight</p>
+            <h1>Can you see the aurora tonight?</h1>
+            <p class="lead">Aurora Forecast Now turns NOAA space weather data and cloud cover into a city-level viewing chance for the northern lights.</p>
+            <form class="search-box" action="#cities" data-live-search-form>
+              <input data-city-search type="search" placeholder="Search a city or state" aria-label="Search a city or state">
+              <button class="button" type="submit">Find forecast</button>
+            </form>
+            <div class="live-result" data-live-result hidden></div>
+            <div class="hero-meta" aria-label="Current forecast summary">
+              <div class="metric"><span>Max Kp next 36h</span><strong data-live-max-kp>Checking</strong></div>
+              <div class="metric"><span>NOAA forecast time</span><strong data-live-forecast-time>Checking</strong></div>
+              <div class="metric"><span>Best city now</span><strong data-live-best-city>Checking</strong></div>
+              <div class="metric"><span>Live cache</span><strong data-live-status>Connecting</strong></div>
             </div>
-            ${auroraVisual(topCities.slice(0, 4))}
+            <p class="live-note" data-live-note>Live conditions load from the forecast API when you open this page.</p>
           </div>
+        </section>
+
+        <section class="section visual-story" aria-labelledby="visual-story-title">
+          <div class="story-intro">
+            <p class="kicker">From forecast to horizon</p>
+            <h2 id="visual-story-title">Plan the observation, then meet the sky</h2>
+            <p>The live score handles the decision. These two scenes keep the fieldwork in view without turning the forecast into a gallery.</p>
+          </div>
+          <figure class="story-visual">
+            <img src="assets/photos/aurora-ai-field.webp" width="1448" height="1086" alt="An AI-created scene of an aurora observer preparing a tripod beside a dark road" loading="lazy" decoding="async">
+            <div class="story-copy">
+              <h3>Prepare before dark</h3>
+              <p>Scout a safe horizon, dress for a long wait, and keep batteries warm.</p>
+            </div>
+            <figcaption>AI-generated visual</figcaption>
+          </figure>
+          <figure class="story-visual">
+            <img src="assets/photos/aurora-ai-south.webp" width="1536" height="1024" alt="An AI-created southern aurora glowing above a rocky ocean coast" loading="lazy" decoding="async">
+            <div class="story-copy">
+              <h3>Look south below the equator</h3>
+              <p>Open coastal horizons can reveal aurora australis color low over the sea.</p>
+            </div>
+            <figcaption>AI-generated visual</figcaption>
+          </figure>
         </section>
 
         ${adUnit({
@@ -662,25 +690,7 @@ ${spotCards}
 }
 
 function alertSignupPanel(city) {
-  const citySlug = city ? city.slug : "";
-  const target = city ? city.name : "your city";
-  return `
-            <article class="panel" data-alert-signup data-alert-city="${escapeHtml(citySlug)}">
-              <p class="kicker">Storm alerts</p>
-              <h3>Get an email when a storm hits ${escapeHtml(target)}</h3>
-              <p>We are building free storm email alerts. Join the waitlist and we will notify you when they launch.</p>
-              <form class="comment-form" data-alert-form>
-                <div class="comment-fields">
-                  <label>
-                    <span>Email</span>
-                    <input name="email" type="email" maxlength="254" placeholder="you@example.com" autocomplete="email" required>
-                  </label>
-                  <input name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
-                </div>
-                <button type="submit" class="text-link">Join the waitlist</button>
-              </form>
-              <p data-alert-status role="status"></p>
-            </article>`;
+  return renderAlertSignupPanel({ city, cities: forecast.cities });
 }
 
 function generateAuroraAustralisHub() {
@@ -946,7 +956,7 @@ function generateUtilityPages() {
     {
       slug: "privacy",
       title: "Privacy Policy",
-      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you join the storm alert waitlist, we store your email address, the city you selected, and the signup date. These are used only to launch and send the aurora alerts you requested, and never sold or shared. To remove your email from the waitlist, contact us via the contact page.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
+      body: `<p>Aurora Forecast Now does not require an account for the public forecast pages. We use Cloudflare Web Analytics to count page loads and understand site performance. Its privacy-first beacon does not use cookies or local storage and does not collect information that directly identifies you.</p><p>If you request a storm alert, we store your email address, selected city, score threshold, subscription status, and relevant timestamps. Confirmation and unsubscribe tokens are stored only as one-way hashes. These details are used only for the aurora alerts you requested and are never sold or shared. Every alert email includes a one-click unsubscribe link; while email delivery is unavailable, requests remain waitlisted.</p><p>Aurora Pro stores an access key and saved location names in your browser. License activation sends the access key to our Worker, which validates the dedicated Aurora product with Lemon Squeezy; the site does not return or store the checkout email. Pro funnel measurements contain only an event name, page type, and saved-location count.</p>`,
     },
   ];
 
@@ -1042,6 +1052,7 @@ function layout({ title, description, path: pagePath, body, schema = [], robots 
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${canonical}">
   <link rel="stylesheet" href="${relativeAsset(pagePath)}styles.css">
+  <link rel="stylesheet" href="${relativeAsset(pagePath)}assets/alert.css">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:type" content="website">
@@ -1090,13 +1101,6 @@ ${pageBody}
 </body>
 </html>
 `;
-}
-
-function auroraVisual() {
-  return `<div class="aurora-visual" role="img" aria-label="Illustrated aurora forecast backdrop">
-    <div class="aurora-band" aria-hidden="true"></div>
-    <div class="visual-label">Live NOAA and cloud-aware city scores load below.</div>
-  </div>`;
 }
 
 function cityCard(city, prefix) {
