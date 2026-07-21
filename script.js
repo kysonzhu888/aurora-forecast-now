@@ -77,8 +77,8 @@ function updateLiveStatus(forecast) {
 
   if (liveNote) {
     const age = formatAge(forecast.cache.ageSeconds);
-    const storm = forecast.stormMode ? ` Storm mode G${forecast.stormLevel}.` : "";
-    liveNote.textContent = `Updated ${age} ago from the live cache.${storm} Next refresh target: ${formatAge(forecast.cache.maxAgeSeconds)}.`;
+    const storm = forecast.stormMode ? ` Active G${forecast.stormLevel} storm watch.` : "";
+    liveNote.textContent = `Updated ${age} ago.${storm} Forecast checks continue automatically.`;
   }
 
   if (liveFooterUpdated) {
@@ -164,7 +164,7 @@ function renderLiveCityResult(forecast) {
       <p>Kp ${forecast.maxKp || "N/A"} · Cloud ${cloud} · Aurora ${city.aurora}</p>
     </div>
     <p>${escapeHtml(city.guidance)}</p>
-    <p>Live cache: ${escapeHtml(forecast.cache.status)} · ${escapeHtml(forecast.cache.refreshMode)} · updated ${formatAge(forecast.cache.ageSeconds)} ago.</p>
+    <p>Updated ${formatAge(forecast.cache.ageSeconds)} ago.</p>
   `);
 }
 
@@ -391,9 +391,9 @@ document.querySelectorAll("[data-alert-signup]").forEach((panel) => {
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || "Could not save your alert.");
       if (payload.delivery === "email") {
-        setStatus("Live email sent. Check your inbox to confirm or review this alert.", "ok");
+        setStatus("Confirmation email sent. Check your inbox to activate or review this alert.", "ok");
       } else {
-        setStatus("Saved for launch. Your location and minimum level are on the waitlist.", "ok");
+        setStatus("Email delivery is temporarily unavailable. Your request was saved; please try again later.", "ok");
       }
       panel.dispatchEvent(new CustomEvent("aurora:alert-saved", {
         bubbles: true,

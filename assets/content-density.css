@@ -1,71 +1,151 @@
-.visual-story {
-  display: block;
-  padding-bottom: 30px;
-  padding-top: 32px;
+.alert-process {
+  border-bottom: 1px solid var(--line);
 }
 
-.story-intro {
-  align-items: end;
-  display: flex;
-  gap: 24px;
-  justify-content: space-between;
-  margin-bottom: 18px;
-  padding-right: 0;
-}
-
-.story-intro h2 {
-  font-size: clamp(1.55rem, 2.7vw, 2.2rem);
-  max-width: 560px;
-}
-
-.story-intro > p {
+.process-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
   margin: 0;
-  max-width: 500px;
+  padding: 0;
 }
 
-.story-grid {
+.process-step {
+  border-top: 1px solid var(--line);
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 34px minmax(0, 1fr);
+  padding-top: 16px;
 }
 
-.story-visual {
-  background: rgba(244, 247, 239, 0.06);
-  border: 1px solid var(--line);
+.process-step > span {
+  color: var(--green);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.process-step h3 {
+  font-size: 1rem;
+}
+
+.process-step p {
+  font-size: 0.9rem;
+  margin: 7px 0 0;
+}
+
+.service-list {
+  display: grid;
+  gap: 30px;
+  margin-top: 24px;
+}
+
+.service-row {
+  align-items: center;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  padding-top: 30px;
+}
+
+.service-row.reverse .service-visual {
+  order: 2;
+}
+
+.service-visual,
+.about-visual {
   border-radius: 8px;
   margin: 0;
-  min-width: 0;
   overflow: hidden;
+  position: relative;
 }
 
-.story-visual img {
-  aspect-ratio: 4 / 3;
+.service-visual img {
+  aspect-ratio: 16 / 10;
   display: block;
   height: auto;
   object-fit: cover;
   width: 100%;
 }
 
-.story-copy {
-  padding: 14px 14px 8px;
-}
-
-.story-copy h3 {
-  font-size: 1rem;
-  line-height: 1.2;
-}
-
-.story-copy p {
-  font-size: 0.88rem;
-  line-height: 1.5;
-  margin: 7px 0 0;
-}
-
-.story-visual > figcaption {
-  color: var(--muted);
+.service-visual figcaption,
+.about-visual figcaption {
+  background: rgba(5, 9, 8, 0.76);
+  border-radius: 6px;
+  bottom: 10px;
+  color: rgba(244, 247, 239, 0.84);
   font-size: 0.68rem;
-  padding: 0 14px 13px;
-  text-transform: uppercase;
+  left: 10px;
+  padding: 5px 7px;
+  position: absolute;
+}
+
+.service-visual-pair {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.service-visual-pair .service-visual:first-child {
+  margin-top: 28px;
+}
+
+.service-visual-pair .service-visual img {
+  aspect-ratio: 4 / 5;
+}
+
+.service-copy {
+  max-width: 480px;
+}
+
+.service-copy h3 {
+  font-size: 1.85rem;
+}
+
+.service-copy p:not(.kicker) {
+  margin: 14px 0 18px;
+}
+
+.about-band {
+  background: #e4ebe5;
+  color: #121713;
+  margin-top: 28px;
+}
+
+.about-inner {
+  align-items: center;
+  display: grid;
+  gap: 38px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  margin: 0 auto;
+  max-width: var(--max);
+  padding: 52px 22px;
+}
+
+.about-image {
+  aspect-ratio: 16 / 10;
+  display: block;
+  height: auto;
+  object-fit: cover;
+  width: 100%;
+}
+
+.about-copy {
+  max-width: 520px;
+}
+
+.about-copy .kicker {
+  color: #176b45;
+}
+
+.about-copy p {
+  color: #465148;
+}
+
+.about-copy .text-link {
+  border-color: rgba(18, 23, 19, 0.24);
+  color: #121713;
 }
 
 .city-sky-context {
@@ -110,7 +190,7 @@
 }
 
 .city-sky-copy > h2 {
-  font-size: clamp(1.55rem, 2.8vw, 2.2rem);
+  font-size: 2rem;
 }
 
 .city-sky-copy > p:not(.kicker) {
@@ -154,14 +234,13 @@
 }
 
 @media (max-width: 880px) {
-  .story-intro {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
+  .service-row,
+  .about-inner {
+    grid-template-columns: 1fr;
   }
 
-  .story-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .service-row.reverse .service-visual {
+    order: 0;
   }
 
   .city-sky-context {
@@ -175,9 +254,23 @@
 }
 
 @media (max-width: 560px) {
-  .story-grid,
+  .process-grid,
   .sky-signal-grid {
     grid-template-columns: 1fr;
+  }
+
+  .service-row {
+    gap: 18px;
+    padding-top: 22px;
+  }
+
+  .service-visual-pair .service-visual:first-child {
+    margin-top: 16px;
+  }
+
+  .about-inner {
+    gap: 24px;
+    padding: 38px 18px;
   }
 
   .sky-signal:nth-child(even) {

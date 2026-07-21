@@ -1,145 +1,9 @@
-.alert-signup {
-  grid-column: 1 / -1;
-  padding: 24px;
-}
-
-.alert-form {
-  margin-top: 18px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
-.alert-form button {
-  justify-content: center;
-}
-
-.alert-steps {
-  display: grid;
-  gap: 14px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.alert-step,
-.alert-threshold {
-  min-width: 0;
-}
-
-.alert-step + .alert-step {
-  border-top: 1px solid var(--line);
-  padding-top: 14px;
-}
-
-.alert-step label,
-.alert-threshold {
-  display: grid;
-  gap: 12px;
-}
-
-.alert-threshold {
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.alert-step-heading {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
-  width: 100%;
-  color: var(--text);
-}
-
-.alert-step-heading b {
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--green);
-  color: var(--ink);
-  font-size: 0.82rem;
-}
-
-.alert-step-heading span,
-.alert-step-heading small,
-.alert-threshold-option span,
-.alert-threshold-option small,
-.alert-how li span {
-  display: block;
-}
-
-.alert-step-heading small,
-.alert-threshold-option small,
-.alert-how li span {
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 650;
-}
-
-.alert-location select {
-  width: 100%;
-  min-width: 0;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 11px 34px 11px 12px;
-  background: rgba(244, 247, 239, 0.08);
-  color: var(--text);
-  font: inherit;
-  font-size: 0.94rem;
-}
-
-.alert-threshold-options {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-}
-
-.alert-threshold-option {
-  position: relative;
-  min-width: 0;
-  cursor: pointer;
-}
-
-.alert-threshold-option input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-.alert-threshold-option span {
-  min-height: 62px;
-  padding: 9px 7px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  overflow-wrap: anywhere;
-  text-align: center;
-}
-
-.alert-threshold-option input:checked + span {
-  border-color: var(--green);
-  background: rgba(116, 242, 164, 0.16);
-  color: var(--green);
-}
-
-.alert-threshold-option input:focus-visible + span,
-.alert-location select:focus-visible,
-.alert-email input:focus-visible {
-  outline: 3px solid var(--amber);
-  outline-offset: 2px;
-}
-
 .alert-status {
-  min-height: 22px;
-  margin: 12px 0 0;
+  min-height: 20px;
+  margin: 10px 0 0;
   color: var(--muted);
-  font-size: 0.9rem;
-  font-weight: 800;
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .alert-status[data-tone="ok"] {
@@ -150,58 +14,17 @@
   color: var(--rose);
 }
 
-.alert-how {
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
-}
-
-.alert-how h4 {
-  margin: 0 0 12px;
-}
-
-.alert-how ol {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0;
-  padding-left: 20px;
-}
-
-@media (min-width: 1100px) {
-  .guide-grid > .alert-signup .alert-steps {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .guide-grid > .alert-signup .alert-step + .alert-step {
-    border-top: 0;
-    border-left: 1px solid var(--line);
-    padding-top: 0;
-    padding-left: 14px;
-  }
-}
-
-@media (max-width: 560px) {
-  .alert-threshold-options {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .alert-how ol {
-    grid-template-columns: 1fr;
-  }
-}
-
 .alert-prompt {
   background: var(--panel);
   border: 1px solid rgba(244, 247, 239, 0.24);
   border-radius: 8px;
   box-shadow: 0 26px 80px rgba(0, 0, 0, 0.6);
   color: var(--text);
-  max-height: calc(100svh - 32px);
-  max-width: 900px;
+  max-height: calc(100svh - 24px);
+  max-width: 560px;
   overflow: auto;
   padding: 0;
-  width: calc(100% - 32px);
+  width: calc(100% - 24px);
 }
 
 .alert-prompt::backdrop {
@@ -210,50 +33,23 @@
 }
 
 .alert-prompt-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(340px, 1fr);
-  min-height: 480px;
-}
-
-.alert-prompt-media {
-  margin: 0;
-  min-height: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-.alert-prompt-image {
   display: block;
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
-
-.alert-prompt-media figcaption {
-  background: rgba(5, 9, 8, 0.76);
-  border-radius: 6px;
-  bottom: 12px;
-  color: rgba(244, 247, 239, 0.84);
-  font-size: 0.72rem;
-  left: 12px;
-  padding: 5px 8px;
-  position: absolute;
 }
 
 .alert-prompt-content {
-  align-self: center;
-  padding: 32px;
+  padding: 30px;
   position: relative;
 }
 
 .alert-prompt-content h2 {
-  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  font-size: 2rem;
   line-height: 1.12;
-  max-width: 460px;
+  max-width: 420px;
+  padding-right: 34px;
 }
 
 .alert-prompt-content > p:not(.kicker) {
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 .alert-prompt-close {
@@ -289,10 +85,21 @@
 }
 
 .alert-prompt-form {
-  margin-top: 20px;
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
 }
 
-.alert-prompt-form select {
+.alert-prompt-form label {
+  color: var(--text);
+  display: grid;
+  font-size: 0.84rem;
+  font-weight: 700;
+  gap: 6px;
+}
+
+.alert-prompt-form select,
+.alert-prompt-form input {
   background: rgba(244, 247, 239, 0.08);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -304,39 +111,30 @@
   width: 100%;
 }
 
+.alert-prompt-form input {
+  padding: 10px 12px;
+}
+
 .alert-prompt-form button {
   width: 100%;
 }
 
 .alert-prompt-privacy {
   font-size: 0.78rem;
-  margin: 4px 0 0;
+  margin: 2px 0 0;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 560px) {
   .alert-prompt {
-    max-height: calc(100svh - 20px);
-    width: calc(100% - 20px);
-  }
-
-  .alert-prompt-shell {
-    grid-template-columns: 1fr;
-  }
-
-  .alert-prompt-media {
-    min-height: 170px;
-  }
-
-  .alert-prompt-image {
-    max-height: 210px;
+    max-height: calc(100svh - 16px);
+    width: calc(100% - 16px);
   }
 
   .alert-prompt-content {
-    padding: 24px 20px 20px;
+    padding: 24px 18px 18px;
   }
 
   .alert-prompt-content h2 {
-    font-size: 1.65rem;
-    padding-right: 32px;
+    font-size: 1.55rem;
   }
 }

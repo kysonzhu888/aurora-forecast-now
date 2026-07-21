@@ -1,29 +1,25 @@
-export function renderAlertPrompt({ cities = [], assetPrefix = "" } = {}) {
+export function renderAlertPrompt({ cities = [], selectedCitySlug = "" } = {}) {
   const cityOptions = [...cities]
     .sort((left, right) => left.name.localeCompare(right.name))
     .map(
       (city) =>
-        `<option value="${escapeHtml(city.slug)}">${escapeHtml(city.name)}, ${escapeHtml(city.region)}</option>`,
+        `<option value="${escapeHtml(city.slug)}"${city.slug === selectedCitySlug ? " selected" : ""}>${escapeHtml(city.name)}, ${escapeHtml(city.region)}</option>`,
     )
     .join("");
 
   return `
-  <dialog class="alert-prompt" data-alert-prompt data-alert-signup data-alert-city="" aria-labelledby="alert-prompt-title" aria-describedby="alert-prompt-description">
+  <dialog class="alert-prompt" data-alert-prompt data-alert-signup data-alert-city="${escapeHtml(selectedCitySlug)}" aria-labelledby="alert-prompt-title" aria-describedby="alert-prompt-description">
     <div class="alert-prompt-shell">
-      <figure class="alert-prompt-media">
-        <img class="alert-prompt-image" src="${escapeHtml(assetPrefix)}assets/photos/aurora-ai-cabin.webp" width="1448" height="1086" alt="An AI-created remote cabin under a subtle green aurora and a clear northern sky" loading="lazy" decoding="async">
-        <figcaption>AI-generated visual</figcaption>
-      </figure>
       <div class="alert-prompt-content">
         <button class="alert-prompt-close" type="button" data-alert-prompt-close aria-label="Close storm reminder" title="Close storm reminder">&times;</button>
-        <p class="kicker">Free storm reminder</p>
-        <h2 id="alert-prompt-title">Know when the aurora is worth a look</h2>
-        <p id="alert-prompt-description">Choose a city and save a Good-or-better alert. We will tell you immediately whether email delivery is live or your request is queued for launch.</p>
-        <form class="comment-form alert-prompt-form" data-alert-form>
+        <p class="kicker">Free email alert</p>
+        <h2 id="alert-prompt-title">Let us watch the sky for you</h2>
+        <p id="alert-prompt-description">Choose a city. We will send one confirmation now, then email only when conditions reach Good or better.</p>
+        <form class="alert-prompt-form" data-alert-form>
           <label>
             Viewing city
             <select name="citySlug" required autofocus>
-              <option value="" selected disabled>Select a city</option>
+              <option value=""${selectedCitySlug ? "" : " selected"} disabled>Select a city</option>
               ${cityOptions}
             </select>
           </label>
@@ -33,10 +29,10 @@ export function renderAlertPrompt({ cities = [], assetPrefix = "" } = {}) {
           </label>
           <input name="threshold" type="hidden" value="60">
           <input name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
-          <button type="submit">Set storm reminder</button>
+          <button class="button" type="submit">Set email alert</button>
         </form>
         <p class="alert-status" data-alert-status role="status" aria-live="polite"></p>
-        <p class="alert-prompt-privacy">Only this alert uses your address. Unsubscribe anytime. We never sell it.</p>
+        <p class="alert-prompt-privacy">Used only for aurora alerts. Unsubscribe in one click. We never sell your address.</p>
       </div>
     </div>
   </dialog>`;

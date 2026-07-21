@@ -13,7 +13,7 @@
 .pro-dashboard,
 .pro-boundary {
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 8px;
   margin-bottom: 24px;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .pro-hero h1 {
-  font-size: clamp(2.4rem, 7vw, 5rem);
+  font-size: 4rem;
 }
 
 .pro-benefits {
@@ -41,7 +41,7 @@
   align-items: center;
   background: rgba(244, 247, 239, 0.06);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 8px;
   color: var(--text);
   display: flex;
   font-weight: 700;
@@ -73,7 +73,7 @@
   align-self: start;
   background: linear-gradient(145deg, rgba(116, 242, 164, 0.14), rgba(123, 223, 242, 0.08));
   border: 1px solid rgba(116, 242, 164, 0.28);
-  border-radius: 14px;
+  border-radius: 8px;
   display: grid;
   gap: 14px;
   padding: 22px;
@@ -214,7 +214,7 @@
 .pro-comparison-card {
   background: var(--panel-2);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 8px;
   min-width: 0;
   padding: 20px;
 }
@@ -306,7 +306,11 @@
   .pro-gate,
   .pro-dashboard,
   .pro-boundary {
-    border-radius: 12px;
+    border-radius: 8px;
+  }
+
+  .pro-hero h1 {
+    font-size: 2.6rem;
   }
 
   .pro-license-form > div,

@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS comments (
 CREATE INDEX IF NOT EXISTS idx_comments_page_created
 ON comments (page_key, created_at DESC);
 
--- Storm alert email waitlist（2026-07-03）：只收集意向，不发邮件；
--- email+city 唯一约束配合 INSERT OR IGNORE 做幂等去重
+-- Legacy Storm alert waitlist (2026-07-03). Kept only as a rerunnable
+-- migration source; new subscriptions use alert_subscriptions below.
 CREATE TABLE IF NOT EXISTS alert_signups (
   id TEXT PRIMARY KEY,
   email TEXT NOT NULL,
@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS alert_signups (
 CREATE INDEX IF NOT EXISTS idx_alert_signups_created
 ON alert_signups (created_at DESC);
 
--- 可重复执行的 alert v2 迁移。旧 waitlist 数据进入不可发送的 waitlist 状态，
--- 待邮件 binding 与 token secret 配置后由用户再次订阅并确认。
+-- Rerunnable alert v2 migration. Legacy rows remain in a non-deliverable
+-- waitlist state until the user subscribes again and confirms by email.
 CREATE TABLE IF NOT EXISTS alert_subscriptions (
   id TEXT PRIMARY KEY,
   email TEXT NOT NULL,

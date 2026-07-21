@@ -25,6 +25,7 @@ const proCss = fs.readFileSync(path.join(root, "assets", "pro.css"), "utf8");
 const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
 const alertStyles = fs.readFileSync(path.join(root, "assets", "alert.css"), "utf8");
 const contentStyles = fs.readFileSync(path.join(root, "assets", "content-density.css"), "utf8");
+const pageHeaders = fs.readFileSync(path.join(root, "_headers"), "utf8");
 const alertPromptClient = fs.readFileSync(path.join(root, "assets", "alert-prompt.js"), "utf8");
 const client = fs.readFileSync(path.join(root, "script.js"), "utf8");
 const googleVerification = fs.readFileSync(
@@ -72,6 +73,26 @@ test("generated pages expose a stable SEO shell without internal review language
   assert.doesNotMatch(home, /Updated from the static build/i);
 });
 
+test("versioned CSS and JavaScript cannot mix a new page with stale edge assets", () => {
+  assert.match(config.assetVersion || "", /^[a-z0-9][a-z0-9._-]{0,31}$/i);
+
+  for (const assetPath of [
+    "styles.css",
+    "assets/alert.css",
+    "assets/content-density.css",
+    "script.js",
+    "assets/alert-prompt.js",
+  ]) {
+    assert.match(home, new RegExp(`${assetPath.replaceAll(".", "\\.")}\\?v=${config.assetVersion}`));
+  }
+
+  assert.match(city, new RegExp(`\\.\\./\\.\\./styles\\.css\\?v=${config.assetVersion}`));
+  assert.match(pro, new RegExp(`\\.\\./assets/pro\\.css\\?v=${config.assetVersion}`));
+  assert.match(pro, new RegExp(`\\.\\./assets/pro-access\\.js\\?v=${config.assetVersion}`));
+  assert.doesNotMatch(pageHeaders, /^\/assets\/\*$/m);
+  assert.match(pageHeaders, /^\/assets\/photos\/\*$/m);
+});
+
 test("home and city pages use seven disclosed, responsive AI visuals", () => {
   const generatedPhotos = media.generatedVisuals
     .filter((visual) => visual.file?.startsWith("assets/photos/aurora-ai-"));
@@ -109,7 +130,7 @@ test("home and city pages use seven disclosed, responsive AI visuals", () => {
   );
   assert.match(
     home,
-    /<img class="alert-prompt-image" src="assets\/photos\/aurora-ai-cabin\.webp" width="1448" height="1086" alt="[^"]+"/,
+    /<img class="about-image" src="assets\/photos\/aurora-ai-cabin\.webp" width="1448" height="1086" alt="[^"]+"/,
   );
   assert.match(
     city,
@@ -126,12 +147,13 @@ test("home and city pages use seven disclosed, responsive AI visuals", () => {
   );
   assert.match(
     home,
-    /<figure class="story-visual">[\s\S]*?<div class="story-copy">[\s\S]*?<\/div>\s*<figcaption>AI-generated visual<\/figcaption>\s*<\/figure>/,
+    /<figure class="service-visual">[\s\S]*?<img[^>]+aurora-ai-field\.webp[\s\S]*?<figcaption>AI-generated visual<\/figcaption>\s*<\/figure>/,
   );
   assert.match(
     contentStyles,
-    /\.story-visual img\s*\{[^}]*aspect-ratio:[^;]+;[^}]*height:\s*auto;[^}]*object-fit:\s*cover;/s,
+    /\.service-visual img\s*\{[^}]*aspect-ratio:[^;]+;[^}]*height:\s*auto;[^}]*object-fit:\s*cover;/s,
   );
+  assert.match(contentStyles, /\.about-image\s*\{[^}]*height:\s*auto;/s);
   assert.match(styles, /@media \(max-width: 560px\)[\s\S]*\.hero-meta\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/s);
   assert.doesNotMatch(styles, /radial-gradient\(/);
   assert.doesNotMatch(contentStyles, /radial-gradient\(/);
@@ -149,10 +171,10 @@ test("first visits get an accessible alert prompt with privacy-safe suppression"
     assert.match(page, /role="status" aria-live="polite"/);
   }
 
-  assert.match(home, /href="assets\/content-density\.css"/);
-  assert.match(city, /href="\.\.\/\.\.\/assets\/content-density\.css"/);
-  assert.match(home, /<script type="module" src="assets\/alert-prompt\.js"><\/script>/);
-  assert.match(city, /<script type="module" src="\.\.\/\.\.\/assets\/alert-prompt\.js"><\/script>/);
+  assert.match(home, new RegExp(`href="assets/content-density\\.css\\?v=${config.assetVersion}"`));
+  assert.match(city, new RegExp(`href="\\.\\./\\.\\./assets/content-density\\.css\\?v=${config.assetVersion}"`));
+  assert.match(home, new RegExp(`<script type="module" src="assets/alert-prompt\\.js\\?v=${config.assetVersion}"></script>`));
+  assert.match(city, new RegExp(`<script type="module" src="\\.\\./\\.\\./assets/alert-prompt\\.js\\?v=${config.assetVersion}"></script>`));
   assert.match(alertPromptClient, /showModal\(\)/);
   assert.match(alertPromptClient, /aurora:alert-saved/);
   assert.match(alertPromptClient, /document\.addEventListener\("aurora:alert-saved"/);
@@ -160,22 +182,36 @@ test("first visits get an accessible alert prompt with privacy-safe suppression"
   assert.doesNotMatch(alertPromptClient, /localStorage\.[^(]+\([^)]*email/is);
 });
 
-test("typography and layouts expose denser practical information", () => {
-  assert.match(styles, /h1\s*\{[^}]*font-size:\s*clamp\(2\.2rem,\s*6vw,\s*4\.2rem\)/s);
-  assert.match(styles, /\.hero h1\s*\{[^}]*font-size:\s*clamp\(2\.25rem,\s*5vw,\s*3\.8rem\)/s);
-  assert.match(styles, /h2\s*\{[^}]*font-size:\s*clamp\(1\.55rem,\s*3\.4vw,\s*2\.3rem\)/s);
+test("home and city pages expose one clear action without data or taxonomy clutter", () => {
+  assert.match(styles, /h1\s*\{[^}]*font-size:\s*3\.5rem/s);
+  assert.match(styles, /\.hero h1\s*\{[^}]*font-size:\s*3\.35rem/s);
+  assert.match(styles, /h2\s*\{[^}]*font-size:\s*2\.05rem/s);
   assert.match(styles, /\.section\s*\{[^}]*padding:\s*40px 22px/s);
   assert.match(styles, /\.city-page\s*\{[^}]*padding:\s*32px 22px 52px/s);
   assert.match(
     styles,
-    /@media \(max-width: 560px\)[\s\S]*\.hero h1\s*\{[^}]*font-size:\s*clamp\(2\.1rem,\s*10vw,\s*2\.8rem\)/s,
+    /@media \(max-width: 560px\)[\s\S]*\.hero h1\s*\{[^}]*font-size:\s*2\.45rem/s,
   );
-  assert.match(contentStyles, /\.story-grid\s*\{[^}]*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/s);
+  assert.match(
+    styles,
+    /@media \(max-width: 560px\)[\s\S]*\.city-hero h1\s*\{[^}]*font-size:\s*2\.4rem/s,
+  );
+  assert.match(home, /How email alerts work/);
+  assert.match(home, /data-open-alert-prompt/);
+  assert.equal((home.match(/class="service-row/g) || []).length, 3);
+  assert.ok((home.match(/data-city-card/g) || []).length <= 12);
+  assert.doesNotMatch(home, /Location collections|Forecast atlas|Browse by location, guide, or forecast term/);
+  assert.doesNotMatch(home, /class="link-cloud"|Live cache|Update strategy/);
+  assert.doesNotMatch(city, /class="alert-signup"|Region page|Country page|Current data/);
+  assert.match(city, /data-open-alert-prompt/);
+  assert.match(contentStyles, /\.service-row\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1\.05fr\)\s*minmax\(0,\s*0\.95fr\)/s);
   assert.match(contentStyles, /\.city-sky-context\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*0\.9fr\)\s*minmax\(0,\s*1\.1fr\)/s);
-  assert.equal((home.match(/class="story-visual"/g) || []).length, 4);
   assert.equal((city.match(/class="sky-signal"/g) || []).length, 4);
   assert.match(city, /Face the northern horizon/);
   assert.match(city, /10:00 PM to 2:00 AM local time/);
+  assert.doesNotMatch(home, /section class="section compact-section"/);
+  assert.match(styles, /\.compact-section\s*\{[^}]*padding-left:\s*0;[^}]*padding-right:\s*0;/s);
+  assert.doesNotMatch(`${styles}\n${alertStyles}\n${contentStyles}`, /font-size:[^;]*vw/);
 });
 
 test("generated navigation moves lower-priority links into an accessible mobile menu", () => {
@@ -221,42 +257,31 @@ test("Aurora Pro preview is fail-closed without leaking the GGB product", () => 
   assert.doesNotMatch(city, /data-pro-locked|paywall-locked/);
   assert.match(proClient, /\/api\/pro\/license/);
   assert.match(proClient, /\/api\/pro\/funnel/);
-  assert.match(pro, /<script type="module" src="\.\.\/assets\/pro-access\.js"><\/script>/);
+  assert.match(pro, new RegExp(`<script type="module" src="\\.\\./assets/pro-access\\.js\\?v=${config.assetVersion}"></script>`));
   assert.match(proClient, /from "\.\/pro-license-state\.mjs"/);
   assert.match(proLicenseState, /parseLicenseReturnUrl/);
   assert.match(proCss, /\.pro-page \[hidden\]\s*\{[^}]*display:\s*none\s*!important/);
 });
 
-test("home and city alerts share an accessible three-step flow with honest capability states", () => {
+test("home and city alerts use one compact popup with honest capability states", () => {
   for (const page of [home, city]) {
-    assert.match(
-      page,
-      /Choose a location[\s\S]*Choose your minimum level[\s\S]*Add your email/,
-    );
-    assert.equal((page.match(/type="radio" name="threshold"/g) || []).length, 4);
-    assert.match(page, /type="radio" name="threshold" value="60" checked/);
-    assert.doesNotMatch(page, /<select name="threshold"/);
-    assert.match(page, /How alerts work/);
-    assert.match(page, /Choose a location[\s\S]*Wait for a storm[\s\S]*Check cloud cover/);
+    assert.equal((page.match(/<dialog class="alert-prompt"/g) || []).length, 1);
+    assert.equal((page.match(/data-alert-form/g) || []).length, 1);
+    assert.doesNotMatch(page, /class="alert-signup"|type="radio" name="threshold"/);
     assert.match(page, /name="website"[^>]*tabindex="-1"[^>]*aria-hidden="true"/);
   }
 
   assert.match(home, /<option value="" selected disabled>Select a city<\/option>/);
   assert.match(city, /<option value="fairbanks" selected>Fairbanks, Alaska<\/option>/);
-  const cityAlertForm = city.match(/<form class="comment-form alert-form"[\s\S]*?<\/form>/)?.[0] || "";
-  assert.equal((cityAlertForm.match(/<option /g) || []).length, 2);
-  assert.match(home, /href="assets\/alert\.css"/);
-  assert.match(city, /href="\.\.\/\.\.\/assets\/alert\.css"/);
+  assert.match(home, new RegExp(`href="assets/alert\\.css\\?v=${config.assetVersion}"`));
+  assert.match(city, new RegExp(`href="\\.\\./\\.\\./assets/alert\\.css\\?v=${config.assetVersion}"`));
   assert.match(client, /Saving your alert/);
-  assert.match(client, /Live email sent/);
-  assert.match(client, /Saved for launch/);
+  assert.match(client, /Confirmation email sent/);
+  assert.match(client, /temporarily unavailable/);
   assert.match(client, /Check your connection and try again/);
   assert.doesNotMatch(client, /settings_updated/);
   assert.doesNotMatch(styles, /\.alert-signup/);
-  assert.match(alertStyles, /\.alert-signup\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/s);
-  assert.match(alertStyles, /\.alert-threshold-option span\s*\{[^}]*overflow-wrap:\s*anywhere/s);
-  assert.match(
-    alertStyles,
-    /@media \(max-width: 560px\)[\s\S]*\.alert-threshold-options\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s,
-  );
+  assert.doesNotMatch(alertStyles, /\.alert-signup|\.alert-threshold-options/);
+  assert.match(alertStyles, /\.alert-prompt\s*\{[^}]*max-width:\s*560px/s);
+  assert.match(alertStyles, /\.alert-prompt-shell\s*\{[^}]*display:\s*block/s);
 });

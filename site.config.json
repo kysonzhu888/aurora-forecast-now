@@ -3,6 +3,7 @@
   "siteUrl": "https://auroraforecastnow.com",
   "description": "City-level northern lights forecast, aurora chance, Kp index, and cloud-aware viewing guidance.",
   "contentLastmod": "2026-07-21",
+  "assetVersion": "20260721-2",
   "contactEmail": "hello@auroraforecastnow.com",
   "cloudflareWebAnalyticsToken": "fdaa481c4b104e8383de83183ca1f321",
   "googleAnalyticsId": "",

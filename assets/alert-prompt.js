@@ -54,6 +54,20 @@ function initializeAlertPrompt() {
   }
 
   const closeButton = prompt.querySelector("[data-alert-prompt-close]");
+  const citySelect = prompt.querySelector('select[name="citySlug"]');
+  let lastOpener = null;
+  const showPrompt = (opener = null) => {
+    lastOpener = opener;
+    const citySlug = opener?.dataset.alertCity || "";
+    if (citySlug && citySelect?.querySelector(`option[value="${CSS.escape(citySlug)}"]`)) {
+      citySelect.value = citySlug;
+    }
+    if (!prompt.open) {
+      if (typeof prompt.showModal === "function") prompt.showModal();
+      else prompt.setAttribute("open", "");
+    }
+    window.setTimeout(() => citySelect?.focus(), 0);
+  };
   const dismiss = () => {
     if (prompt.dataset.alertSaved === "true") return;
     markAlertPromptDismissed(storage);
@@ -67,6 +81,10 @@ function initializeAlertPrompt() {
   prompt.addEventListener("click", (event) => {
     if (event.target === prompt) dismiss();
   });
+  prompt.addEventListener("close", () => lastOpener?.focus());
+  document.querySelectorAll("[data-open-alert-prompt]").forEach((button) => {
+    button.addEventListener("click", () => showPrompt(button));
+  });
   document.addEventListener("aurora:alert-saved", () => {
     prompt.dataset.alertSaved = "true";
     markAlertPromptSaved(storage);
@@ -77,11 +95,7 @@ function initializeAlertPrompt() {
 
   window.setTimeout(() => {
     if (!shouldShowAlertPrompt(storage) || prompt.open) return;
-    if (typeof prompt.showModal === "function") {
-      prompt.showModal();
-    } else {
-      prompt.setAttribute("open", "");
-    }
+    showPrompt();
   }, 850);
 }
 

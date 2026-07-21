@@ -54,19 +54,19 @@ Cron trigger: */5 * * * *
   -> storm mode: full refresh every 5 minutes when NOAA alerts include G2+
 ```
 
-The generated city pages are SEO entry pages, not the product limit. The saved city pool is curated in `data/city-seeds.json`, resolved into `data/cities.json`, and sorted dynamically by live forecast score at build/runtime. The live API can also score any resolved city or valid latitude/longitude. D1 is still reserved for later user-facing features such as email alerts, favorites, observations, and historical forecast analytics.
+The generated city pages are SEO entry pages, not the product limit. The saved city pool is curated in `data/city-seeds.json`, resolved into `data/cities.json`, and sorted dynamically by live forecast score at build/runtime. The live API can also score any resolved city or valid latitude/longitude. D1 stores comments, alert subscriptions, delivery receipts, and anonymous Pro funnel totals; favorites, observations, and historical analytics remain future work.
 
 The crawlable HTML is a stable location-and-guide shell. Forecast scores, Kp, cloud cover, NOAA timestamps, and alert summaries are hydrated from `/api/forecast` in the browser and remain generated deployment data rather than Git source. Update `site.config.json#contentLastmod` only when the stable page content or template meaning changes; routine NOAA refreshes must not change sitemap `lastmod`.
 
 Storm alert requests are stored in D1 with city, score threshold, lifecycle status, and timestamps. Confirmation and unsubscribe tokens are persisted only as SHA-256 hashes. The five-minute Worker cron evaluates active subscriptions against the latest cached forecast, claims a per-forecast delivery receipt, applies a six-hour cooldown, and sends one recipient per message.
 
-Email delivery is fail-closed. Without all of `EMAIL` (Cloudflare Email Service binding), `ALERT_FROM_EMAIL`, and the `ALERT_TOKEN_SECRET` secret, subscriptions remain in the visible waitlist state and no live-delivery claim is shown. Enabling arbitrary-recipient delivery is the sole external infrastructure gate: the Cloudflare account must already have Workers Paid and an onboarded sending domain. Do not purchase or enable those services as part of deployment automation.
+Email delivery is fail-closed. Production currently uses the fixed `https://tinyneed.com/api/aurora-email` relay, which verifies an HMAC-SHA256 signature before sending through TinyNeed's existing Resend account. Configure the same 32-byte-or-longer `ALERT_EMAIL_RELAY_SECRET` on the Aurora Worker and `AURORA_EMAIL_RELAY_SECRET` on the TinyNeed Pages project, plus a separate `ALERT_TOKEN_SECRET` on the Aurora Worker. The relay fixes the sender as `Aurora Forecast Now <alerts@tinyneed.com>` and never accepts a caller-supplied sender. A native Cloudflare `EMAIL` binding remains supported as an alternative.
 
-After applying `schema.sql`, deployment acceptance should smoke-test `GET /api/health` and a `POST /api/alerts/subscribe` before and after the Worker change. A configured account should return `confirmation_pending` and deliver confirmation; an unentitled account should return `waitlist` with `delivery: unavailable` while still saving the request.
+Deploy the TinyNeed relay before the Aurora Worker, then apply `schema.sql` and smoke-test `GET /api/health` plus `POST /api/alerts/subscribe`. A configured account returns `confirmation_pending` and delivers a confirmation email. Missing secrets or a relay outage fail closed as `waitlist` with `delivery: unavailable` while preserving the request. Never print or commit either secret.
 
 ## SEO Page Matrix
 
-- `/locations/`: full city index and collection hub
+- `/locations/`: full city index
 - `/countries/<country>/`: country-level city collections
 - `/states/<region-country>/`: state, province, and region city collections
 - `/guides/`: evergreen aurora forecast guide index
